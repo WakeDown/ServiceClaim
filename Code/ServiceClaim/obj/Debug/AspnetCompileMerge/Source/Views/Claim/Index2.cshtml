@@ -1,0 +1,94 @@
+﻿@model ServiceClaim.Models.Claim
+
+@{
+    ViewBag.Title = "Карточка заяки";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Карточка заявки
+}
+
+@section PanelBody
+{
+    @*@using(Html.BeginForm("Index", "Claim", FormMethod.Post, new {@class="form-horizontal"}))*@
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div>
+                <div class="row"><label class="col-lg-2 text-right">Контрагент</label> <span class="col-lg-10">@Model.Contractor.FullName</span></div>
+                <div class="row"><label class="col-lg-2 text-right">Договор</label> <span class="col-lg-10">@Model.Contract.Number</span></div>
+                <div class="row"><label class="col-lg-2 text-right">Аппарат</label> <span class="col-lg-10">@Model.Device.ExtendedName</span></div>
+                @*<div class="row"><label class="col-lg-2 text-right">Принял</label> <span class="col-lg-10">@Model.Creator.DisplayName</span></div>
+                <div class="row"><label class="col-lg-2 text-right">Описание</label> <span class="col-lg-10">@Model.Descr</span></div>*@
+            </div>
+            <div>
+                <div class="row">
+                    <label class="col-lg-2 text-right">Информация</label>
+                    <div class="col-lg-10">
+                        @if (Model.State.SysName.ToUpper().Equals("TECH"))
+                        {
+                            <p>
+                                <textarea id="techDescr" class="form-control required-mark" rows="3" required="required"></textarea>
+                            </p>
+                            <div>
+                                <button id="clContinue" class="btn btn-success">Продолжить</button>
+                                <button id="clEnd" class="btn btn-danger">Закрыть</button>
+                            </div>
+                        }
+                        else
+                        {
+                            
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* История статусов *@
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        История изменений статусов
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    @Html.Partial("StateHistory", Model.GetStateHistory())
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    @*<script type="text/javascript">
+    $(document).ready(function() {
+        $('#clContinue').onclick(claimConfirm);
+        $('#clEnd').onclick(claimEnd);
+    });
+
+    function claimConfirm() {
+        var id = @Model.Id;
+        var descr = $('#techDescr').val();
+        $.ajax({
+            url:'@Url.Action("ClaimConfirm")', method:'POST', data:{id:id, descr: descr},
+                success: function(data) {
+
+                }
+            });
+        }
+
+        function claimEnd() {
+            var id = @Model.Id;
+            var descr = $('#techDescr').val();
+            $.ajax({
+                url:'@Url.Action("ClaimEnd")', method:'POST', data:{id:id, descr: descr},
+                success: function(data) {
+
+                }
+            });
+        }
+    </script>*@
+}

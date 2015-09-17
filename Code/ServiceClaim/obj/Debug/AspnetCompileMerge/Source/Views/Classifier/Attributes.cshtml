@@ -1,0 +1,34 @@
+﻿@using ServiceClaim.Models
+@model ServiceClaim.Models.ClassifierAttributes
+
+@using (Html.BeginForm("Attributes", "Classifier", FormMethod.Post, new { @id = "attrForm", @class = "form-inline", data_toggle = "validator", role = "form" }))
+{
+    <table>
+        <tr>
+            <th>ФОТ</th>
+            <th>Накладные</th>
+            <th>
+
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.TextBoxFor(m => m.Wage, new { @class = "form-control required-mark", @id = "wage", required = "required", data_error = "Заполните ФОТ" })
+                <span class="help-block with-errors"></span>
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.Overhead, new { @class = "form-control required-mark", @id = "overhead", required = "required", data_error = "Заполните ФОТ" })
+                <span class="help-block with-errors"></span>
+            </td>
+            <td>
+                <button type="submit" class="btn btn-success"><i class="fa fa-refresh"></i> Обновить</button>
+                <span class="help-block with-errors"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="text-danger">
+                <small>@TempData["ServerErrorAttr"]</small>
+            </td>
+        </tr>
+    </table>
+}

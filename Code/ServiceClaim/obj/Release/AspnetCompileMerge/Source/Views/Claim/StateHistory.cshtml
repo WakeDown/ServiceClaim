@@ -1,0 +1,11 @@
+﻿@model System.Collections.Generic.IEnumerable<ServiceClaim.Models.Claim2ClaimState>
+
+@foreach (var state in Model)
+{
+    <div style="background-color: #@state.State.BackgroundColor; color:#@state.State.ForegroundColor" class="padding-lg history-state-block" id="@state.State.SysName@state.Id">
+        @state.DateCreate.ToString("g") - @state.Creator.DisplayName - <strong>@state.State.Name</strong>
+        <p>
+            @state.Descr
+        </p>
+    </div>
+}

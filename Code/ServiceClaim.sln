@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceClaim", "ServiceClaim\ServiceClaim.csproj", "{801D0966-E8DC-46B7-8907-D24EC07CB2E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateChecker", "StateChecker\StateChecker.csproj", "{99FD2299-DDE1-4C24-978A-437ADA7B4D01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{801D0966-E8DC-46B7-8907-D24EC07CB2E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{801D0966-E8DC-46B7-8907-D24EC07CB2E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{801D0966-E8DC-46B7-8907-D24EC07CB2E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{801D0966-E8DC-46B7-8907-D24EC07CB2E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99FD2299-DDE1-4C24-978A-437ADA7B4D01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99FD2299-DDE1-4C24-978A-437ADA7B4D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99FD2299-DDE1-4C24-978A-437ADA7B4D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99FD2299-DDE1-4C24-978A-437ADA7B4D01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

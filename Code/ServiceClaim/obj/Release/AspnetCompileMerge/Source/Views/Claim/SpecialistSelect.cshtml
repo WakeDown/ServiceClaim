@@ -1,0 +1,29 @@
+﻿
+@using ServiceClaim.Models
+@using ServiceClaim.Objects
+@model ServiceClaim.Models.Claim
+
+@using (Html.BeginForm("SpecialistSelect", "Claim", FormMethod.Post, new { @id = "SpecialistSelectForm", @class = "form-horizontal", data_toggle = "validator", role = "form" }))
+{
+    @*<p>
+            @Html.DropDownListFor(m=>m.WorkType, WorkType.GetSelectionList())
+        </p>*@
+    @Html.HiddenFor(m => m.Id)
+    <div class="row">
+        <label class="col-lg-2 text-right">Специалист</label>
+        <div class="col-lg-6">
+            @Html.DropDownListFor(m => m.SpecialistSid, Model.GetCurrentClaimSpecialistSelectionList(), new {@class = "form-control required-mark", required = "required", data_error = "Выберите специалиста"})
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <button type="submit" class="btn btn-success">Назначить</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <p class="text-danger">@TempData["ServerError"]</p>
+        </div>
+    </div>
+}

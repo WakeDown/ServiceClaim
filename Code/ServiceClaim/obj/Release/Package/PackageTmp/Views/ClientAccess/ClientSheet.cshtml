@@ -1,0 +1,90 @@
+﻿@model ServiceClaim.Models.ClientAccess
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявление</title>
+    <style type="text/css">
+        body {
+            font-size: 16pt;
+            font-family: Verdana, Arial, sans-serif;
+        }
+
+        .sheet {
+            width: 1020px !important;
+            padding: 10mm;
+            padding-left: 20mm;
+        }
+
+        .print {
+            page-break-after: always;
+        }
+
+        .sel-text {
+            color: #AE703E;
+        }
+
+        .center {
+            text-align: center;
+        }
+        table.table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table.table, table.table tr, table.table tr td, table.table tr th {
+            border: 1px solid black;
+        }
+        table.table tr td, table.table tr th {
+            padding: 15px;
+        }
+        .line {
+            margin: 50px 0 60px 0;
+            border: 1px solid black; 
+        }
+        .bold {
+            font-weight: 700;
+        }
+        .text-nowrap {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="print sheet">
+        <h3 class="center bold">Реквизиты доступа в Сервис - <span class="sel-text">Личный кабинет клиента</span></h3>
+        <table class="table">
+            <tr>
+                <td class="bold">Ссылка на ПО</td>
+                <td><a href="https://dsu-zip.unitgroup.ru:4434/">https://dsu-zip.unitgroup.ru:4434/</a></td>
+            </tr>
+            <tr>
+                <td class="bold">Контрагент</td>
+                <td>@Model.FullName</td>
+            </tr>
+            <tr>
+                <td class="bold">Логин</td>
+                <td>@Model.Login&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="bold">Пароль</td>
+                <td>@Model.Password&nbsp;</td>
+            </tr>
+        </table>
+        <hr class="line"/>
+        <div class="center bold">
+            <div>Предложения по улучшению сервиса <span class="sel-text">Личный кабинет клиента</span></div>
+            <div>пожалуйста направляйте по адресу</div>
+            <div><a href="mailto:dsu-client@unitgroup.ru">dsu-client@unitgroup.ru</a></div>
+        </div>
+        
+    </div>
+</body>
+</html>

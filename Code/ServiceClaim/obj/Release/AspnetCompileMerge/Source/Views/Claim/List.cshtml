@@ -1,0 +1,43 @@
+﻿@using System.Linq
+@using System.ServiceModel.Configuration
+@using ServiceClaim.Models;
+@model ListResult<Claim>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("New")"><i class="fa fa-plus-circle"></i> новая</a>
+</p>
+
+@if (Model.List.Any())
+{
+    <p class="text-info">
+        <span class="">показано записей <span class="label label-warning label-badge">@Model.List.Count()</span> из <span class="label label-success label-badge">@Model.TotalCount</span></span>
+    </p>
+    <table id="claimList" class="table table-bordered sel-list">
+        <tr>
+            <th class="min-width">№</th>
+            <th>Контрагент</th>
+            <th>Статус</th>
+        </tr>
+        @foreach (var claim in Model.List)
+        {
+            <tr claimid="@claim.Id" onclick="window.location = '@Url.Action("Index")/@claim.Id';">
+                <th>@claim.Id</th>
+                <td>@claim.Contractor.FullName</td>
+                <td style="background-color: #@claim.State.BackgroundColor; color: #@claim.State.ForegroundColor">@claim.State.Name</td>
+            </tr>
+        }
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            $('#claimList tr').click(function() {
+                window.location = '@Url.Action("Index")/'+ $(this).attr('claimid');
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,161 @@
+﻿@using System.Linq
+@using ServiceClaim.Models
+@model ServiceClaim.Models.Claim
+
+@{
+    ViewBag.Title = "Карточка заяки";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+    var stateHistory = Model.GetStateHistory();
+}
+
+@section PanelHead
+{
+    Карточка заявки
+}
+
+@section PanelBody
+{
+    @*@using(Html.BeginForm("Index", "Claim", FormMethod.Post, new {@class="form-horizontal"}))*@
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div>
+                <div class="row"><label class="col-lg-2 text-right">Контрагент</label> <span class="col-lg-10">@Model.Contractor.FullName</span></div>
+                <div class="row"><label class="col-lg-2 text-right">Договор</label> <span class="col-lg-10">@Model.Contract.Number</span></div>
+                <div class="row"><label class="col-lg-2 text-right">Аппарат</label> <span class="col-lg-10">@Model.Device.ExtendedName</span></div>
+                @if (Model.WorkType != null && !String.IsNullOrEmpty(Model.WorkType.Name))
+                {
+                    <div class="row"><label class="col-lg-2 text-right">Тип работ</label> <span class="col-lg-10">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
+                }
+                @if (Model.Specialist != null && !String.IsNullOrEmpty(Model.Specialist.DisplayName))
+                {
+                    <div class="row"><label class="col-lg-2 text-right">Специалист</label> <span class="col-lg-10">@Model.Specialist.DisplayName</span></div>
+                }
+                @if (Model.State.SysName.ToUpper().Equals("NEW"))
+                {
+                    @Html.Partial("StateNew", Model)
+                }
+                @if (Model.State.SysName.ToUpper().Equals("NEWADD") || Model.State.SysName.ToUpper().Equals("SRVADMWORK") || Model.State.SysName.ToUpper().Equals("SERVADMSETWAIT") || Model.State.SysName.ToUpper().Equals("SERVENGSETWAIT"))
+                {
+                    @Html.Partial("SpecialistSelect", Model)
+                }
+                @if (Model.State.SysName.ToUpper().Equals("TECHSET"))
+                {
+                    @Html.Partial("TechConfirm", Model)
+                }
+                @if (Model.State.SysName.ToUpper().Equals("SERVADMSET") || Model.State.SysName.ToUpper().Equals("SRVENGSET"))
+                {
+                    @Html.Partial("ConfirmWork", Model)
+                }
+                @if (Model.State.SysName.ToUpper().Equals("TECHWORK"))
+                {
+                    @Html.Partial("StateTechWork", Model)
+                }
+                @if (Model.State.SysName.ToUpper().Equals("SERVENGOUTWAIT"))
+                {
+                    @Html.Partial("StateEngOutWait", Model)
+                }
+                @if (Model.State.SysName.ToUpper().Equals("SRVENGWORK"))
+                {
+                    @Html.Partial("ServiceSheet", Model)
+                }
+                @if (Model.State.SysName.ToUpper().Equals("DONE"))
+                {
+                    @Html.Partial("StateDone", Model)
+                }
+            </div>
+
+            <div class="row">
+                @*<label class="col-lg-2 text-right">Комментарий</label>*@
+                <div class="col-lg-12">
+
+
+                    @*@if (!Model.State.SysName.ToUpper().Equals("END"))
+                    {
+                        <p>
+                            <textarea id="descr" class="form-control required-mark" rows="3" required="required" placeholder="Ваш комментарий"></textarea>
+                        </p>
+                        <div>
+                            <button id="clSave" class="btn btn-primary">Сохранить</button>
+                            <button id="clContinue" class="btn btn-success">Передать</button>
+                            <button id="clEnd" class="btn btn-danger">Закрыть</button>
+                        </div>
+                    }*@
+                </div>
+            </div>
+            <p>
+                @Html.Partial("StateHistory", stateHistory.ToList().OrderByDescending(c => c.DateCreate))
+            </p>
+        </div>
+        @* История статусов *@
+        <div class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        История изменений статусов
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    @Html.Partial("StateHistorySmall", stateHistory)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#clSave').click(claimSave);
+            $('#clContinue').click(claimContinue);
+            $('#clEnd').click(claimEnd);
+        });
+
+        function claimSave() {
+            var id = @Model.Id;
+            var descr = $('#descr').val();
+            $.ajax({
+                url:'@Url.Action("ClaimSave")', method:'POST', data:{id:id, descr: descr},
+                success: function(data) {
+                    if (data.errorMessage) {
+                        alert(data.errorMessage);
+                    } else {
+                        window.location.reload();// = '';
+                        //alert('OK');
+                    }
+                }
+            });
+        }
+
+        function claimContinue() {
+            var id = @Model.Id;
+            var descr = $('#descr').val();
+            $.ajax({
+                url:'@Url.Action("ClaimContinue")', method:'POST', data:{id:id, descr: descr},
+                success: function(data) {
+                    if (data.errorMessage) {
+                        alert(data.errorMessage);
+                    } else {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+
+        @*function claimEnd() {
+            var id = @Model.Id;
+            var descr = $('#descr').val();
+            $.ajax({
+                url:'@Url.Action("ClaimEnd")', method:'POST', data:{id:id, descr: descr},
+                success: function(data) {
+                    if (data.errorMessage) {
+                        alert(data.errorMessage);
+                    } else {
+                        window.location.reload();
+                    }
+                }
+            });
+        }*@
+    </script>
+}

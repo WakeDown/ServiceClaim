@@ -1,0 +1,18 @@
+﻿@using ServiceClaim.Helpers
+@model System.Collections.Generic.IEnumerable<ServiceClaim.Models.Claim2ClaimState>
+
+@foreach (var state in Model)
+{
+    <div style="background-color: #@state.State.BackgroundColor; color:#@state.State.ForegroundColor" class="padding-lg history-state-block" id="@state.State.SysName@state.Id">
+        @state.DateCreate.ToString("g") - @state.Creator.DisplayName - <strong>@state.State.Name</strong>
+        <p>
+            @Html.Nl2Br(state.Descr)
+            @if (state.IdServiceSheet.HasValue)
+            {
+                <div>
+                    <a href="@Url.Action("ServiceSheet", new {id=state.IdServiceSheet.Value})" target="_blank">Сервисный лист №@state.IdServiceSheet.Value</a>
+                </div>
+            }
+        </p>
+    </div>
+}

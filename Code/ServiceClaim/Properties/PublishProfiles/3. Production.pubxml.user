@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>\\uiis-1\c$\inetpub\wwwroot\PRODUCT\ServiceClaim</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>07/20/2015 10:36:26</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>07/20/2015 10:36:25</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>07/20/2015 10:36:28</publishTime>
+    </File>
+    <File Include="bin/Select.HtmlToPdf.dll">
+      <publishTime>08/23/2015 19:52:42</publishTime>
+    </File>
+    <File Include="bin/ServiceClaim.dll">
+      <publishTime>09/09/2015 13:15:25</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>07/24/2015 09:53:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>07/24/2015 09:53:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>07/20/2015 10:36:24</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>07/24/2015 09:53:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>07/24/2015 09:53:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>07/24/2015 09:53:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>07/24/2015 09:53:54</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>07/20/2015 10:36:26</publishTime>
+    </File>
+    <File Include="Content/bootstrap-datepicker3.css">
+      <publishTime>07/20/2015 13:44:02</publishTime>
+    </File>
+    <File Include="Content/bootstrap-theme.css">
+      <publishTime>07/20/2015 13:44:02</publishTime>
+    </File>
+    <File Include="Content/bootstrap-timepicker.min.css">
+      <publishTime>07/20/2015 13:44:02</publishTime>
+    </File>
+    <File Include="Content/bootstrap.css">
+      <publishTime>02/09/2015 14:04:48</publishTime>
+    </File>
+    <File Include="Content/font-awesome.css">
+      <publishTime>07/20/2015 13:44:04</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.eot">
+      <publishTime>07/20/2015 10:41:30</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.svg">
+      <publishTime>07/20/2015 10:41:30</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.ttf">
+      <publishTime>07/20/2015 10:41:30</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.woff">
+      <publishTime>07/20/2015 10:41:30</publishTime>
+    </File>
+    <File Include="Content/fonts/FontAwesome.otf">
+      <publishTime>07/20/2015 10:41:30</publishTime>
+    </File>
+    <File Include="Content/images/logo-unit.png">
+      <publishTime>07/20/2015 10:55:09</publishTime>
+    </File>
+    <File Include="Content/Site.css">
+      <publishTime>03/09/2015 18:24:33</publishTime>
+    </File>
+    <File Include="favicon.ico">
+      <publishTime>07/20/2015 11:14:01</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>07/20/2015 10:36:11</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>08/26/2015 08:22:32</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-datepicker.js">
+      <publishTime>07/20/2015 11:55:56</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-datepicker.ru.js">
+      <publishTime>07/20/2015 11:55:56</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-timepicker.js">
+      <publishTime>07/20/2015 11:55:56</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.js">
+      <publishTime>07/20/2015 11:55:56</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.min.js">
+      <publishTime>07/20/2015 10:36:16</publishTime>
+    </File>
+    <File Include="Scripts/bootstrapValidator.js">
+      <publishTime>07/20/2015 11:55:56</publishTime>
+    </File>
+    <File Include="Scripts/jquery-2.1.4.js">
+      <publishTime>08/26/2015 08:19:30</publishTime>
+    </File>
+    <File Include="Scripts/jquery-2.1.4.min.js">
+      <publishTime>08/26/2015 08:19:28</publishTime>
+    </File>
+    <File Include="Scripts/jquery-2.1.4.min.map">
+      <publishTime>08/26/2015 08:19:28</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui.js">
+      <publishTime>07/20/2015 11:55:56</publishTime>
+    </File>
+    <File Include="Scripts/jquery.mask.min.js">
+      <publishTime>07/20/2015 11:55:56</publishTime>
+    </File>
+    <File Include="Scripts/jquery.unobtrusive-ajax.js">
+      <publishTime>07/20/2015 11:55:56</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.js">
+      <publishTime>07/20/2015 10:36:27</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.min.js">
+      <publishTime>07/20/2015 10:36:27</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.js">
+      <publishTime>07/20/2015 10:36:27</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.min.js">
+      <publishTime>07/20/2015 10:36:27</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.6.2.js">
+      <publishTime>07/20/2015 10:36:25</publishTime>
+    </File>
+    <File Include="Scripts/respond.js">
+      <publishTime>07/20/2015 10:36:27</publishTime>
+    </File>
+    <File Include="Scripts/respond.min.js">
+      <publishTime>07/20/2015 10:36:27</publishTime>
+    </File>
+    <File Include="Scripts/site.js">
+      <publishTime>08/09/2015 15:17:47</publishTime>
+    </File>
+    <File Include="Scripts/validator.js">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Scripts/_references.js">
+      <publishTime>08/26/2015 08:22:20</publishTime>
+    </File>
+    <File Include="Views/Claim/ConfirmWork.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/Index.cshtml">
+      <publishTime>07/09/2015 15:21:03</publishTime>
+    </File>
+    <File Include="Views/Claim/Index2.cshtml">
+      <publishTime>08/20/2015 16:33:20</publishTime>
+    </File>
+    <File Include="Views/Claim/List.cshtml">
+      <publishTime>08/09/2015 13:41:10</publishTime>
+    </File>
+    <File Include="Views/Claim/New.cshtml">
+      <publishTime>08/09/2015 15:31:30</publishTime>
+    </File>
+    <File Include="Views/Claim/ServiceSheet.cshtml">
+      <publishTime>07/09/2015 15:14:17</publishTime>
+    </File>
+    <File Include="Views/Claim/ServiceSheetForm.cshtml">
+      <publishTime>08/09/2015 11:03:07</publishTime>
+    </File>
+    <File Include="Views/Claim/ServiceSheetTech.cshtml">
+      <publishTime>09/07/2015 11:49:59</publishTime>
+    </File>
+    <File Include="Views/Claim/ServiceSheetTechForm.cshtml">
+      <publishTime>07/09/2015 17:59:03</publishTime>
+    </File>
+    <File Include="Views/Claim/SetServEngOnWork.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/SetWorkType.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/SpecialistSelect.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/StateDone.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/StateEngOutWait.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/StateHistory.cshtml">
+      <publishTime>07/09/2015 15:18:35</publishTime>
+    </File>
+    <File Include="Views/Claim/StateHistorySmall.cshtml">
+      <publishTime>04/08/2015 13:35:06</publishTime>
+    </File>
+    <File Include="Views/Claim/StateNew.cshtml">
+      <publishTime>08/24/2015 15:06:27</publishTime>
+    </File>
+    <File Include="Views/Claim/StateNewadd.cshtml">
+      <publishTime>08/24/2015 15:06:15</publishTime>
+    </File>
+    <File Include="Views/Claim/StateServadmWork.cshtml">
+      <publishTime>08/24/2015 17:56:35</publishTime>
+    </File>
+    <File Include="Views/Claim/StateSet.cshtml">
+      <publishTime>08/24/2015 15:41:03</publishTime>
+    </File>
+    <File Include="Views/Claim/StateTechWork.cshtml">
+      <publishTime>08/26/2015 14:41:34</publishTime>
+    </File>
+    <File Include="Views/Claim/TechConfirm.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/ZipCheck.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/ZipConfirm.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/ZipOrder.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Claim/ZipOrderConfirm.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/Classifier/Attributes.cshtml">
+      <publishTime>08/19/2015 14:13:43</publishTime>
+    </File>
+    <File Include="Views/Classifier/ImportExcel.cshtml">
+      <publishTime>08/19/2015 14:13:46</publishTime>
+    </File>
+    <File Include="Views/Classifier/List.cshtml">
+      <publishTime>08/09/2015 17:43:06</publishTime>
+    </File>
+    <File Include="Views/ClientAccess/ClientSheet.cshtml">
+      <publishTime>08/24/2015 18:33:48</publishTime>
+    </File>
+    <File Include="Views/ClientAccess/Edit.cshtml">
+      <publishTime>08/09/2015 17:43:05</publishTime>
+    </File>
+    <File Include="Views/ClientAccess/List.cshtml">
+      <publishTime>08/31/2015 17:12:14</publishTime>
+    </File>
+    <File Include="Views/ClientAccess/New.cshtml">
+      <publishTime>08/09/2015 17:43:05</publishTime>
+    </File>
+    <File Include="Views/ContractorAccess/AccessSheet.cshtml">
+      <publishTime>08/31/2015 15:51:16</publishTime>
+    </File>
+    <File Include="Views/ContractorAccess/List.cshtml">
+      <publishTime>08/31/2015 17:12:01</publishTime>
+    </File>
+    <File Include="Views/ContractorAccess/New.cshtml">
+      <publishTime>08/09/2015 17:43:05</publishTime>
+    </File>
+    <File Include="Views/Error/AccessDenied.cshtml">
+      <publishTime>07/20/2015 11:13:42</publishTime>
+    </File>
+    <File Include="Views/Error/Error.cshtml">
+      <publishTime>07/20/2015 11:13:42</publishTime>
+    </File>
+    <File Include="Views/Error/HandledError.cshtml">
+      <publishTime>08/20/2015 16:31:52</publishTime>
+    </File>
+    <File Include="Views/Error/NotFound.cshtml">
+      <publishTime>07/20/2015 11:13:42</publishTime>
+    </File>
+    <File Include="Views/ServiceIssue/Planing.cshtml">
+      <publishTime>03/09/2015 18:18:01</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.cshtml">
+      <publishTime>07/20/2015 10:36:29</publishTime>
+    </File>
+    <File Include="Views/Shared/_Editor.cshtml">
+      <publishTime>07/20/2015 13:46:17</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>07/09/2015 19:26:06</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>07/20/2015 10:36:11</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>07/20/2015 10:36:11</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>09/09/2015 13:13:08</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

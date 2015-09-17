@@ -1,0 +1,55 @@
+﻿@using ServiceClaim.Models
+@model IEnumerable<ServiceClaim.Models.ContractorAccess>
+
+@{
+    ViewBag.Title = "Доступы подрядчиков";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("New")">Новый</a>
+</p>
+
+@if (Model.Any())
+{
+    int i = 0;
+
+    <table class="table table-bordered">
+        <tr>
+            @*<th class="min-width"></th>*@
+            <th class="min-width">№</th>
+            <th>Наименование</th>
+            <th>Логин</th>
+            <th class="min-width text-nowrap">Лист доступа</th>
+            <th class="min-width"></th>
+        </tr>
+        @foreach (ContractorAccess ca in Model)
+        {
+            i++;
+            <tr>
+                @*<td><a class="btn btn-link nopadding" href="@Url.Action("Edit", new {id = ca.Id})"><i class="fa fa-edit"></i></a></td>*@
+                <th>@i</th>
+                <td>
+                    @ca.Name
+            </td>
+            <td>@ca.Login</td>
+            <td><a target="_blank" href="@Url.Action("AccessSheetPdf", new {id = ca.Id})">Лист доступа</a></td>
+            <th class="min-width"><button class="btn btn-link nopadding" name="delele-ca" caid="@ca.Id"><i class="fa fa-trash"></i></button></th>
+        </tr>
+        }
+    </table>
+    @section scripts{
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("[name='delele-ca']").click(deleteClientAccess);
+            });
+
+            function deleteClientAccess() {
+                if (!confirm('Вы действительно хотите отключить подрядчика от доступ?')) return;
+                var id = $(this).attr('caid');
+                //alert(id);
+                $.post("@Url.Action("Delete", "ContractorAccess")", { id: id }, function() { window.location.reload(); });
+            }
+        </script>
+    }
+}

@@ -1,0 +1,114 @@
+﻿@model ServiceClaim.Models.ClientAccess
+@{
+    ViewBag.Title = "Создание доступа к личному кабинету";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+@section PanelHead
+{
+    Создание доступа к личному кабинету
+}
+@section PanelBody
+{
+    @using (Html.BeginForm("New", "ClientAccess", FormMethod.Post, new {@id = "caForm", @class = "form-horizontal", data_toggle = "validator", role = "form"}))
+    {
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="ctrFind">Контрагент</label>
+            <div class="col-lg-2">
+                <input id="ctrFind" type="text" placeholder="поиск контрагента" class="form-control"/>
+                <small class="text-danger"></small>
+            </div>
+            <div class="col-lg-6">
+                <div class="input-group" style="width: 100%">
+                    <select id="ctrList" name="ctrList" class="form-control required-mark" required="required" data-error="Выберите Контрагента"></select>
+                    @*<input id="ctrListSelName" name="ctrListSelName" type="hidden"/>*@
+                    <div class="input-group-addon" style="width: 50px">
+                        <span id="ctrListCount" class="label label-info"></span>
+                    </div>
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="zip">Доступ к кабинету ЗИП</label>
+            <div class="col-lg-1">
+                @Html.CheckBoxFor(m => m.ZipAccess, new {@class = "form-control", @id = "zip"})
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="counter">Доступ к кабинету Счетчик</label>
+            <div class="col-lg-1">
+                @Html.CheckBoxFor(m => m.CounterAccess, new {@class = "form-control", @id = "counter"}) 
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-push-3 col-lg-8">
+                <button class="btn btn-success">Создать доступ к личному кабинету</button>
+                <p class="text-danger">
+                    @TempData["error"]
+                </p>
+            </div>
+        </div>
+    }
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('caForm').keypress(function (e) {
+                if (e.which === 13) {
+                    return false;
+                }
+            });
+                $('#ctrFind').keypress(function(e) {
+                    if (e.which === 13) {
+                        displayCtrs();
+                    }
+                });
+            //$('#ctrList').click(function() {
+            //    $('#ctrListSelName').val($(this).val());
+            //});
+        });
+
+        function displayCtrs() {
+            var ctrName = $('#ctrFind').val();
+
+            if (ctrName === '' && ctrId === null && contId === null && devId === null) {
+                $('#ctrList').find('option').remove();
+                return;
+            }
+            $('#ctrListCount').text('');
+            $('#ctrFind').prop("disabled", true);
+            $.ajax({
+                url: '@Url.Action("GetCtors")',
+                method: 'POST',
+                data: { contractorName: ctrName },
+                success: function(data) {
+                    var $ctrList = $('#ctrList');
+                    $ctrList.find('option').remove();
+                    
+                    if (data) {
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                var ctr = data[i];
+                                $ctrList.append($("<option></option>").attr("value", ctr.Id).text(ctr.Name));
+                            }
+                            $('#ctrListCount').text(data.length);
+                        } else {
+                            $('#ctrListCount').text(0);
+                        }
+                    } else {
+                        $('#ctrListCount').text(0);
+                    }
+
+                    $('#ctrFind').prop("disabled", false);
+                },
+                error: function() {
+                    $('#ctrFind').prop("disabled", false);
+                }
+            });
+        }
+    </script>
+}

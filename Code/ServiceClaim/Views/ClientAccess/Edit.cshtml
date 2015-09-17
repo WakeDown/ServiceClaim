@@ -1,0 +1,60 @@
+﻿@model ServiceClaim.Models.ClientAccess
+@{
+    ViewBag.Title = "Редактирование доступа к личному кабинету";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Редактирование доступа к личному кабинету
+}
+@section PanelBody
+{
+    @using (Html.BeginForm("Edit", "ClientAccess", FormMethod.Post, new {@id = "caForm", @class = "form-horizontal", data_toggle = "validator", role = "form"}))
+    {
+        @Html.HiddenFor(m=>m.Id)
+        @Html.HiddenFor(m => m.IdClientEtalon)
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="ctrFind">Контрагент</label>
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <h4>@Model.FullName</h4>
+                    <small>@Model.Name</small>
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="ctrFind">Логин</label>
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <h5>@Model.Login</h5>
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="zip">Доступ к кабинету ЗИП</label>
+            <div class="col-lg-1">
+                @Html.CheckBoxFor(m => m.ZipAccess, new {@class = "form-control", @id = "zip"})
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="counter">Доступ к кабинету Счетчик</label>
+            <div class="col-lg-1">
+                @Html.CheckBoxFor(m => m.CounterAccess, new {@class = "form-control", @id = "counter"})
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-push-3 col-lg-8">
+                <button class="btn btn-success">Изменить доступ к личному кабинету</button>
+                <p class="text-danger">
+                    @TempData["error"]
+                </p>
+            </div>
+        </div>
+    }
+
+}

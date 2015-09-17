@@ -1,0 +1,10 @@
+﻿@model System.Collections.Generic.IEnumerable<ServiceClaim.Models.Claim2ClaimState>
+
+@foreach (var state in Model)
+{
+    <div style="background-color: #@state.State.BackgroundColor; color: #@state.State.ForegroundColor" class="padding-sm">
+        <a href="#@state.State.SysName@state.Id">
+            <strong>@state.State.Name</strong> - @state.DateCreate.ToString("g") - @state.Creator.DisplayName
+        </a>
+    </div>
+}

@@ -1,0 +1,73 @@
+﻿
+@model ServiceClaim.Models.Claim
+    
+
+@using (Html.BeginForm("StateTechWork", "Claim", FormMethod.Post, new {@id = "StateTechWorkForm", @class = "form-horizontal", role = "form" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    <div class="row">
+        <label class="col-lg-2 text-right">Процесс печати восстановлен</label>
+        <div class="col-lg-6">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-2 text-right">Аппарат полностью восстановлен</label>
+        <div class="col-lg-6">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.DeviceEnabled, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.DeviceEnabled, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-2 text-right">Необходим заказ ЗИП</label>
+        <div class="col-lg-6">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClaim, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClaim, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-2 text-right">Счетчик ЧБ</label>
+        <div class="col-lg-2">
+            @Html.TextBoxFor(m=>m.ServiceSheet4Save.CounterMono, new {@class="form-control"})
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-2 text-right">Счетчик ЦВ</label>
+        <div class="col-lg-2">
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <button type="submit" class="btn btn-success" value="ServiceSheetSave" name="ServiceSheetSave">Далее</button>
+            <button type="submit" class="btn btn-danger" value="ServiceSheetCancel" name="ServiceSheetCancel" formnovalidate="formnovalidate">Нет связи</button>
+            @*<a class="btn btn-danger" data-toggle="modal" data-target="#modalNoTechWork">Нет связи</a>*@
+            @*<div id="modalNoTechWork" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Ваш комментарий</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                @Html.TextAreaFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control required-mark", placeholder = "Введите комментарий" })                                
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" value="ServiceSheetCancel" name="ServiceSheetCancel" formnovalidate="formnovalidate">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <p class="text-danger">@TempData["ServerError"]</p>
+        </div>
+    </div>
+}

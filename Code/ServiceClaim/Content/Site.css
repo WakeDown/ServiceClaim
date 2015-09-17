@@ -1,0 +1,299 @@
+﻿body {
+    font-family: Arial;
+    background: #B4B4B4 url(../Content/images/bg1.png) repeat left top;
+}
+
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.body-content {
+    background: #fff;
+    padding-top: 70px;
+}
+
+.body-content {
+    box-shadow: 0 0 10px #666;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+select {
+    font-family:monospace,monospace;
+  font-size:1em;
+}
+
+.navbar {
+    box-shadow: 0 0 25px #333;
+    margin-bottom: 0px !important;
+}
+
+.navbar-brand {
+    padding-top: 3px;
+}
+
+    .navbar-brand div {
+        padding: 3px 0 0 8px;
+        margin: 0;
+    }
+
+.brand-prefix {
+    padding-top: 5px;
+}
+
+.headLogo {
+    display: block;
+    height: 25px;
+    padding-left: 25px;
+}
+
+input.required-mark, select.required-mark, span.required-mark, textarea.required-mark {
+    background-color: #fcf8e3;
+}
+
+#filter .panel-heading {
+    cursor: pointer;
+}
+
+#filter .panel-title .title:after {
+    font-family: 'FontAwesome';
+    content: "\f0d7";
+    float: right;
+    color: #999;
+}
+
+#filter .collapsed .title:after {
+    content: "\f0d8";
+}
+
+#filter .panel-title:after {
+    content: "скрыть фильтр";
+}
+
+#filter .collapsed:after {
+    content: "показать фильтр";
+}
+
+#filterPanel {
+    background: #eee;
+}
+
+.field-validation-error {
+    color: #d9534f;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #d43f3a;
+    background-color: #fee;
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #d9534f;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+ul.tree {
+    list-style: none;
+}
+
+    ul.tree li {
+        padding-bottom: 10px;
+    }
+
+.tree li div.panel-title.collapsed .h4:before {
+    font-family: FontAwesome;
+    content: "\f0da   ";
+}
+
+.tree li div.panel-title .h4:before {
+    font-family: FontAwesome;
+    content: "\f0d7   ";
+}
+
+.tree li div.panel-title {
+    cursor: pointer;
+}
+
+.btn-taped {
+    position: relative;
+    top: 3px;
+}
+
+
+.table-stuff {
+    padding: 0;
+    margin: 0;
+}
+
+.min-width {
+    width: 1px !important;
+}
+
+.width-20p {
+    width: 20%;
+}
+
+.btn-nopadding {
+    padding: 0;
+    margin: 0;
+}
+
+.photo-info {
+    width: 250px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.text-warning.light {
+    color: #d58512;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.nomargin {
+    margin: 0;
+}
+.nopadding {
+    padding: 0;
+}
+
+.padding-sm {
+    padding: 5px 10px;
+}
+
+.margin-sm {
+    margin: 5px 0px;
+}
+
+.padding-lg {
+    padding: 20px;
+}
+
+.history-state-block {
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #d3d3d3;
+}
+
+.sel-list tr:hover {
+    cursor: pointer;
+    background-color: #fcf8e3;
+}
+
+.sel-list tr.bg-primary:hover {
+    background-color: #337ab7;
+}
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+.pad-6 {
+    padding: 6px;
+}
+
+.pad-t-15 {
+    padding-top: 15px;
+}
+
+.text-middle {
+    vertical-align: middle;
+}
+
+.text-sm {
+    font-size: 0.9em;
+}
+
+.text-xs {
+    font-size: 0.7em;
+}
+
+.info-top {
+    position: relative;
+    top: -8px;
+    cursor: help;
+}
+
+.label-badge {
+    border-radius: 1em;
+}
+
+.small {
+    font-size: 0.8em;
+    color: #999;
+}
+
+blockquote.bg-warning {
+    border-color: #f0ad4e;
+}
+
+blockquote.bg-danger {
+    border-color: #d9534f;
+}
+
+blockquote.bg-success {
+    border-color: #3c763d;
+}
+
+.spinner {
+  display: inline-block;
+  opacity: 0;
+  max-width: 0;
+
+  -webkit-transition: opacity 0.25s, max-width 0.45s; 
+  -moz-transition: opacity 0.25s, max-width 0.45s;
+  -o-transition: opacity 0.25s, max-width 0.45s;
+  transition: opacity 0.25s, max-width 0.45s; /* Duration fixed since we animate additional hidden width */
+}
+
+.spinner.on-input {
+    z-index:999;
+    position:absolute;
+    top: 7px;
+    left: 10px;
+}
+
+.spinner.on-element {
+    z-index:999;
+    position:absolute;
+}
+
+.spinner.active {
+    cursor:progress;
+  opacity: 1;
+  max-width: 50px; /* More than it will ever come, notice that this affects on animation duration */
+}
+
+.planing-sel-list {
+    
+}
+.planing-sel-list .pad-1 {
+    margin-left: 15px;
+}
+
+.planing-sel-list .pad-2 {
+    margin-left: 15px;
+    font-size: 0.9em;
+}
+
+.planing-sel-list .pad-3 {
+    margin-left: 15px;
+    font-size: 0.9em;
+}

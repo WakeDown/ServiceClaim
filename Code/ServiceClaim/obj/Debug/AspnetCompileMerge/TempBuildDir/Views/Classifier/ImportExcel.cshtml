@@ -1,0 +1,21 @@
+﻿
+
+@using (Html.BeginForm("ImportExcel", "Classifier", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table>
+        <tr>
+            <td>
+                <input type="file" name="file" class="pull-left" />
+            </td>
+            <td rowspan="2"><button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Загрузить в базу</button></td>
+        </tr>
+        <tr>
+            <td><small>только XLS и XLSX файлы</small></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-danger">
+                <small>@TempData["ServerErrorExcel"]</small>
+            </td>
+        </tr>
+    </table>
+}

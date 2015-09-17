@@ -1,0 +1,154 @@
+﻿@using ServiceClaim.Models
+
+@{
+    ViewBag.Title = "Планирование поездки";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+<div class="row">
+    <p>
+            <div class="col-lg-2">
+                <input id="month" type="text" class="form-control" value="@String.Format("{0:MMMM yyyy}", DateTime.Now)" />
+                <span class="help-block with-errors"></span>
+            </div>
+    </p>
+</div>
+<div class="row">
+    <div class="col-lg-3">
+        <div id="planingIssueList" class="planing-sel-list">
+            @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
+            {
+                <div name="city" cid="@city.Id">@city.IssuesCount - @city.Name</div>
+                <div name="addressContainer" cid="@city.Id" class="pad-1">
+                    
+                </div>
+                @*foreach (ServiceIssuePlaningResult.ServiceIssuePlaningCityItem.ServiceIssuePlaningAddressItem address in city.AddressList)
+                {
+                    <tr>
+                        <td class="padding-sm">&nbsp;</td>
+                        <td colspan="2">@address.IssuesCount - @address.Name</td>
+                    </tr>
+                    foreach (ServiceIssuePlaningResult.ServiceIssuePlaningCityItem.ServiceIssuePlaningAddressItem.ServiceIssuePlaningClientItem client  in address.ClientList)
+                    {
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td class="padding-sm">&nbsp;</td>
+                            <td>@client.IssuesCount - @client.Name</td>
+                        </tr>
+                    }
+                }*@
+            }
+        </div>
+    </div>
+    <div class="col-lg-10">
+        назначение
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $('#month').datepicker({
+                minViewMode: 'months',
+                orientation: 'bottom',
+                format: "MM yyyy",
+                autoclose: true,
+                language: "ru"
+            });
+            $('[name="city"]').click(fillAddressList);
+        });
+
+        function fillAddressList() {
+            displayLoading(this);
+            var cid = $(this).attr('cid');
+            var month = new Date($('#month').val());
+            $.ajax({
+                url: '@Url.Action("GetAddressList")',
+                method: 'POST',
+                data: { month: month, idCity: cid },
+                success: function(data) {
+                   
+                    if (data.length) {
+                        var $container = $('[name="addressContainer"][cid="' + cid + '"]');
+                        $container.html('');
+                        for (var i = 0; i < data.length; i++) {
+                            var address = data[i];
+                            var addresItem = '<div name="address" cid="' + cid + '" aid="' + address.Name + '">' + address.IssuesCount + ' - ' + address.Name + '</div><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
+                            $container.append(addresItem);
+                        }
+
+                        $('[name="address"]', $container).click(fillClientList);
+                    }
+                    $('#planingIssueList .spinner').remove();
+                },
+                error:function(data) {
+                    alert(data.error);
+                    $('#planingIssueList .spinner').remove();
+                }
+            });
+        }
+
+        function fillClientList() {
+            displayLoading(this);
+            var cid = $(this).attr('cid');
+            var aid = $(this).attr('aid');
+            var month = new Date($('#month').val());
+            $.ajax({
+                url: '@Url.Action("GetClientList")',
+                method: 'POST',
+                data: { month: month, idCity: cid, address: aid },
+                success: function(data) {
+                    if (data.length) {
+                        var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
+                        $container.html('');
+                        for (var i = 0; i < data.length; i++) {
+                            var client = data[i];
+                            var clientItem = '<div name="client" cid="' + cid + '" aid="' + aid + '" clid="' + client.Id + '">' + client.IssuesCount + ' - ' + client.Name + '</div><div name="deviceContainer"  cid="' + cid + '" aid="' + aid + '"  clid="' + client.Id + '" class="pad-3"></div>';
+                            $container.append(clientItem);
+                        }
+
+                        $('[name="client"]', $container).click(fillDeviceList);
+                    }
+                    $('#planingIssueList .spinner').remove();
+                },
+                error: function (data) {
+                    alert(data.error);
+                    $('#planingIssueList .spinner').remove();
+                }
+            });
+        }
+
+        function fillDeviceList() {
+            displayLoading(this);
+            var cid = $(this).attr('cid');
+            var aid = $(this).attr('aid');
+            var clid = $(this).attr('clid');
+            var month = new Date($('#month').val());
+            $.ajax({
+                url: '@Url.Action("GetDeviceList")',
+                method: 'POST',
+                data: { month: month, idCity: cid, address: aid, idClient: clid },
+                success: function(data) {
+                    if (data.length) {
+                        var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
+                        $container.html('');
+                        for (var i = 0; i < data.length; i++) {
+                            var device = data[i];
+                            var deviceItem = '<div name="device" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" did="' + device.Id + '">' + device.IssuesCount + ' - ' + device.Name + '</div>';
+                            $container.append(deviceItem);
+                        }
+                    }
+                    $('#planingIssueList .spinner').remove();
+                },
+                error: function (data) {
+                    alert(data.error);
+                    $('#planingIssueList .spinner').remove();
+                }
+            });
+        }
+
+        
+    </script>
+}

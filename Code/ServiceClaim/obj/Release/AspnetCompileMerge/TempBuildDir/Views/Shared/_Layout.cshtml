@@ -1,0 +1,80 @@
+﻿@using System.Configuration
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    
+</head>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="~/">
+                    <img class="headLogo" src="~/Content/images/logo-unit.png" alt="" />
+                    <div class="h5"><strong>ЮНИТ</strong>&nbsp;<span class="h6">Сервис</span></div>
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Заявки", "List", "Claim")</li>
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog fa-fw"></i>Настройки <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("List", "Classifier")">Классификатор</a></li>
+                            <li>@Html.ActionLink("Доступы клиентов", "List", "ClientAccess")</li>
+                            <li>@Html.ActionLink("Доступы подрядчиков", "List", "ContractorAccess")</li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="navbar-text">Вы вошли как <strong id="userName">@ViewBag.CurUser.ShortName</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+<div class="container body-content">
+    @if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["Environment"]))
+    {
+        <blockquote class="bg-warning">
+            @ConfigurationManager.AppSettings["Environment"]<br/>
+            <small>@ConfigurationManager.AppSettings["OdataServiceUri"]</small>
+        </blockquote>
+    }
+    @RenderBody()
+    <hr/>
+    <footer>
+        <div class="pull-left">
+            <h5>
+                2015 @if (DateTime.Now.Year > 2015)
+                     {
+                         @String.Format("- {0}", DateTime.Now.Year)
+                     }
+                &copy; UN1T
+                <br/>
+                <small>v&nbsp;1.0</small>
+            </h5>
+        </div>
+        <div class="pull-right">
+            <h5><small><a href='http://support.unitgroup.ru' target="_blank">Техподдержка</a></small></h5>
+        </div>
+    </footer>
+</div>
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/common")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

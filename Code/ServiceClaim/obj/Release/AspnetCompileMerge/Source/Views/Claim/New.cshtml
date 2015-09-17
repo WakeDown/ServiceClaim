@@ -1,0 +1,332 @@
+﻿@using ServiceClaim.Objects
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Новая заявка
+}
+@section PanelBody
+{
+    @using (Html.BeginForm("New", "Claim", FormMethod.Post, new { @id = "clForm", @class = "form-horizontal", role = "form" }))
+    {
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="ctrFind">Контрагент</label>
+            <div class="col-lg-2">
+                <input id="ctrFind" type="text" placeholder="поиск контрагента" class="form-control" />
+                <small class="text-danger"></small>
+            </div>
+            <div class="col-lg-4">
+                <div class="input-group" style="width: 100%">
+                    <select id="ctrList" name="ctrList" class="form-control required-mark" required="required" data-error="Выберите Контрагента"></select>
+                    <div class="input-group-addon" style="width: 50px">
+                        <span id="ctrListCount" class="label label-info"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="contFind">Договор</label>
+            <div class="col-lg-2">
+                <input id="contFind" type="text" placeholder="поиск договора" class="form-control" />
+            </div>
+            <div class="col-lg-4">
+                <div class="input-group" style="width: 100%">
+                    <select id="contList" name="contList" class="form-control required-mark" required="required" data-error="Выберите Договор"></select>
+                    <div class="input-group-addon" style="width: 50px">
+                        <span id="contListCount" class="label label-info"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="devFind">Аппарат</label>
+            <div class="col-lg-2">
+                <p>
+                    <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control" />
+                </p>
+                <div id="vendorFilterCntnr"></div>
+            </div>
+            <div class="col-lg-4">
+                <div class="input-group" style="width: 100%">
+                    <select id="devList" name="devList" class="form-control required-mark" required="required" data-error="Выберите Аппарат"></select>
+                    <input id="devListData" type="hidden" value=""/>
+                    <div class="input-group-addon" style="width: 50px">
+                        <span id="devListCount" class="label label-info"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="descr">Описание</label>
+            <div class="col-lg-6">
+                <textarea id="descr" name="descr" type="text" placeholder="описание заявки" class="form-control required-mark" required="required" rows="3" data-error="Введите описание заявки"></textarea>
+            </div>
+            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-push-2 col-lg-5">
+                @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@
+                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;добавить</button>
+                <p class="text-danger">
+                    @TempData["ServerError"]
+                </p>
+            </div>
+        </div>
+    }
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#ctrFind').keypress(function(e) {
+                if (e.which !== 13) return;
+                ctrFind(e);
+            });
+                //.blur(ctrFind);
+            $('#contFind').keypress(function(e) {
+                if (e.which !== 13) return;
+                e.preventDefault();
+                displayCtrs();
+                displayConts();
+                $('#contList').focus();
+            });
+            //    .blur(function () {
+            //    displayCtrs();
+            //    displayConts();
+            //});
+            $('#devFind').keypress(function(e) {
+                if (e.which !== 13) return;
+                e.preventDefault();
+                displayDevs(true);
+                $('#devList').focus();
+            });//.blur(function () { displayDevs(true); });
+            $('#ctrList').change(setCtrContNdev);
+            $('#contList').change(setContВev);
+            $('#devList').change(setDevCtrNcont);
+            $('#ctrFind').focus();
+        });
+
+        //function fidLists(e) {
+        //    if (e.which !== 13) return;
+        //    //var devName = $('#devFind').val();
+        //    //var contName = $('#contFind').val();
+        //    //var ctrName = $('#ctrFind').val();
+        //    //var devId = $('#devList').val();
+        //    //var contId = $('#contList').val();
+        //    //var ctrId = $('#ctrList').val();
+
+        //    //if (devName === '' && contName === '' && ctrName === '') return;
+        //    //displayCtrs(ctrId, ctrName, contId, contName, devId, devName);
+        //    //displayConts(ctrId, ctrName, contId, contName, devId, devName);
+        //    //displayDevs(ctrId, ctrName, contId, contName, devId, devName);
+
+        //    e.preventDefault();
+        //}
+
+        function setContВev() {
+            $('#devList').find('option').remove();
+            $('#devListCount').text(0);
+            displayDevs();
+        }
+
+        function ctrFind(e) {
+            $('#contList').find('option').remove();
+            $('#devList').find('option').remove();
+            $('#devListCount').text(0);
+            $('#contListCount').text(0);
+            $('#contFind').val('');
+            $('#devFind').val('');
+            displayCtrs(true);
+            //e.preventDefault();
+            $('#ctrList').focus();
+        }
+
+        function setCtrContNdev() {
+            $('#contList').find('option').remove();
+            $('#devList').find('option').remove();
+            $('#devListCount').text(0);
+            $('#conListCount').text(0);
+            displayConts();
+            displayDevs();
+        }
+
+        function setDevCtrNcont() {
+            $('#contList').find('option').remove();
+            $('#ctrList').find('option').remove();
+            $('#ctrListCount').text(0);
+            $('#contListCount').text(0);
+            displayCtrs();
+            displayConts();
+        }
+
+        function displayDevs(updateCtrNcontLists) {
+            var ctrName = $('#ctrFind').val();
+            var ctrId = $('#ctrList').val();
+            var contName = $('#contFind').val();
+            var contId = $('#contList').val();
+            var devId = $('#devList').val();
+            var devName = $('#devFind').val();
+            if (ctrId === null && contId === null && devName === '') {
+                $('#devList').find('option').remove();
+                return;
+            }
+
+            $('#devListCount').text('');
+            $.ajax({
+                url: '@Url.Action("GetDevices")',
+                method: 'POST',
+                data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
+                success: function(data) {
+                    var $devList = $('#devList');
+                    var $vFltrCntnr = $('#vendorFilterCntnr');
+                    $devList.find('option').remove();
+                    $vFltrCntnr.find('.btn').remove();
+                    if (data) {
+                        if (data.Vendors.length > 0) {
+                            $('#devListData').val(JSON.stringify(data.Devices));
+                            $vFltrCntnr.append($("<span name='filter-vendor' class='btn btn-primary btn-xs' vlaue=''></span>").text('все'));
+                            for (var i = 0; i < data.Vendors.length; i++) {
+                                var vend = data.Vendors[i];
+                                $vFltrCntnr.append($("<span name='filter-vendor' class='btn btn-default btn-xs' vlaue='" + vend + "'></span>").text(vend));
+                            }
+                            $("[name='filter-vendor']").click(filterVendor);
+
+                        }
+
+                        if (data.Devices.length > 0) {
+                            //for (var i = 0; i < data.Devices.length; i++) {
+                            //    var dev = data.Devices[i];
+                            //    $devList.append($("<option></option>").attr("value", dev.Id).text(dev.SelListName));
+                            //}
+                            filterDeviceList('');
+                        } else { $('#devListCount').text(0); }
+                        //else {
+                        //    var help = $ctrList.next('small');
+                        //    help.text('ничего не найдено');
+                        //}
+                        if (updateCtrNcontLists) setDevCtrNcont();
+                    }
+                    else { $('#devListCount').text(0); }
+                }
+            });
+            //$(this).blur();
+            //e.preventDefault();
+
+        }
+
+        function filterVendor() {
+            $("[name='filter-vendor']").removeClass('btn-primary').addClass('btn-default');
+            $(this).addClass('btn-primary');
+            filterDeviceList($(this).attr('vlaue'));
+        }
+
+        function filterDeviceList(vendor) {
+            var data = $.parseJSON($('#devListData').val());
+            var $devList = $('#devList');
+            $devList.find('option').remove();
+            var cnt = 0;
+            for (var i = 0; i < data.length; i++) {
+                var dev = data[i];
+                if (vendor === '' || dev.SelListName.indexOf(vendor) >= 0) {
+                    $devList.append($("<option></option>").attr("value", dev.Id).text(dev.ExtendedName));
+                    cnt++;
+                }
+            }
+            setDevCtrNcont();
+            $('#devListCount').text(cnt);
+        }
+
+        function displayConts() {
+            var ctrName = $('#ctrFind').val();
+            var ctrId = $('#ctrList').val();
+            var contName = $('#contFind').val();
+            var contId = $('#contList').val();
+            var devId = $('#devList').val();
+            var devName = $('#devFind').val();
+
+            if ((ctrName === '' || ctrId === null) && (contName === '' || contId === null) && devId === null) {
+                $('#contList').find('option').remove();
+                return;
+            }
+
+            $('#contListCount').text('');
+            $.ajax({
+                url: '@Url.Action("GetConts")',
+                method: 'POST',
+                data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
+                success: function(data) {
+                    if (data) {
+                        if (data.length > 0) {
+                            var contList = $('#contList');
+                            contList.find('option').remove();
+                            if (data.length > 1) {
+                                contList.append($("<option></option>").attr("value", null).text('--все--'));
+                            }
+                            for (var i = 0; i < data.length; i++) {
+                                var cont = data[i];
+                                contList.append($("<option></option>").attr("value", cont.Id).text(cont.Number));
+                            }
+                            $('#contListCount').text(data.length);
+                        } else { $('#contListCount').text(0); }
+                    } else { $('#contListCount').text(0); }
+                }
+            });
+        }
+
+        function displayCtrs(updateConNdevLists) {
+            var ctrName = $('#ctrFind').val();
+            var ctrId = $('#ctrList').val();
+            var contName = $('#contFind').val();
+            var contId = $('#contList').val();
+            var devId = $('#devList').val();
+            var devName = $('#devFind').val();
+            
+            if (ctrName === '' && ctrId === null && contId === null && devId === null) {
+                $('#ctrList').find('option').remove();
+                return;
+            }
+            $('#ctrListCount').text('');
+            $.ajax({
+                url: '@Url.Action("GetCtors")',
+                method: 'POST',
+                data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
+                success: function(data) {
+                    var $ctrList = $('#ctrList');
+                    $ctrList.find('option').remove();
+
+                    if (data) {
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                var ctr = data[i];
+                                $ctrList.append($("<option></option>").attr("value", ctr.Id).text(ctr.Name));
+                            }
+                            $('#ctrListCount').text(data.length);
+                        } else {
+                            $('#ctrListCount').text(0);
+                        }
+                        if (updateConNdevLists) {
+                            
+                            setCtrContNdev();
+                        }
+                        //else {
+                        //    var help = $ctrList.next('small');
+                        //    help.text('ничего не найдено');
+                        //}
+                    } else {
+                        $('#ctrListCount').text(0);
+                    }
+                    
+                    
+                }
+            });
+        }
+    </script>
+}

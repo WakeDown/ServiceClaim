@@ -1,0 +1,43 @@
+﻿
+
+@using ServiceClaim.Models
+@using ServiceClaim.Objects
+@model ServiceClaim.Models.Claim
+
+@using (Html.BeginForm("ZipOrderConfirm", "Claim", FormMethod.Post, new { @id = "ConfirmWorkForm", @class = "form-horizontal", data_toggle = "validator", role = "form" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <button type="submit" class="btn btn-success" value="ZipOrderConfirm" name="ZipOrderConfirm">ЗИП на складе</button>
+            <a class="btn btn-danger" data-toggle="modal" data-target="#modalZipOrderCancel">Отказано в закупке ЗИП</a>
+            <div id="modalZipOrderCancel" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Ваш комментарий</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                @Html.TextAreaFor(m=>m.Descr, new {@class="form-control required-mark", rows="3", placeholder="Введите комментарий", required="required"})
+                                @*<textarea id="ZipOrderCancelDescr" name="ZipOrderCancelDescr" class="form-control required-mark" rows="3" placeholder="Введите комментарий" required="required"></textarea>*@
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" value="ZipOrderCancel" name="ZipOrderCancel">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <p class="text-danger">@TempData["error"]</p>
+        </div>
+    </div>
+}
+
+
+

@@ -1,0 +1,106 @@
+﻿@using System.Net.Mime
+@using ServiceClaim.Models
+@using ServiceClaim.Objects
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+    var catList = ClassifierCaterory.GetLowerList();
+    var wtList = WorkType.GetList();
+    var clsfr = Classifier.GetList();
+}
+@section PanelHead
+{
+    Классификатор работ
+}
+
+@section PanelBody
+{
+    @*@helper GetClassifierValues(int idCategory, int idWorkType)
+        {
+
+        }
+
+        @functions{
+
+            public string GetClassifierTimeValue(int idCategory, int idWorkType)
+            {
+
+                return String.Empty;
+            }
+
+        }*@
+
+    <p>
+        <div class="row">
+            <div class="col-lg-3">@Html.Partial("Attributes", ClassifierAttributes.Get())</div>
+            <div class="col-lg-6 pad-t-15">
+                <div class="pull-left">@Html.Partial("ImportExcel")</div>
+                <div class="pull-left pad-6">
+                    <a target="_blank" href="@String.Format("{0}/Classifier/GetExcel", DbModel.OdataServiceUri)" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Выгрузить в Excel</a>
+                </div>
+            </div>
+        </div>
+        <div class="text-danger">
+    @TempData["ServerError"]
+        </div>
+        </p>
+
+        @if (catList.Any())
+    {
+            <table class="table table-bordered text-xs" style="background-color: #fff">
+                <tr>
+                    <th rowspan="2" class="text-center text-middle">Подтип</th>
+                    <th class="text-nowrap text-center text-middle" rowspan="2">№ подтипа</th>
+                    <th rowspan="2" class="text-center text-middle">Сложность</th>
+                    <th class="text-center" colspan="@wtList.Count()">Временной норматив</th>
+                    <th class="text-center" colspan="@wtList.Count()">Прайс лист</th>
+                    <th class="text-center" colspan="@wtList.Count()">Стоимость работы в ФОТ</th>
+                    <th class="text-center" colspan="@wtList.Count()">Себестоимость для компании</th>
+
+                </tr>
+                <tr>
+                    @foreach (var wt in wtList)
+                {
+                        <th class="text-nowrap">@wt.SysName <i class="fa fa-info-circle text-info text-sm info-top" title="@wt.Name"></i></th>
+                }
+                    @foreach (var wt in wtList)
+                {
+                        <th class="text-nowrap">@wt.SysName <i class="fa fa-info-circle text-info text-sm info-top" title="@wt.Name"></i></th>
+                }
+                    @foreach (var wt in wtList)
+                {
+                        <th class="text-nowrap">@wt.SysName <i class="fa fa-info-circle text-info text-sm info-top" title="@wt.Name"></i></th>
+                }
+                    @foreach (var wt in wtList)
+                {
+                        <th class="text-nowrap">@wt.SysName <i class="fa fa-info-circle text-info text-sm info-top" title="@wt.Name"></i></th>
+                }
+                </tr>
+                @foreach (var cat in catList)
+            {
+                    <tr>
+                        <td>@cat.Number @cat.Name</td>
+                        <td>@cat.Number</td>
+                        <td>@cat.Complexity</td>
+                        @foreach (var wt in wtList)
+                {
+
+                            <td>@(clsfr.Any(x=>x.IdCategory==cat.Id && x.IdWorkType==wt.Id) ? @clsfr.FirstOrDefault(x=>x.IdCategory==cat.Id && x.IdWorkType==wt.Id).Time.ToString() : String.Empty)</td>
+                }
+                        @foreach (var wt in wtList)
+                {
+                            <td>@(clsfr.Any(x=>x.IdCategory==cat.Id && x.IdWorkType==wt.Id) ? @clsfr.FirstOrDefault(x=>x.IdCategory==cat.Id && x.IdWorkType==wt.Id).Price.ToString() : String.Empty)</td>
+                }
+                        @foreach (var wt in wtList)
+                {
+                            <td>@(clsfr.Any(x=>x.IdCategory==cat.Id && x.IdWorkType==wt.Id) ? @clsfr.FirstOrDefault(x=>x.IdCategory==cat.Id && x.IdWorkType==wt.Id).CostPeople.ToString() : String.Empty)</td>
+                }
+                        @foreach (var wt in wtList)
+                {
+                            <td>@(clsfr.Any(x=>x.IdCategory==cat.Id && x.IdWorkType==wt.Id) ? @clsfr.FirstOrDefault(x=>x.IdCategory==cat.Id && x.IdWorkType==wt.Id).CostCompany.ToString() : String.Empty)</td>
+                }
+                    </tr>
+            }
+            </table>
+    }
+}
