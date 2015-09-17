@@ -25,8 +25,6 @@ namespace ServiceClaim.Objects
             {
                 store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
-                // You can check certificate here ... 
-                // and populate cert variable.. 
             }
             finally
             {
@@ -40,6 +38,31 @@ namespace ServiceClaim.Objects
             if (cert != null) clientHandler.ClientCertificates.Add(cert);
             
             var client = new HttpClient(clientHandler) { BaseAddress = baseUri };
+            return client;
+        }
+
+        public static WebClient GetApiClient(string contentType = "application/json")
+        {
+            //X509Certificate2 cert = null;
+            //X509Store store = null;
+
+            //try
+            //{
+            //    store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+            //    store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
+            //}
+            //finally
+            //{
+            //    if (store != null) store.Close();
+            //}
+            var baseUri = new Uri(OdataServiceUri);
+            var clientHandler = new WebRequestHandler();
+            CredentialCache cc = new CredentialCache();
+            cc.Add(baseUri, "NTLM", CredentialCache.DefaultNetworkCredentials);
+            clientHandler.Credentials = cc;
+            //if (cert != null) clientHandler.ClientCertificates.Add(cert);
+            
+            var client = new WebClient() { BaseAddress = baseUri.ToString(), Credentials = cc };
             return client;
         }
 

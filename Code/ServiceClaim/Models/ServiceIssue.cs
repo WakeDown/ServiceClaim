@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using ServiceClaim.Objects;
 
@@ -69,6 +70,27 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        
+        public static SelectList GetEngeneerSelectionList()
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceIssue/GetEngeneerList", OdataServiceUri));
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<string, string>>>(jsonString);
+
+            return new SelectList(model, "Key", "Value");
+        }
+
+        public static IEnumerable<ServiceIssuePeriodItem> GetPerionList(int year, int month)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceIssue/GetPeriodList?year={1}&month={2}", OdataServiceUri, year, month));
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePeriodItem>>(jsonString);
+
+            return model;
+        }
+
+        public static SelectList GetPerionSelectionList(int year, int month)
+        {
+            return new SelectList(GetPerionList(year, month), "ListValue", "ListName");
+        }
     }
 }

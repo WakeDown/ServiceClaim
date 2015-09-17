@@ -297,3 +297,20 @@ blockquote.bg-success {
     margin-left: 15px;
     font-size: 0.9em;
 }
+
+a.async-sel {
+    border-bottom: 1px dashed #000080;
+}
+
+a.async-sel:hover, a.async-sel:focus {
+    text-decoration: none;
+    /*border-bottom: none;*/
+}
+
+a.async-sel:visited {
+    text-decoration: none;
+}
+
+.pad-b-md {
+    padding-bottom: 15px;
+}
