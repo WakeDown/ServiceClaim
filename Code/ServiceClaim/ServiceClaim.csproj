@@ -244,9 +244,7 @@
     <Content Include="Views\ClientAccess\Edit.cshtml" />
     <Content Include="Views\ClientAccess\ClientSheet.cshtml" />
     <Content Include="Views\Claim\ConfirmWork.cshtml" />
-    <Content Include="Views\Claim\ServiceSheetTechForm.cshtml" />
     <Content Include="Views\Claim\StateEngOutWait.cshtml" />
-    <Content Include="Views\Claim\ServiceSheetForm.cshtml" />
     <Content Include="Views\Claim\TechConfirm.cshtml" />
     <Content Include="Views\Claim\StateDone.cshtml" />
     <Content Include="Views\ContractorAccess\List.cshtml" />
@@ -259,6 +257,8 @@
     <Content Include="Views\Claim\ZipOrder.cshtml" />
     <Content Include="Views\Claim\ZipOrderConfirm.cshtml" />
     <Content Include="Views\Claim\ServiceSheet.cshtml" />
+    <Content Include="Views\Claim\ServiceSheetTechForm.cshtml" />
+    <Content Include="Views\Claim\ServiceSheetForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

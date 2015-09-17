@@ -1,0 +1,180 @@
+﻿@model ServiceClaim.Models.Claim
+
+
+@using (Html.BeginForm("ServiceSheetForm", "Claim", FormMethod.Post, new { @id = "ServiceSheetForm", @class = "form-horizontal", role = "form" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    <div class="row">
+        <label class="col-lg-2 text-right">Процесс печати восстановлен</label>
+        <div class="col-lg-6">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-2 text-right">Оборудование полностью восстановлено</label>
+        <div class="col-lg-6">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.DeviceEnabled, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.DeviceEnabled, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="zipClaimContainer">
+        <label class="col-lg-2 text-right">Необходим заказ ЗИП</label>
+        <div class="col-lg-6">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClaim, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClaim, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="commentContainer">
+        <label class="col-lg-2 text-right">Комментарий</label>
+        <div class="col-lg-6">
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new { id = "comment", @class = "form-control required-mark", required = "required" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="counterUnavailableContainer">
+        <label class="col-lg-2 text-right">Счетчик доступен</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.CounterUnavailable, false, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.CounterUnavailable, true) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="commentCounterContainer">
+        <label class="col-lg-2 text-right">Комментарий</label>
+        <div class="col-lg-6">
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.CounterDescr, new { id = "counterComment", @class = "form-control required-mark", required = "required", placeholder = "Что случилось со счетчиком" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="noCounterContainer">
+        <label class="col-lg-2 text-right">Счетчик предусмотрен</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.NoCounter, false, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.NoCounter, true) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="countersContainer">
+        <label class="col-lg-2 text-right">Счетчик</label>
+        <div class="col-lg-2">
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterTotal, new { id = "counterTotal", @class = "form-control required-mark", placeholder = "Общий", required = "required" })
+            <span class="help-block with-errors"></span>
+        </div>
+        <div class="col-lg-2">
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { @class = "form-control", placeholder = "Черно/Белый" })
+            <span class="help-block with-errors"></span>
+        </div>
+        <div class="col-lg-2">
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control", placeholder = "Цветной" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <button type="submit" class="btn btn-success" value="ServiceSheetSave" name="ServiceSheetSave">Сохранить</button>
+        </div>
+    </div>
+}
+@*Подобная форма ServiceSheetTech*@
+<script type="text/javascript">
+    var procEnab;
+    var procDisab;
+    var devEnab;
+    var devDisab;
+    var zipEnab;
+    var zipDisab;
+    var countAvail;
+    var countNotAvail;
+    var countHas;
+    var countNotHas;
+
+    function setVars() {
+        procEnab = $('[name="ServiceSheet4Save.ProcessEnabled"]:checked').attr('value') === 'True';
+        procDisab = $('[name="ServiceSheet4Save.ProcessEnabled"]:checked').attr('value') === 'False';
+        devEnab = $('[name="ServiceSheet4Save.DeviceEnabled"]:checked').attr('value') === 'True';
+        devDisab = $('[name="ServiceSheet4Save.DeviceEnabled"]:checked').attr('value') === 'False';
+        zipEnab = $('[name="ServiceSheet4Save.ZipClaim"]:checked').attr('value') === 'True';
+        zipDisab = $('[name="ServiceSheet4Save.ZipClaim"]:checked').attr('value') === 'False';
+        //Здесь специально доступность поменяна местами так как название в БД противоположное
+        countAvail = $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').attr('value') === 'False';
+        countNotAvail = $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').attr('value') === 'True';
+        //Здесь специально отуствие поменяно местами так как название в БД противоположное
+        countHas = $('[name="ServiceSheet4Save.NoCounter"]:checked').attr('value') === 'False';
+        countNotHas = $('[name="ServiceSheet4Save.NoCounter"]:checked').attr('value') === 'True';
+    }
+
+    function displayElements() {
+        setVars();
+        if (procEnab && devEnab) {
+            $('#zipClaimContainer').hide();
+            $('[name="ServiceSheet4Save.ZipClaim"]:checked').prop('checked', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            $('#counterUnavailableContainer').hide();
+        }
+        else {
+            if (procEnab) {
+                $('[name="ServiceSheet4Save.DeviceEnabled"][value="True"]').prop('disabled', false);
+            } else if (procDisab) {
+                $('[name="ServiceSheet4Save.DeviceEnabled"][value="False"]').prop('checked', true);
+                $('[name="ServiceSheet4Save.DeviceEnabled"][value="True"]').prop('disabled', true);
+            }
+            setVars();
+            if (devDisab) {
+                $('#zipClaimContainer').show();
+                $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', false);
+                $('#counterUnavailableContainer').show();
+            }
+        }
+        setVars();
+        if (zipEnab) {//Необходим заказ ЗИП
+            $('#commentContainer').show();
+            $('#comment').attr('placeholder', 'Укажите список ЗИП');
+            $('#comment').prop('required', true);
+            $('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
+        }
+        else if (zipDisab && ((devDisab && procDisab) || (devDisab && procEnab))) {//НЕ необходим заказ ЗИП
+            $('#commentContainer').show();
+            $('#comment').attr('placeholder', 'Укажите что случилось');
+            $('#comment').prop('required', true);
+            $('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
+        } else {//ничего не выбрано
+            $('#commentContainer').hide();
+            $('#comment').attr('placeholder', '');
+            $('#comment').prop('required', false);
+            $('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', false);
+        }
+
+        if (countAvail) {//Счетчик доступен
+            $('#commentCounterContainer').hide();
+            $('#counterComment').prop('required', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', true);
+        }
+        else if (countNotAvail) {//Счетчик НЕ доступен
+            $('#commentCounterContainer').show();
+            $('#counterComment').prop('required', true);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
+        } else {//ничего не выбрано
+            $('#commentCounterContainer').hide();
+            $('#counterComment').prop('required', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', true);
+        }
+        if (countHas) {//Счетчик предусмотрен
+            $('#countersContainer').show();
+            $('#counterTotal').prop('required', true);
+        } else if (countNotHas) {//Счетчик НЕ предусмотрен
+            $('#countersContainer').hide();
+            $('#counterTotal').prop('required', false);
+        } else {//ничего не выбрано
+            $('#countersContainer').hide();
+            $('#counterTotal').prop('required', false);
+        }
+    }
+
+    $(function () {
+        $('[name="ServiceSheet4Save.ProcessEnabled"]').change(displayElements);
+        $('[name="ServiceSheet4Save.DeviceEnabled"]').change(displayElements);
+        $('[name="ServiceSheet4Save.ZipClaim"]').change(displayElements);
+        $('[name="ServiceSheet4Save.CounterUnavailable"]').change(displayElements);
+        $('[name="ServiceSheet4Save.NoCounter"]').change(displayElements);
+        displayElements();
+    });
+</script>
