@@ -147,11 +147,12 @@
     <Compile Include="Models\DeviceInfoResult.cs" />
     <Compile Include="Models\DeviceSearchResult.cs" />
     <Compile Include="Models\EmployeeSm.cs" />
-    <Compile Include="Controllers\ServiceIssueController.cs" />
+    <Compile Include="Controllers\ServiceIssuePlanController.cs" />
     <Compile Include="Models\ListResult.cs" />
     <Compile Include="Models\PlanServiceIssue.cs" />
     <Compile Include="Models\ServiceIssue.cs" />
     <Compile Include="Models\ServiceIssuePeriodItem.cs" />
+    <Compile Include="Models\ServiceIssuePlan.cs" />
     <Compile Include="Models\ServiceIssuePlaningItem.cs" />
     <Compile Include="Models\ServiceIssuePlaningResult.cs" />
     <Compile Include="Models\ServiceSheet.cs" />
@@ -252,7 +253,7 @@
     <Content Include="Views\ContractorAccess\New.cshtml" />
     <Content Include="Views\ContractorAccess\AccessSheet.cshtml" />
     <Content Include="Views\Claim\SetServEngOnWork.cshtml" />
-    <Content Include="Views\ServiceIssue\Planing.cshtml" />
+    <Content Include="Views\ServiceIssuePlan\Planing.cshtml" />
     <Content Include="Views\Claim\ZipCheck.cshtml" />
     <Content Include="Views\Claim\ZipConfirm.cshtml" />
     <Content Include="Views\Claim\ZipOrder.cshtml" />
@@ -260,7 +261,8 @@
     <Content Include="Views\Claim\ServiceSheet.cshtml" />
     <Content Include="Views\Claim\ServiceSheetTechForm.cshtml" />
     <Content Include="Views\Claim\ServiceSheetForm.cshtml" />
-    <Content Include="Views\ServiceIssue\PeriodWeekView.cshtml" />
+    <Content Include="Views\ServiceIssuePlan\PeriodWeekView.cshtml" />
+    <Content Include="Views\ServiceIssuePlan\ServiceIssuePlanItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

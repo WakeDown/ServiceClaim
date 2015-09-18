@@ -1,0 +1,42 @@
+﻿@model IEnumerable<ServiceClaim.Models.ServiceIssuePeriodItem>
+
+@{
+    int periodCount = Model.Count();
+    int colLenght = 12 / periodCount;
+}
+
+@if (Model.Any())
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-@colLenght">
+                <h4 name="periodTitle" value="@item.ListValue">@item.ListName</h4>
+
+                @{
+                    var issueList = item.GetServiceIssueList();
+                }
+                <div id="periodContainer-@item.ListValue" sd="@item.StartDate" ed="@item.EndDate">
+                    @if (issueList.Any())
+                    {
+                        foreach (var issue in issueList)
+                        {
+                            @Html.Partial("ServiceIssuePlanItem", issue)
+                        }
+                    }
+                </div>
+            </div>
+                    }
+    </div>
+                    }
+
+<script type="text/javascript">
+    $(function () {
+        $('[name="periodTitle"]').click(function () {
+            var val = $(this).attr('value');
+            $('#selPeriod').val(val);
+        });
+    });
+
+    
+</script>

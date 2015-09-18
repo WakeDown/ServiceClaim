@@ -314,3 +314,7 @@ a.async-sel:visited {
 .pad-b-md {
     padding-bottom: 15px;
 }
+
+.btn-xl {
+    height: 100%;
+}

@@ -6,32 +6,37 @@
     DateTime date = DateTime.Parse(Request.QueryString["month"]);
     int year = date.Year;
     int month = date.Month;
-    var periodList = ServiceIssue.GetPerionList(year, month);
+    var periodList = ServiceIssuePlan.GetPeriodList(year, month);
 }
 
 <div class="row pad-b-md">
-        <div class="col-lg-3">
-            <div>
-                <input id="month" type="text" class="form-control" value="@String.Format("{0:MMMM yyyy}", DateTime.Now)" />
-            </div>
-            <div>
-                @Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), "--все инженеры--", new {@class = "form-control"})
-            </div>
+    <div class="col-lg-3">
+        <div>
+            <input id="month" type="text" class="form-control" value="@String.Format("{0:MMMM yyyy}", DateTime.Now)" />
         </div>
+        <div>
+            @Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), "--все инженеры--", new { @class = "form-control" })
+        </div>
+    </div>
     <div class="col-lg-9">
         <div class="row">
             <div class="col-lg-4">
-                <span id="selectedIssueName"></span>
+                <div id="selectedIssueName" class="form-control">
+                    выберите заявку
+                </div>
+                <div>
+                    @Html.DropDownList("selPeriod", new SelectList(periodList, "ListValue", "ListName"), new { @class = "form-control" })
+                </div>
             </div>
-            <div class="col-lg-2">
-                @Html.DropDownList("selPeriod", new SelectList(periodList, "ListValue", "ListName"), new { @class = "form-control" })
+            <div class="col-lg-8">
+                <button id="btnIssuePlanSave" class="btn btn-success btn-xl">сохранить</button>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-3">
-        
+
         <div id="planingIssueList" class="planing-sel-list">
             @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
             {
@@ -67,7 +72,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             $('#month').datepicker({
                 minViewMode: 'months',
                 orientation: 'bottom',
@@ -76,7 +81,32 @@
                 language: "ru"
             });
             $('[name="city"]').click(fillAddressList);
+            $('#btnIssuePlanSave').click(function () {
+                var serviceIssueId = $('#selectedIssueName').attr('sid');
+                var periodStr = $('#selPeriod').val();
+                $.ajax({
+                    url: '@Url.Action("SaveServiceIssuePlan")',
+                    method: 'POST',
+                    data: { serviceIssueId: serviceIssueId, periodStr: periodStr },
+                    success: function (data) {
+                        if (!data.error) {
+                            appendServiceIssue(data);
+                        } else {
+                            alert(data.error);
+                        }
+                    }
+                });
+            });
         });
+
+        function appendServiceIssue(data) {
+            
+            var issueItem = '<div>' + data.IdServiceIssue + '</div>';
+            alert(data.PeriodValue);
+            var col = $('#periodContainer-31.08.2015|06.09.2015');
+            alert(col);
+            col.append(issueItem);
+        }
 
         function fillAddressList() {
             showSpinner(this, false);
@@ -86,7 +116,7 @@
                 url: '@Url.Action("GetAddressList")',
                 method: 'POST',
                 data: { month: month, idCity: cid },
-                success: function(data) {
+                success: function (data) {
 
                     if (data.length) {
                         var $container = $('[name="addressContainer"][cid="' + cid + '"]');
@@ -101,7 +131,7 @@
                     }
                     hideSpinner();
                 },
-                error:function(data) {
+                error: function (data) {
                     alert(data.error);
                     hideSpinner();
                 }
@@ -117,7 +147,7 @@
                 url: '@Url.Action("GetClientList")',
                 method: 'POST',
                 data: { month: month, idCity: cid, address: aid },
-                success: function(data) {
+                success: function (data) {
                     if (data.length) {
                         var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
                         $container.html('');
@@ -145,20 +175,20 @@
             var clid = $(this).attr('clid');
             var month = new Date($('#month').val());
             $.ajax({
-                url: '@Url.Action("GetDeviceList")',
+                url: '@Url.Action("GetDeviceIssueList")',
                 method: 'POST',
                 data: { month: month, idCity: cid, address: aid, idClient: clid },
-                success: function(data) {
+                success: function (data) {
                     if (data.length) {
                         var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
                         $container.html('');
                         for (var i = 0; i < data.length; i++) {
-                            var device = data[i];
-                            var deviceItem = '<div class="btn btn-link" name="device" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" did="' + device.Id + '" dname="' + device.Name + '">' + device.IssuesCount + ' - ' + device.Name + '</div>';
+                            var deviceIssue = data[i];
+                            var deviceItem = '<div class="btn btn-link" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '">' + deviceIssue.IssuesCount + ' - ' + deviceIssue.Name + '</div>';
                             $container.append(deviceItem);
                         }
 
-                        $('[name="device"]', $container).click(setIssue);
+                        $('[name="deviceIssue"]', $container).click(setIssue);
                     }
                     hideSpinner();
                 },
@@ -171,17 +201,19 @@
 
         function setIssue() {
             showSpinner(this, false);
-            var cid = $(this).attr('cid');
-            var aid = $(this).attr('aid');
-            var clid = $(this).attr('clid');
-            var did = $(this).attr('did');
+            //var cid = $(this).attr('cid');
+            //var aid = $(this).attr('aid');
+            //var clid = $(this).attr('clid');
+            //var did = $(this).attr('did');
             var dname = $(this).attr('dname');
+            var sid = $(this).attr('sid');//serviceClaimId
             var $issueNameInput = $('#selectedIssueName');
             $issueNameInput.text(dname);
-            $issueNameInput.attr('cid', cid);
-            $issueNameInput.attr('aid', aid);
-            $issueNameInput.attr('clid', clid);
-            $issueNameInput.attr('did', did);
+            $issueNameInput.attr('sid', sid);
+            //$issueNameInput.attr('cid', cid);
+            //$issueNameInput.attr('aid', aid);
+            //$issueNameInput.attr('clid', clid);
+            //$issueNameInput.attr('did', did);
 
             hideSpinner();
         }
