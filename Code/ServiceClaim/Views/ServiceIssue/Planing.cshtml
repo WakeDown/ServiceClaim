@@ -6,6 +6,7 @@
     DateTime date = DateTime.Parse(Request.QueryString["month"]);
     int year = date.Year;
     int month = date.Month;
+    var periodList = ServiceIssue.GetPerionList(year, month);
 }
 
 <div class="row pad-b-md">
@@ -23,7 +24,7 @@
                 <span id="selectedIssueName"></span>
             </div>
             <div class="col-lg-2">
-                @Html.DropDownList("selPeriod", ServiceIssue.GetPerionSelectionList(year, month), new { @class = "form-control" })
+                @Html.DropDownList("selPeriod", new SelectList(periodList, "ListValue", "ListName"), new { @class = "form-control" })
             </div>
         </div>
     </div>
@@ -58,20 +59,7 @@
     </div>
     <div class="col-lg-9">
         <div id="issueContainer">
-            <div class="row">
-                <div class="col-lg-3">
-                    <h4>Период 1</h4>
-                </div>
-                <div class="col-lg-3">
-                    <h4>Период 2</h4>
-                </div>
-                <div class="col-lg-3">
-                    <h4>Период 3</h4>
-                </div>
-                <div class="col-lg-3">
-                    <h4>Период 4</h4>
-                </div>
-            </div>
+            @Html.Partial("PeriodWeekView", periodList)
         </div>
     </div>
 </div>
