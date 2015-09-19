@@ -83,5 +83,12 @@ namespace ServiceClaim.Controllers
         {
             return PartialView("PeriodWeekView", periodList);
         }
+
+        public ActionResult GetServiceIssuePlanItem(int? id)
+        {
+            if (!id.HasValue) return HttpNotFound();
+            var issue = ServiceIssuePlan.Get(id.Value);
+            return PartialView("ServiceIssuePlanItem", issue);
+        }
     }
 }

@@ -16,7 +16,7 @@
                 @{
                     var issueList = item.GetServiceIssueList();
                 }
-                <div id="periodContainer-@item.ListValue" sd="@item.StartDate" ed="@item.EndDate">
+                <div id="periodContainer-@item.IdValue">
                     @if (issueList.Any())
                     {
                         foreach (var issue in issueList)

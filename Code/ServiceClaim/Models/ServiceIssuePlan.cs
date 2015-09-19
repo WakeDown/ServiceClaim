@@ -16,12 +16,13 @@ namespace ServiceClaim.Models
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
 
-        public string PeriodValue => $"{PeriodStart:dd.MM.yyyy}|{PeriodEnd:dd.MM.yyyy}";
+        public string IdValue => $"{PeriodStart:ddMMyyyy}-{PeriodEnd:ddMMyyyy}";
 
         public ServiceIssuePlan()
         {
         }
-        public ServiceIssuePlan(int idServiceIssue, int idServiceIssueType, DateTime periodStart, DateTime periodEnd)
+
+       public ServiceIssuePlan(int idServiceIssue, int idServiceIssueType, DateTime periodStart, DateTime periodEnd)
         {
             IdServiceIssue = idServiceIssue;
             IdServiceIssueType = idServiceIssueType;
@@ -35,6 +36,15 @@ namespace ServiceClaim.Models
             string json = JsonConvert.SerializeObject(this);
             bool result = PostJson(uri, json, out responseMessage);
             return result;
+        }
+
+        public static ServiceIssuePlan Get(int id)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceIssuePlan/Get?id={1}", OdataServiceUri, id));
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<ServiceIssuePlan>(jsonString);
+
+            return model;
         }
 
         public static IEnumerable<ServiceIssuePlan> GetList(DateTime periodStart, DateTime periodEnd)

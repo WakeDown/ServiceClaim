@@ -318,3 +318,32 @@ a.async-sel:visited {
 .btn-xl {
     height: 100%;
 }
+
+.sub-menu-fixed-top {
+    padding-left: 10px;
+    padding-top: 10px;
+    margin-top: 50px;
+}
+.sub-menu-fixed-top-marginer {
+    margin-bottom: 70px;
+}
+
+.updated-issue-item {
+    /*border: 1px solid red;*/
+    -webkit-animation-name: updated-issue-item; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: updated-issue-item;
+    animation-duration: 4s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes updated-issue-item {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}
+
+/* Standard syntax */
+@keyframes updated-issue-item {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}

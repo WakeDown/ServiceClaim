@@ -12,6 +12,7 @@ namespace ServiceClaim.Models
 
         public string ListName => $"{StartDate:dd.MM.yy} - {EndDate:dd.MM.yy}";
         public string ListValue => $"{StartDate:dd.MM.yyyy}|{EndDate:dd.MM.yyyy}";
+            public string IdValue => $"{StartDate:ddMMyyyy}-{EndDate:ddMMyyyy}";
 
         public IEnumerable<ServiceIssuePlan> GetServiceIssueList()
         {
