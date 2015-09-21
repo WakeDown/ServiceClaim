@@ -218,11 +218,11 @@ ul.tree {
 }
 
 .text-sm {
-    font-size: 0.9em;
+    font-size: 0.9em !important;
 }
 
 .text-xs {
-    font-size: 0.7em;
+    font-size: 0.7em !important;
 }
 
 .info-top {
@@ -327,6 +327,9 @@ a.async-sel:visited {
 .sub-menu-fixed-top-marginer {
     margin-bottom: 70px;
 }
+.sub-menu-fixed-top-padding {
+    padding-top: 70px;
+}
 
 .updated-issue-item {
     /*border: 1px solid red;*/
@@ -344,6 +347,68 @@ a.async-sel:visited {
 
 /* Standard syntax */
 @keyframes updated-issue-item {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}
+
+.accent-issue-item {
+    /*border: 1px solid red;*/
+    -webkit-animation-name: accent-issue-item; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: accent-issue-item;
+    animation-duration: 4s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes accent-issue-item {
+    0% {background-color: #3c763d;}
+    100% {background-color: #fff;}
+}
+
+/* Standard syntax */
+@keyframes accent-issue-item {
+    0% {background-color: #3c763d;}
+    100% {background-color: #fff;}
+}
+
+.issue-plan-item {
+    border: 1px solid #3c763d;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 3px;
+    font-size: 0.8em;
+}
+
+.issue-plan-item:hover {
+    cursor: pointer;
+    background-color: #3c763d;
+}
+
+.issue-item {
+   border: 1px solid #3c763d;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 3px;
+    font-size: 0.9em; 
+    cursor: pointer;
+}
+
+.updated-input {
+    /*border: 1px solid red;*/
+    -webkit-animation-name: updated-input; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: updated-input;
+    animation-duration: 4s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes updated-input {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}
+
+/* Standard syntax */
+@keyframes updated-input {
     0% {background-color: #ffecb3;}
     100% {background-color: #fff;}
 }

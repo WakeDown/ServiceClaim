@@ -72,12 +72,16 @@ namespace ServiceClaim.Models
 
         public static SelectList GetEngeneerSelectionList()
         {
+            return new SelectList(GetEngeneerList(), "Key", "Value");
+        }
+
+        public static IEnumerable<KeyValuePair<string, string>> GetEngeneerList()
+        {
             Uri uri = new Uri(String.Format("{0}/ServiceIssue/GetEngeneerList", OdataServiceUri));
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<string, string>>>(jsonString);
 
-            return new SelectList(model, "Key", "Value");
+            return model;
         }
-
     }
 }

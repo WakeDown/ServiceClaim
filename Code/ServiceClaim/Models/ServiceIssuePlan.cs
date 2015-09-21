@@ -47,6 +47,15 @@ namespace ServiceClaim.Models
             return model;
         }
 
+        public static ServiceIssuePlan Get(int idServiceIssue, int idServiceIssueType)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceIssuePlan/Get?idServiceIssue={1}&idServiceIssueType={2}", OdataServiceUri, idServiceIssue, idServiceIssueType));
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<ServiceIssuePlan>(jsonString);
+
+            return model;
+        }
+
         public static IEnumerable<ServiceIssuePlan> GetList(DateTime periodStart, DateTime periodEnd)
         {
             Uri uri = new Uri(String.Format("{0}/ServiceIssuePlan/GetList?periodStart={1:yyyy-MM-dd}&periodEnd={2:yyyy-MM-dd}", OdataServiceUri, periodStart, periodEnd));

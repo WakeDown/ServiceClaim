@@ -90,5 +90,11 @@ namespace ServiceClaim.Controllers
             var issue = ServiceIssuePlan.Get(id.Value);
             return PartialView("ServiceIssuePlanItem", issue);
         }
+
+        //public JsonResult CheckServiceIssueIsExists(int idServiceIssue, int idServiceIssueType)
+        //{
+        //    var model = ServiceIssuePlan.Get(idServiceIssue, idServiceIssueType);
+        //    return Json(model);
+        //}
     }
 }

@@ -11,7 +11,7 @@
         @foreach (var item in Model)
         {
             <div class="col-lg-@colLenght">
-                <h4 name="periodTitle" value="@item.ListValue">@item.ListName</h4>
+                <h4 name="periodTitle" value="@item.ListValue" class="cursor-pointer">@item.ListName</h4>
 
                 @{
                     var issueList = item.GetServiceIssueList();

@@ -15,7 +15,13 @@
             <input id="month" type="text" class="form-control" value="@String.Format("{0:MMMM yyyy}", DateTime.Now)"/>
         </div>
         <div>
-            @Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), "--все инженеры--", new {@class = "form-control"})
+            @*@Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), new {id="engeneersSelect", @class = "form-control", multiple = "multiple" })*@
+            <select id="engeneersSelect" class = "form-control" multiple = "multiple">
+                @foreach (var eng in ServiceIssue.GetEngeneerList())
+                {
+                    <option value="@eng.Key" selected="selected">@eng.Value</option>
+                }
+            </select>
         </div>
     </div>
     <div class="col-lg-9">
@@ -34,46 +40,47 @@
         </div>
     </div>
 </div>
-<div class="sub-menu-fixed-top-marginer"></div>
-<div class="row">
-    <div class="col-lg-3">
+<div class="sub-menu-fixed-top-padding">
+    <div class="row">
+        <div class="col-lg-3">
 
-        <div id="planingIssueList" class="planing-sel-list">
-            @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
+            <div id="planingIssueList" class="planing-sel-list">
+                @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
             {
-                <a class="async-sel" href="#!" name="city" cid="@city.Id">@city.IssuesCount - @city.Name</a>
-                <div name="addressContainer" cid="@city.Id" class="pad-1">
+                    <a class="async-sel" href="#!" name="city" cid="@city.Id">@city.IssuesCount - @city.Name</a>
+                    <div name="addressContainer" cid="@city.Id" class="pad-1">
 
-                </div>
-                @*foreach (ServiceIssuePlaningResult.ServiceIssuePlaningCityItem.ServiceIssuePlaningAddressItem address in city.AddressList)
-                    {
-                        <tr>
-                            <td class="padding-sm">&nbsp;</td>
-                            <td colspan="2">@address.IssuesCount - @address.Name</td>
-                        </tr>
-                        foreach (ServiceIssuePlaningResult.ServiceIssuePlaningCityItem.ServiceIssuePlaningAddressItem.ServiceIssuePlaningClientItem client  in address.ClientList)
+                    </div>
+                    @*foreach (ServiceIssuePlaningResult.ServiceIssuePlaningCityItem.ServiceIssuePlaningAddressItem address in city.AddressList)
                         {
                             <tr>
-                                <td>&nbsp;</td>
                                 <td class="padding-sm">&nbsp;</td>
-                                <td>@client.IssuesCount - @client.Name</td>
+                                <td colspan="2">@address.IssuesCount - @address.Name</td>
                             </tr>
-                        }
-                    }*@
-            }
+                            foreach (ServiceIssuePlaningResult.ServiceIssuePlaningCityItem.ServiceIssuePlaningAddressItem.ServiceIssuePlaningClientItem client  in address.ClientList)
+                            {
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td class="padding-sm">&nbsp;</td>
+                                    <td>@client.IssuesCount - @client.Name</td>
+                                </tr>
+                            }
+                        }*@
+                }
+            </div>
         </div>
-    </div>
-    <div class="col-lg-9">
-        <div id="issueContainer">
-            @Html.Partial("PeriodWeekView", periodList)
+        <div class="col-lg-9">
+            <div id="issueContainer">
+                @Html.Partial("PeriodWeekView", periodList)
+            </div>
         </div>
     </div>
 </div>
-
 @section scripts
 {
     <script type="text/javascript">
         $(function() {
+                //$('#engeneersSelect').multiselect();
             $('#month').datepicker({
                 orientation: 'bottom',
                 minViewMode: 'months',
@@ -200,7 +207,7 @@
                         $container.html('');
                         for (var i = 0; i < data.length; i++) {
                             var deviceIssue = data[i];
-                            var deviceItem = '<div class="btn btn-link" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '">' + deviceIssue.IssuesCount + ' - ' + deviceIssue.Name + '</div>';
+                            var deviceItem = '<div class="issue-item" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '">' + deviceIssue.IssuesCount + ' - ' + deviceIssue.Name + '</div>';
                             $container.append(deviceItem);
                         }
 
@@ -217,15 +224,32 @@
 
         function setIssue() {
             showSpinner(this, false);
+            var $issueNameInput = $('#selectedIssueName');
+            
+            $issueNameInput.text('выберите заявку');
             //var cid = $(this).attr('cid');
             //var aid = $(this).attr('aid');
             //var clid = $(this).attr('clid');
             //var did = $(this).attr('did');
             var dname = $(this).attr('dname');
             var sid = $(this).attr('sid'); //serviceClaimId
-            var $issueNameInput = $('#selectedIssueName');
-            $issueNameInput.text(dname);
-            $issueNameInput.attr('sid', sid);
+
+            var id = 'sid-' + sid + '-tid-1';
+            var $elem = $('#'+id);
+            
+            if ($elem.length > 0) {
+                $elem.removeClass('accent-issue-item');
+                scroll_if_anchor('#' + id);
+                //window.location.hash = id;
+                $elem.addClass('accent-issue-item');
+            } else {
+                $issueNameInput.text(dname);
+                $issueNameInput.attr('sid', sid);
+                $issueNameInput.removeClass('updated-input');
+                setTimeout(function () {
+                    $issueNameInput.addClass('updated-input');
+                }, 100);
+            }
             //$issueNameInput.attr('cid', cid);
             //$issueNameInput.attr('aid', aid);
             //$issueNameInput.attr('clid', clid);
@@ -233,5 +257,29 @@
 
             hideSpinner();
         }
+
+        function scroll_if_anchor(href) {
+            href = typeof (href) == "string" ? href : $(this).attr("href");
+
+            // You could easily calculate this dynamically if you prefer
+            var fromTop = 150;
+
+            // If our Href points to a valid, non-empty anchor, and is on the same page (e.g. #foo)
+            // Legacy jQuery and IE7 may have issues: http://stackoverflow.com/q/1593174
+            if (href.indexOf("#") == 0) {
+                var $target = $(href);
+
+                // Older browser without pushState might flicker here, as they momentarily
+                // jump to the wrong position (IE < 10)
+                if ($target.length) {
+                    $('html, body').animate({ scrollTop: $target.offset().top - fromTop });
+                    if (history && "pushState" in history) {
+                        history.pushState({}, document.title, window.location.pathname + href);
+                        return false;
+                    }
+                }
+            }
+        }
+
     </script>
 }
