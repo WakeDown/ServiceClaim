@@ -78,6 +78,7 @@ namespace ServiceClaim.Helpers
             return result;
         }
 
+
         public static bool UserInGroup(string sid, params AdGroup[] groups)
         {
             using (WindowsImpersonationContextFacade impersonationContext
