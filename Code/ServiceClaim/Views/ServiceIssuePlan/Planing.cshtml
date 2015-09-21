@@ -12,11 +12,11 @@
 <div class="row pad-b-md navbar-fixed-top sub-menu-fixed-top bg-primary">
     <div class="col-lg-3">
         <div>
-            <input id="month" type="text" class="form-control" value="@String.Format("{0:MMMM yyyy}", DateTime.Now)"/>
+            <input id="month" type="text" class="form-control" value="@String.Format("{0:MMMM yyyy}", DateTime.Now)" />
         </div>
         <div>
             @*@Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), new {id="engeneersSelect", @class = "form-control", multiple = "multiple" })*@
-            <select id="engeneersSelect" class = "form-control" multiple = "multiple">
+            <select id="engeneersSelect" class="form-control" multiple="multiple">
                 @foreach (var eng in ServiceIssue.GetEngeneerList())
                 {
                     <option value="@eng.Key" selected="selected">@eng.Value</option>
@@ -31,7 +31,7 @@
                     выберите заявку
                 </div>
                 <div>
-                    @Html.DropDownList("selPeriod", new SelectList(periodList, "ListValue", "ListName"), new {@class = "form-control"})
+                    @Html.DropDownList("selPeriod", new SelectList(periodList, "ListValue", "ListName"), new { @class = "form-control" })
                 </div>
             </div>
             <div class="col-lg-8">
@@ -46,26 +46,11 @@
 
             <div id="planingIssueList" class="planing-sel-list">
                 @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
-            {
-                    <a class="async-sel" href="#!" name="city" cid="@city.Id">@city.IssuesCount - @city.Name</a>
-                    <div name="addressContainer" cid="@city.Id" class="pad-1">
-
-                    </div>
-                    @*foreach (ServiceIssuePlaningResult.ServiceIssuePlaningCityItem.ServiceIssuePlaningAddressItem address in city.AddressList)
-                        {
-                            <tr>
-                                <td class="padding-sm">&nbsp;</td>
-                                <td colspan="2">@address.IssuesCount - @address.Name</td>
-                            </tr>
-                            foreach (ServiceIssuePlaningResult.ServiceIssuePlaningCityItem.ServiceIssuePlaningAddressItem.ServiceIssuePlaningClientItem client  in address.ClientList)
-                            {
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td class="padding-sm">&nbsp;</td>
-                                    <td>@client.IssuesCount - @client.Name</td>
-                                </tr>
-                            }
-                        }*@
+                {
+                    <a class="async-sel row nomargin nopadding" href="#!" name="city" cid="@city.Id" data-toggle="tooltip" title="@city.Name">
+                        <div class="issues-count col-lg-2"><span class="pull-right">@city.IssuesCount</span></div><div class="col-lg-10">@city.ShortName</div></a>
+                                    <div name="addressContainer" cid="@city.Id" class="pad-1">
+                                    </div>
                 }
             </div>
         </div>
@@ -79,8 +64,13 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function() {
-                //$('#engeneersSelect').multiselect();
+        $(function () {
+            $('#engeneersSelect').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: 'все',
+                selectAllValue: '',
+                enableFiltering: true
+            });
             $('#month').datepicker({
                 orientation: 'bottom',
                 minViewMode: 'months',
@@ -89,14 +79,14 @@
                 language: "ru"
             });
             $('[name="city"]').click(fillAddressList);
-            $('#btnIssuePlanSave').click(function() {
+            $('#btnIssuePlanSave').click(function () {
                 var serviceIssueId = $('#selectedIssueName').attr('sid');
                 var periodStr = $('#selPeriod').val();
                 $.ajax({
                     url: '@Url.Action("SaveServiceIssuePlan")',
                     method: 'POST',
                     data: { serviceIssueId: serviceIssueId, periodStr: periodStr },
-                    success: function(data) {
+                    success: function (data) {
                         if (!data.error) {
                             appendServiceIssue(data);
                         } else {
@@ -111,7 +101,7 @@
             $.ajax({
                 url: '@Url.Action("GetServiceIssuePlanItem")?id=' + data.Id,
                 method: 'GET',
-                success: function(html) {
+                success: function (html) {
                     var $issueItem = $(html);
                     if ($issueItem.attr('name') === 'issueItem') {
                         $($issueItem).addClass('updated-issue-item');
@@ -125,28 +115,28 @@
                     //$tr.addClass('updated--issue-item');
                     //initTaskList($tr);
                 },
-                error: function(json) {
+                error: function (json) {
                     alert(json.error);
                 }
             });
         }
 
         function fillAddressList() {
-            showSpinner(this, false);
+            showSpinnerAfter(this, false);
             var cid = $(this).attr('cid');
             var month = new Date($('#month').val());
             $.ajax({
                 url: '@Url.Action("GetAddressList")',
                 method: 'POST',
                 data: { month: month, idCity: cid },
-                success: function(data) {
+                success: function (data) {
 
                     if (data.length) {
                         var $container = $('[name="addressContainer"][cid="' + cid + '"]');
                         $container.html('');
                         for (var i = 0; i < data.length; i++) {
                             var address = data[i];
-                            var addresItem = '<a href="#!" class="async-sel" name="address" cid="' + cid + '" aid="' + address.Name + '">' + address.IssuesCount + ' - ' + address.Name + '</a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
+                            var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10">' + address.Name + '</div></a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
                             $container.append(addresItem);
                         }
 
@@ -154,7 +144,7 @@
                     }
                     hideSpinner();
                 },
-                error: function(data) {
+                error: function (data) {
                     alert(data.error);
                     hideSpinner();
                 }
@@ -162,7 +152,7 @@
         }
 
         function fillClientList() {
-            showSpinner(this, false);
+            showSpinnerAfter(this, false);
             var cid = $(this).attr('cid');
             var aid = $(this).attr('aid');
             var month = new Date($('#month').val());
@@ -170,13 +160,13 @@
                 url: '@Url.Action("GetClientList")',
                 method: 'POST',
                 data: { month: month, idCity: cid, address: aid },
-                success: function(data) {
+                success: function (data) {
                     if (data.length) {
                         var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
                         $container.html('');
                         for (var i = 0; i < data.length; i++) {
                             var client = data[i];
-                            var clientItem = '<a href="#!" class="async-sel" name="client" cid="' + cid + '" aid="' + aid + '" clid="' + client.Id + '">' + client.IssuesCount + ' - ' + client.Name + '</a><div name="deviceContainer"  cid="' + cid + '" aid="' + aid + '"  clid="' + client.Id + '" class="pad-3"></div>';
+                            var clientItem = '<a href="#!" class="async-sel row nomargin nopadding" name="client" cid="' + cid + '" aid="' + aid + '" clid="' + client.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + client.IssuesCount + '</span></div><div class="col-lg-10">' + client.Name + '</div></a><div name="deviceContainer"  cid="' + cid + '" aid="' + aid + '"  clid="' + client.Id + '" class="pad-3"></div>';
                             $container.append(clientItem);
                         }
 
@@ -184,7 +174,7 @@
                     }
                     hideSpinner();
                 },
-                error: function(data) {
+                error: function (data) {
                     alert(data.error);
                     hideSpinner();
                 }
@@ -192,7 +182,7 @@
         }
 
         function fillDeviceList() {
-            showSpinner(this, false);
+            showSpinnerAfter(this, false);
             var cid = $(this).attr('cid');
             var aid = $(this).attr('aid');
             var clid = $(this).attr('clid');
@@ -201,13 +191,13 @@
                 url: '@Url.Action("GetDeviceIssueList")',
                 method: 'POST',
                 data: { month: month, idCity: cid, address: aid, idClient: clid },
-                success: function(data) {
+                success: function (data) {
                     if (data.length) {
                         var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
                         $container.html('');
                         for (var i = 0; i < data.length; i++) {
                             var deviceIssue = data[i];
-                            var deviceItem = '<div class="issue-item" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '">' + deviceIssue.IssuesCount + ' - ' + deviceIssue.Name + '</div>';
+                            var deviceItem = '<a href="#!" class="async-sel row nomargin nopadding" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + deviceIssue.IssuesCount + '</span></div><div class="col-lg-10">' + deviceIssue.Name + '</div></a>';
                             $container.append(deviceItem);
                         }
 
@@ -215,7 +205,7 @@
                     }
                     hideSpinner();
                 },
-                error: function(data) {
+                error: function (data) {
                     alert(data.error);
                     hideSpinner();
                 }
@@ -225,7 +215,7 @@
         function setIssue() {
             showSpinner(this, false);
             var $issueNameInput = $('#selectedIssueName');
-            
+
             $issueNameInput.text('выберите заявку');
             //var cid = $(this).attr('cid');
             //var aid = $(this).attr('aid');
@@ -235,8 +225,8 @@
             var sid = $(this).attr('sid'); //serviceClaimId
 
             var id = 'sid-' + sid + '-tid-1';
-            var $elem = $('#'+id);
-            
+            var $elem = $('#' + id);
+
             if ($elem.length > 0) {
                 $elem.removeClass('accent-issue-item');
                 scroll_if_anchor('#' + id);

@@ -27,7 +27,7 @@ namespace ServiceClaim
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/bootstrap-datepicker.js",
                         "~/Scripts/bootstrap-datepicker.ru.js",
-                        "~/Scripts/bootstrap-multiselect.ru.js",
+                        "~/Scripts/bootstrap-multiselect.js",
                         //"~/Scripts/bootstrap-timepicker.js",
                       "~/Scripts/validator.js",
                       "~/Scripts/respond.js",
