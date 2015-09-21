@@ -56,12 +56,12 @@
     </div>
     <div class="row" id="countersContainer">
         <label class="col-lg-2 text-right">Счетчик</label>
-        <div class="col-lg-2">
+        @*<div class="col-lg-2">
             @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterTotal, new { id = "counterTotal", @class = "form-control required-mark", placeholder = "Общий", required = "required" })
             <span class="help-block with-errors"></span>
-        </div>
+        </div>*@
         <div class="col-lg-2">
-            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { @class = "form-control", placeholder = "Черно/Белый" })
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control", placeholder = "Черно/Белый" })
             <span class="help-block with-errors"></span>
         </div>
         <div class="col-lg-2">
@@ -186,14 +186,14 @@
         }
         if (countHas) {//Счетчик предусмотрен
             $('#countersContainer').show();
-            $('#counterTotal').prop('required', true);
+            $('#counterMono').prop('required', true);
 
         } else if (countNotHas) {//Счетчик НЕ предусмотрен
             $('#countersContainer').hide();
-            $('#counterTotal').prop('required', false);
+            $('#counterMono').prop('required', false);
         } else {//ничего не выбрано
             $('#countersContainer').hide();
-            $('#counterTotal').prop('required', false);
+            $('#counterMono').prop('required', false);
         }
     }
 
