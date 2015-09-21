@@ -72,12 +72,13 @@
                 enableFiltering: true
             });
             $('#month').datepicker({
-                orientation: 'bottom',
                 minViewMode: 'months',
                 format: "MM yyyy",
                 autoclose: true,
                 language: "ru"
-            });
+            }).on('changeDate', function (ev) {
+                window.location = '@Url.Action("Planing")?month=' + ev.format('yyyy-mm');
+            });;
             $('[name="city"]').click(fillAddressList);
             $('#btnIssuePlanSave').click(function () {
                 var serviceIssueId = $('#selectedIssueName').attr('sid');

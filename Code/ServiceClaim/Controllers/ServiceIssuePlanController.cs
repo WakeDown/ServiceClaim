@@ -14,7 +14,7 @@ namespace ServiceClaim.Controllers
         // GET: Issue
         public ActionResult Planing(DateTime? month)
         {
-            if (!month.HasValue) return RedirectToAction("Planing", new { month = $"{DateTime.Now:yyyy-MM-dd}" });
+            if (!month.HasValue) return RedirectToAction("Planing", new { month = $"{DateTime.Now:yyyy-MM}" });
 
             ViewBag.IssueCityList = ServiceIssue.GetPlaningCityList(month.Value);
 
