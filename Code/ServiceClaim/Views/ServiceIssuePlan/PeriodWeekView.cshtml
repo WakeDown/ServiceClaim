@@ -1,32 +1,38 @@
-﻿@model IEnumerable<ServiceClaim.Models.ServiceIssuePeriodItem>
+﻿@using ServiceClaim.Models
+@model IEnumerable<ServiceClaim.Models.ServiceIssuePeriodItem>
 
 @{
-    int periodCount = Model.Count();
-    int colLenght = 12 / periodCount;
+    var monthes = ServiceIssuePlan.GetMonthesFromItemArray(Model);
+    int mColLenght = 12 / monthes.Count;
 }
 
 @if (Model.Any())
 {
     <div class="row">
-        @foreach (var item in Model)
+        @foreach (var mth in monthes)
         {
-            <div class="col-lg-@colLenght">
-                <h4 name="periodTitle" value="@item.ListValue" class="cursor-pointer">@item.ListName</h4>
+            <div class="col-lg-@mColLenght">
+                @foreach (var item in Model)
+                {
+                <div class="col-lg-@colLenght">
+                    <h4 name="periodTitle" value="@item.ListValue" class="cursor-pointer">@item.ListName <span class="label label-info label-as-badge">@item.DaysDiff</span></h4>
 
-                @{
-                    var issueList = item.GetServiceIssueList();
-                }
-                <div id="periodContainer-@item.IdValue">
-                    @if (issueList.Any())
-                    {
-                        foreach (var issue in issueList)
+                    @{
+                        var issueList = item.GetServiceIssueList();
+                    }
+                    <div id="periodContainer-@item.IdValue">
+                        @if (issueList.Any())
                         {
-                            @Html.Partial("ServiceIssuePlanItem", issue)
+                            foreach (var issue in issueList)
+                            {
+                                @Html.Partial("ServiceIssuePlanItem", issue)
+                            }
                         }
-                    }
+                    </div>
                 </div>
+                }
             </div>
-                    }
+        }
     </div>
                     }
 

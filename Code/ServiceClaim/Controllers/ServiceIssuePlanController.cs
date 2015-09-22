@@ -75,7 +75,7 @@ namespace ServiceClaim.Controllers
 
         public PartialViewResult PeriodWeekView(int? year, int? month)
         {
-            var periodList = ServiceIssuePlan.GetPeriodList(year.Value, month.Value);
+            var periodList = ServiceIssuePlan.GetPeriodMonthList(year.Value, month.Value);
             return PeriodWeekView(periodList);
         }
 

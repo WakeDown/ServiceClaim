@@ -416,3 +416,11 @@ a.async-sel:visited {
 .issues-count {
     width: 40px !important;
 }
+
+.label-as-badge {
+    border-radius: 1em;
+}
+
+#issueContainer {
+    overflow-x: auto;
+}

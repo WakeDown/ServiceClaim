@@ -6,7 +6,7 @@
     DateTime date = DateTime.Parse(Request.QueryString["month"]);
     int year = date.Year;
     int month = date.Month;
-    var periodList = ServiceIssuePlan.GetPeriodList(year, month);
+    var periodList = ServiceIssuePlan.GetPeriodMonthCurPrevNextList(year, month);
 }
 
 <div class="row pad-b-md navbar-fixed-top sub-menu-fixed-top bg-primary">
@@ -43,7 +43,6 @@
 <div class="sub-menu-fixed-top-padding">
     <div class="row">
         <div class="col-lg-3">
-
             <div id="planingIssueList" class="planing-sel-list">
                 @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
                 {
