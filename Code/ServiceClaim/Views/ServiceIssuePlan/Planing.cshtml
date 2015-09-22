@@ -22,6 +22,7 @@
                     <option value="@eng.Key" selected="selected">@eng.Value</option>
                 }
             </select>
+            <button class="btn btn-info" id="search"><i class="fa fa-search"></i></button>
         </div>
     </div>
     <div class="col-lg-9">
@@ -64,6 +65,9 @@
 {
     <script type="text/javascript">
         $(function () {
+            $('#search').click(function (){
+                window.location = '@Url.Action("Planing")?serviceEngeneerSid=' + $('#engeneersSelect').val();
+        });
             $('#engeneersSelect').multiselect({
                 includeSelectAllOption: true,
                 selectAllText: 'все',

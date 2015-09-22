@@ -12,11 +12,11 @@ namespace ServiceClaim.Controllers
     public class ServiceIssuePlanController : BaseController
     {
         // GET: Issue
-        public ActionResult Planing(DateTime? month)
+        public ActionResult Planing(DateTime? month, string serviceEngeneerSid)
         {
             if (!month.HasValue) return RedirectToAction("Planing", new { month = $"{DateTime.Now:yyyy-MM}" });
 
-            ViewBag.IssueCityList = ServiceIssue.GetPlaningCityList(month.Value);
+            ViewBag.IssueCityList = ServiceIssue.GetPlaningCityList(month.Value, serviceEngeneerSid);
 
             return View();
         }
