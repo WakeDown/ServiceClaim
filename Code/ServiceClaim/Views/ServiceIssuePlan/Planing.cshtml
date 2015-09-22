@@ -1,0 +1,275 @@
+﻿@using ServiceClaim.Models
+
+@{
+    ViewBag.Title = "Планирование поездки";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    DateTime date = DateTime.Parse(Request.QueryString["month"]);
+    int year = date.Year;
+    int month = date.Month;
+    var periodList = ServiceIssuePlan.GetPeriodMonthCurPrevNextList(year, month);
+}
+
+<div class="row pad-b-md navbar-fixed-top sub-menu-fixed-top bg-primary">
+    <div class="col-lg-3">
+        <div>
+            <input id="month" type="text" class="form-control" value="@String.Format("{0:MMMM yyyy}", DateTime.Now)" />
+        </div>
+        <div>
+            @*@Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), new {id="engeneersSelect", @class = "form-control", multiple = "multiple" })*@
+            <select id="engeneersSelect" class="form-control" multiple="multiple">
+                @foreach (var eng in ServiceIssue.GetEngeneerList())
+                {
+                    <option value="@eng.Key" selected="selected">@eng.Value</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <div class="row">
+            <div class="col-lg-4">
+                <div id="selectedIssueName" class="form-control">
+                    выберите заявку
+                </div>
+                <div>
+                    @Html.DropDownList("selPeriod", new SelectList(periodList, "ListValue", "ListName"), new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <button id="btnIssuePlanSave" class="btn btn-success btn-xl">сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sub-menu-fixed-top-padding">
+    <div class="row">
+        <div class="col-lg-3">
+            <div id="planingIssueList" class="planing-sel-list">
+                @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
+                {
+                    <a class="async-sel row nomargin nopadding" href="#!" name="city" cid="@city.Id" data-toggle="tooltip" title="@city.Name">
+                        <div class="issues-count col-lg-2"><span class="pull-right">@city.IssuesCount</span></div><div class="col-lg-10">@city.ShortName</div></a>
+                                    <div name="addressContainer" cid="@city.Id" class="pad-1">
+                                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div id="issueContainer">
+                @Html.Partial("PeriodWeekView", periodList)
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#engeneersSelect').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: 'все',
+                selectAllValue: '',
+                enableFiltering: true
+            });
+            $('#month').datepicker({
+                minViewMode: 'months',
+                format: "MM yyyy",
+                autoclose: true,
+                language: "ru"
+            }).on('changeDate', function (ev) {
+                window.location = '@Url.Action("Planing")?month=' + ev.format('yyyy-mm');
+            });;
+            $('[name="city"]').click(fillAddressList);
+            $('#btnIssuePlanSave').click(function () {
+                var serviceIssueId = $('#selectedIssueName').attr('sid');
+                var periodStr = $('#selPeriod').val();
+                $.ajax({
+                    url: '@Url.Action("SaveServiceIssuePlan")',
+                    method: 'POST',
+                    data: { serviceIssueId: serviceIssueId, periodStr: periodStr },
+                    success: function (data) {
+                        if (!data.error) {
+                            appendServiceIssue(data);
+                        } else {
+                            alert(data.error);
+                        }
+                    }
+                });
+            });
+        });
+
+        function appendServiceIssue(data) {
+            $.ajax({
+                url: '@Url.Action("GetServiceIssuePlanItem")?id=' + data.Id,
+                method: 'GET',
+                success: function (html) {
+                    var $issueItem = $(html);
+                    if ($issueItem.attr('name') === 'issueItem') {
+                        $($issueItem).addClass('updated-issue-item');
+                    } else {
+                        $('[name="issueItem"]', $issueItem).addClass('updated-issue-item');
+                    }
+                    var $col = $('#periodContainer-' + data.IdValue.toString());
+                    $col.prepend($issueItem);
+
+                    //var $tr = $("tr#taskClaim-" + id);
+                    //$tr.addClass('updated--issue-item');
+                    //initTaskList($tr);
+                },
+                error: function (json) {
+                    alert(json.error);
+                }
+            });
+        }
+
+        function fillAddressList() {
+            showSpinnerAfter(this, false);
+            var cid = $(this).attr('cid');
+            var month = new Date($('#month').val());
+            $.ajax({
+                url: '@Url.Action("GetAddressList")',
+                method: 'POST',
+                data: { month: month, idCity: cid },
+                success: function (data) {
+
+                    if (data.length) {
+                        var $container = $('[name="addressContainer"][cid="' + cid + '"]');
+                        $container.html('');
+                        for (var i = 0; i < data.length; i++) {
+                            var address = data[i];
+                            var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10">' + address.Name + '</div></a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
+                            $container.append(addresItem);
+                        }
+
+                        $('[name="address"]', $container).click(fillClientList);
+                    }
+                    hideSpinner();
+                },
+                error: function (data) {
+                    alert(data.error);
+                    hideSpinner();
+                }
+            });
+        }
+
+        function fillClientList() {
+            showSpinnerAfter(this, false);
+            var cid = $(this).attr('cid');
+            var aid = $(this).attr('aid');
+            var month = new Date($('#month').val());
+            $.ajax({
+                url: '@Url.Action("GetClientList")',
+                method: 'POST',
+                data: { month: month, idCity: cid, address: aid },
+                success: function (data) {
+                    if (data.length) {
+                        var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
+                        $container.html('');
+                        for (var i = 0; i < data.length; i++) {
+                            var client = data[i];
+                            var clientItem = '<a href="#!" class="async-sel row nomargin nopadding" name="client" cid="' + cid + '" aid="' + aid + '" clid="' + client.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + client.IssuesCount + '</span></div><div class="col-lg-10">' + client.Name + '</div></a><div name="deviceContainer"  cid="' + cid + '" aid="' + aid + '"  clid="' + client.Id + '" class="pad-3"></div>';
+                            $container.append(clientItem);
+                        }
+
+                        $('[name="client"]', $container).click(fillDeviceList);
+                    }
+                    hideSpinner();
+                },
+                error: function (data) {
+                    alert(data.error);
+                    hideSpinner();
+                }
+            });
+        }
+
+        function fillDeviceList() {
+            showSpinnerAfter(this, false);
+            var cid = $(this).attr('cid');
+            var aid = $(this).attr('aid');
+            var clid = $(this).attr('clid');
+            var month = new Date($('#month').val());
+            $.ajax({
+                url: '@Url.Action("GetDeviceIssueList")',
+                method: 'POST',
+                data: { month: month, idCity: cid, address: aid, idClient: clid },
+                success: function (data) {
+                    if (data.length) {
+                        var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
+                        $container.html('');
+                        for (var i = 0; i < data.length; i++) {
+                            var deviceIssue = data[i];
+                            var deviceItem = '<a href="#!" class="async-sel row nomargin nopadding" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + deviceIssue.IssuesCount + '</span></div><div class="col-lg-10">' + deviceIssue.Name + '</div></a>';
+                            $container.append(deviceItem);
+                        }
+
+                        $('[name="deviceIssue"]', $container).click(setIssue);
+                    }
+                    hideSpinner();
+                },
+                error: function (data) {
+                    alert(data.error);
+                    hideSpinner();
+                }
+            });
+        }
+
+        function setIssue() {
+            showSpinner(this, false);
+            var $issueNameInput = $('#selectedIssueName');
+
+            $issueNameInput.text('выберите заявку');
+            //var cid = $(this).attr('cid');
+            //var aid = $(this).attr('aid');
+            //var clid = $(this).attr('clid');
+            //var did = $(this).attr('did');
+            var dname = $(this).attr('dname');
+            var sid = $(this).attr('sid'); //serviceClaimId
+
+            var id = 'sid-' + sid + '-tid-1';
+            var $elem = $('#' + id);
+
+            if ($elem.length > 0) {
+                $elem.removeClass('accent-issue-item');
+                scroll_if_anchor('#' + id);
+                //window.location.hash = id;
+                $elem.addClass('accent-issue-item');
+            } else {
+                $issueNameInput.text(dname);
+                $issueNameInput.attr('sid', sid);
+                $issueNameInput.removeClass('updated-input');
+                setTimeout(function () {
+                    $issueNameInput.addClass('updated-input');
+                }, 100);
+            }
+            //$issueNameInput.attr('cid', cid);
+            //$issueNameInput.attr('aid', aid);
+            //$issueNameInput.attr('clid', clid);
+            //$issueNameInput.attr('did', did);
+
+            hideSpinner();
+        }
+
+        function scroll_if_anchor(href) {
+            href = typeof (href) == "string" ? href : $(this).attr("href");
+
+            // You could easily calculate this dynamically if you prefer
+            var fromTop = 150;
+
+            // If our Href points to a valid, non-empty anchor, and is on the same page (e.g. #foo)
+            // Legacy jQuery and IE7 may have issues: http://stackoverflow.com/q/1593174
+            if (href.indexOf("#") == 0) {
+                var $target = $(href);
+
+                // Older browser without pushState might flicker here, as they momentarily
+                // jump to the wrong position (IE < 10)
+                if ($target.length) {
+                    $('html, body').animate({ scrollTop: $target.offset().top - fromTop });
+                    if (history && "pushState" in history) {
+                        history.pushState({}, document.title, window.location.pathname + href);
+                        return false;
+                    }
+                }
+            }
+        }
+
+    </script>
+}

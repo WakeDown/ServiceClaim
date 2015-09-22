@@ -147,10 +147,12 @@
     <Compile Include="Models\DeviceInfoResult.cs" />
     <Compile Include="Models\DeviceSearchResult.cs" />
     <Compile Include="Models\EmployeeSm.cs" />
-    <Compile Include="Controllers\ServiceIssueController.cs" />
+    <Compile Include="Controllers\ServiceIssuePlanController.cs" />
     <Compile Include="Models\ListResult.cs" />
     <Compile Include="Models\PlanServiceIssue.cs" />
     <Compile Include="Models\ServiceIssue.cs" />
+    <Compile Include="Models\ServiceIssuePeriodItem.cs" />
+    <Compile Include="Models\ServiceIssuePlan.cs" />
     <Compile Include="Models\ServiceIssuePlaningItem.cs" />
     <Compile Include="Models\ServiceIssuePlaningResult.cs" />
     <Compile Include="Models\ServiceSheet.cs" />
@@ -171,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datepicker3.css" />
+    <Content Include="Content\bootstrap-multiselect.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-timepicker.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -182,6 +185,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.ru.js" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap-timepicker.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -190,6 +194,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\FontAwesome.otf" />
     <Content Include="Scripts\bootstrapValidator.js" />
+    <None Include="Properties\PublishProfiles\1. Dev.pubxml" />
     <None Include="Properties\PublishProfiles\2. TEST.pubxml" />
     <None Include="Properties\PublishProfiles\3. Production.pubxml" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -251,7 +256,7 @@
     <Content Include="Views\ContractorAccess\New.cshtml" />
     <Content Include="Views\ContractorAccess\AccessSheet.cshtml" />
     <Content Include="Views\Claim\SetServEngOnWork.cshtml" />
-    <Content Include="Views\ServiceIssue\Planing.cshtml" />
+    <Content Include="Views\ServiceIssuePlan\Planing.cshtml" />
     <Content Include="Views\Claim\ZipCheck.cshtml" />
     <Content Include="Views\Claim\ZipConfirm.cshtml" />
     <Content Include="Views\Claim\ZipOrder.cshtml" />
@@ -259,6 +264,8 @@
     <Content Include="Views\Claim\ServiceSheet.cshtml" />
     <Content Include="Views\Claim\ServiceSheetTechForm.cshtml" />
     <Content Include="Views\Claim\ServiceSheetForm.cshtml" />
+    <Content Include="Views\ServiceIssuePlan\PeriodWeekView.cshtml" />
+    <Content Include="Views\ServiceIssuePlan\ServiceIssuePlanItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

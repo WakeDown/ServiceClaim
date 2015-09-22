@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using ServiceClaim.Objects;
 
@@ -53,9 +54,9 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningDeviceList(DateTime month, int idCity, string address, int idClient)
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningDeviceIssueList(DateTime month, int idCity, string address, int idClient)
         {
-            Uri uri = new Uri(String.Format("{0}/ServiceIssue/GetPlaningDeviceList?month={1:yyyy-MM-dd}&idCity={2}&address={3}&idClient={4}", OdataServiceUri, month, idCity, address, idClient));
+            Uri uri = new Uri(String.Format("{0}/ServiceIssue/GetPlaningDeviceIssueList?month={1:yyyy-MM-dd}&idCity={2}&address={3}&idClient={4}", OdataServiceUri, month, idCity, address, idClient));
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
             return model;
@@ -69,6 +70,18 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        
+        public static SelectList GetEngeneerSelectionList()
+        {
+            return new SelectList(GetEngeneerList(), "Key", "Value");
+        }
+
+        public static IEnumerable<KeyValuePair<string, string>> GetEngeneerList()
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceIssue/GetEngeneerList", OdataServiceUri));
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<string, string>>>(jsonString);
+
+            return model;
+        }
     }
 }
