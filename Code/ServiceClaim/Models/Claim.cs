@@ -128,9 +128,9 @@ namespace ServiceClaim.Models
             CurManagerSid = model.CurManagerSid;
         }
 
-        public async Task<ListResult<Claim>> GetList(int? idAdmin = null, int? idEngeneer = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null)
+        public async Task<ListResult<Claim>> GetList(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetList?idAdmin={idAdmin}&idEngeneer={idEngeneer}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}");
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetList?servAdminSid={servAdminSid}&idEngeneer={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}");
             string jsonString = await GetApiClientAsync().GetStringAsync(uri);
             var model = JsonConvert.DeserializeObject<ListResult<Claim>>(jsonString);
             return model;
