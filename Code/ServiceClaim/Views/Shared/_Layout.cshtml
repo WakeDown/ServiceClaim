@@ -27,7 +27,7 @@
                 <div class="h5"><strong>ЮНИТ</strong>&nbsp;<span class="h6">Сервис</span></div>
             </a>
         </div>
-        <div class="navbar-collapse collapse">
+        <div class="navbar-collapse collapse navbar-default">
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Заявки", "List", "Claim")</li>
                 <li><a href="@Url.Action("Planing", "ServiceIssuePlan")">Планирование поездки</a></li>
@@ -39,9 +39,7 @@
                         <li><a href="@Url.Action("List", "ContractorAccess")">Доступы подрядчиков</a></li>
                     </ul>
                 </li>
-
             </ul>
-
             <ul class="nav navbar-nav navbar-right">
                 <li class="navbar-text">Вы вошли как <strong id="userName">@ViewBag.CurUser.DisplayName</strong></li>
             </ul>

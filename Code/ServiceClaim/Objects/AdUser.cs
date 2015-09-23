@@ -13,10 +13,7 @@ namespace ServiceClaim.Objects
         public string Login { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        public string DisplayName
-        {
-            get { return MainHelper.ShortName(FullName); }
-        }
+        public string DisplayName => MainHelper.ShortName(FullName);
         //public List<AdGroup> AdGroups { get; set; }
 
         //private static string GetShortName(string name)

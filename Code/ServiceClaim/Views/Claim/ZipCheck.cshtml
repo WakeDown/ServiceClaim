@@ -25,7 +25,7 @@
 <script type="text/javascript">
     $(function () {
         $('#zipClaim').click(function () {
-            var zipClaimLink = "@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?snum=@Model.Device.SerialNum&ssid=@lastServSheet.Id&servid=@Model.Id&esid=@Model.CurEngeneerSid&asid=@Model.CurAdminSid&csdnum=@Model.ClientSdNum";
+            var zipClaimLink = "@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?snum=@Model.Device.SerialNum&ssid=@lastServSheet.Id&servid=@Model.Id&esid=@Model.CurEngeneerSid&asid=@Model.CurAdminSid&csdnum=@Model.ClientSdNum&cmnt=@Url.Encode(lastServSheet.Descr)&cntr=@lastServSheet.CounterMono&cntrc=@lastServSheet.CounterColor&dvst=@lastServSheet.DeviceEnabled";
             window.open(zipClaimLink);
             $('#ZipCheckForm').submit();
         });
