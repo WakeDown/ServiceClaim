@@ -65,9 +65,8 @@
 {
     <script type="text/javascript">
         $(function () {
-            $('#search').click(function (){
-                window.location = '@Url.Action("Planing")?serviceEngeneerSid=' + $('#engeneersSelect').val();
-        });
+            fill();
+            $('#search').click(reloadWithParams);
             $('#engeneersSelect').multiselect({
                 includeSelectAllOption: true,
                 selectAllText: 'все',
@@ -80,7 +79,9 @@
                 autoclose: true,
                 language: "ru"
             }).on('changeDate', function (ev) {
-                window.location = '@Url.Action("Planing")?month=' + ev.format('yyyy-mm');
+                $('#month').attr('mthdate', ev.format('yyyy-mm'));
+                reloadWithParams();
+                //window.location = '@Url.Action("Planing")?month=' + ev.format('yyyy-mm');
             });;
             $('[name="city"]').click(fillAddressList);
             $('#btnIssuePlanSave').click(function () {
@@ -100,6 +101,21 @@
                 });
             });
         });
+
+        function fill() {
+            var servEngChks = $('#engeneersSelect checkbox');
+            var selServEng = win
+        }
+
+        function reloadWithParams() {
+            var month = $('#month').attr('mthdate');
+            var servEngVals = [];
+            var servEng = $('#engeneersSelect :checked');
+            for (var i = 0; i < servEng.length; i++) {
+                servEngVals.push($(servEng[i]).val());
+            }
+            window.location = '@Url.Action("Planing")?serviceEngeneerSid=' + servEngVals + '&month=' + month;
+        }
 
         function appendServiceIssue(data) {
             $.ajax({
