@@ -41,6 +41,7 @@ namespace ServiceClaim.Controllers
             {
                 return RedirectToAction("HandledError", "Error", new { message= ex.Message});
             }
+            
             return View(model);
         }
 

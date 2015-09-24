@@ -87,6 +87,14 @@ namespace ServiceClaim.Objects
             CurUser = GetCurUser();
             if (CurUser == new AdUser()) RedirectToAction("AccessDenied", "Error");
             ViewBag.CurUser = CurUser;
+            //ViewBag.TechAccess = CurUser.HasAccess(AdGroup.ServiceTech);
+            //ViewBag.AdminAccess = CurUser.HasAccess(AdGroup.ServiceAdmin);
+            //ViewBag.ManagerAccess = CurUser.HasAccess(AdGroup.ServiceManager);
+            //ViewBag.EngeneerAccess = CurUser.HasAccess(AdGroup.ServiceEngeneer);
+            //ViewBag.UserIsTech = CurUser.Is(AdGroup.ServiceTech);
+            //ViewBag.UserIsAdmin = CurUser.Is(AdGroup.ServiceAdmin);
+            //ViewBag.UserIsManager = CurUser.Is(AdGroup.ServiceManager);
+            //ViewBag.UserIsEngeneer = CurUser.Is(AdGroup.ServiceEngeneer);
             return CurUser;
         }
     }

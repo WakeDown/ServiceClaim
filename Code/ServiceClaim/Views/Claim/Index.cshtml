@@ -1,5 +1,6 @@
 ﻿@using System.Linq
 @using ServiceClaim.Models
+@using ServiceClaim.Objects
 @model ServiceClaim.Models.Claim
 
 @{
@@ -38,55 +39,55 @@
                 {
                     <div class="row"><label class="col-lg-2 text-right">Специалист</label> <span class="col-lg-10">@Model.Specialist.DisplayName</span></div>
                 }
-                @if (Model.State.SysName.ToUpper().Equals("NEW"))
+                @if (Model.State.SysName.ToUpper().Equals("NEW") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
                 {
                     @Html.Partial("SetWorkType", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("NEWADD") || Model.State.SysName.ToUpper().Equals("SRVADMWORK") || Model.State.SysName.ToUpper().Equals("SERVADMSETWAIT") || Model.State.SysName.ToUpper().Equals("SERVENGSETWAIT"))
+                @if ((Model.State.SysName.ToUpper().Equals("NEWADD") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager)) || (Model.State.SysName.ToUpper().Equals("SRVADMWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (ViewBag.ManagerAccess && Model.State.SysName.ToUpper().Equals("SERVADMSETWAIT")) || (Model.State.SysName.ToUpper().Equals("SERVENGSETWAIT")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
                 {
                     @Html.Partial("SpecialistSelect", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("TECHSET"))
+                @if (Model.State.SysName.ToUpper().Equals("TECHSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
                 {
                     @Html.Partial("TechConfirm", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("SERVADMSET") || Model.State.SysName.ToUpper().Equals("SRVENGSET"))
+                @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (ViewBag.EngeneerAccess && Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
                 {
                     @Html.Partial("ConfirmWork", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("TECHWORK"))
+                @if (Model.State.SysName.ToUpper().Equals("TECHWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
                 {
                     @Html.Partial("ServiceSheetTechForm", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("SERVENGOUTWAIT"))
+                @if (Model.State.SysName.ToUpper().Equals("SERVENGOUTWAIT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
                 {
                     @Html.Partial("StateEngOutWait", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("SRVENGWENT"))
+                @if (Model.State.SysName.ToUpper().Equals("SRVENGWENT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
                 {
                     @Html.Partial("SetServEngOnWork", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("SRVENGWORK"))
+                @if (Model.State.SysName.ToUpper().Equals("SRVENGWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
                 {
                     @Html.Partial("ServiceSheetForm", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("ZIPCHECK"))
+                @if (Model.State.SysName.ToUpper().Equals("ZIPCHECK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
                 {
                     @Html.Partial("ZipCheck", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("ZIPCHECKED"))
+                @if (Model.State.SysName.ToUpper().Equals("ZIPCHECKED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
                 {
                     @Html.Partial("ZipConfirm", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRMED"))
+                @if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRMED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
                 {
                     @Html.Partial("ZipOrder", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED"))
+                @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
                 {
                     @Html.Partial("ZipOrderConfirm", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("DONE"))
+                @if (Model.State.SysName.ToUpper().Equals("DONE") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
                 {
                     @Html.Partial("StateDone", Model)
                 }
