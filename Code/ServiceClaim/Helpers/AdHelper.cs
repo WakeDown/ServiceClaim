@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Web;
 using ServiceClaim.Objects;
 
@@ -103,5 +104,30 @@ namespace ServiceClaim.Helpers
                 return false;
             }
         }
+
+        //public static bool UserInGroup(IPrincipal user, params AdGroup[] groups)
+        //{
+        //    using (WindowsImpersonationContextFacade impersonationContext
+        //        = new WindowsImpersonationContextFacade(
+        //            nc))
+        //    {
+        //        var context = new PrincipalContext(ContextType.Domain);
+        //        var userPrincipal = UserPrincipal.FindByIdentity(context, IdentityType.Sid, user);
+
+        //        if (userPrincipal == null) return false;
+        //        ////if (userPrincipal.IsMemberOf(context, IdentityType.Sid, AdUserGroup.GetSidByAdGroup(AdGroup.SuperAdmin))) { return true; }//Если юзер Суперадмин
+
+        //        foreach (var grp in groups)
+        //        {
+        //            if (userPrincipal.IsMemberOf(context, IdentityType.Sid, AdUserGroup.GetSidByAdGroup(grp)))
+        //            {
+        //                return true;
+        //            }
+        //        }
+
+
+        //        return false;
+        //    }
+        //}
     }
 }

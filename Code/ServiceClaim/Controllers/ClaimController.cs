@@ -22,9 +22,15 @@ namespace ServiceClaim.Controllers
         //    return View(model);
         //}
 
+
         [HttpGet]
         public ActionResult Index(int? id)
         {
+            if (
+                !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
+                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
+                return HttpNotFound();
+
             if (!id.HasValue || id <= 0) return RedirectToAction("New");
             Claim model=new Claim();
             try
@@ -35,6 +41,7 @@ namespace ServiceClaim.Controllers
             {
                 return RedirectToAction("HandledError", "Error", new { message= ex.Message});
             }
+            
             return View(model);
         }
 
@@ -49,7 +56,7 @@ namespace ServiceClaim.Controllers
         {
             //try
             //{
-                if (!id.HasValue) throw new ArgumentException("Не указана заявка!");
+            if (!id.HasValue) throw new ArgumentException("Не указана заявка!");
                 ResponseMessage responseMessage;
                 var model = new Claim();
                 model.Id = id.Value;
@@ -139,9 +146,12 @@ namespace ServiceClaim.Controllers
         //    }
         //    return Json(new { });
         //}
-
         public async Task<ActionResult> List()
         {
+            if (
+                !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
+                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator)) return HttpNotFound();
+
             ListResult<Claim> result = await new Claim().GetList(topRows: 10);
             return View(result);
         }
