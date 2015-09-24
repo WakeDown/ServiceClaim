@@ -3,7 +3,7 @@
 @using ServiceClaim.Objects
 @model ServiceClaim.Models.Claim
 
-@using (Html.BeginForm("SpecialistSelect", "Claim", FormMethod.Post, new { @id = "SpecialistSelectForm", @class = "form-horizontal", data_toggle = "validator", role = "form" }))
+@using (Html.BeginForm("SpecialistSelect", "Claim", FormMethod.Post, new { @id = "SpecialistSelectForm", @class = "form-horizontal", role = "form" }))
 {
     @*<p>
             @Html.DropDownListFor(m=>m.WorkType, WorkType.GetSelectionList())
