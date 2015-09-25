@@ -92,17 +92,31 @@ namespace ServiceClaim.Models
             return new SelectList(GetPeriodMonthCurPrevNextList(year, month), "ListValue", "ListName");
         }
 
+        public static IEnumerable<ServiceIssuePeriodItemMonth> GroupByMonthes(IEnumerable<ServiceIssuePeriodItem> dates)
+        {
+            var monthes = GetMonthesFromItemArray(dates);
+            var list = new List<ServiceIssuePeriodItemMonth>();
+
+            foreach (var mon in monthes)
+            {
+                var periods = dates.Where(x => x.StartDate.Year == mon.Value.Year && x.StartDate.Month == mon.Value.Month);
+                list.Add(new ServiceIssuePeriodItemMonth(mon.Value, periods));
+            }
+            
+            return list;
+        }
+
         public static IDictionary<string, DateTime> GetMonthesFromItemArray(IEnumerable<ServiceIssuePeriodItem> dates)
         {
             DateTime minDay = dates.Min(x => x.StartDate);
-            DateTime maxDay = dates.Min(x => x.EndDate);
+            DateTime maxDay = dates.Max(x => x.EndDate);
             IDictionary<string, DateTime> monthes = new Dictionary<string, DateTime>();
             DateTime curDay = minDay;
             while (curDay <= maxDay)
             {
-                if (!monthes.Any() || !monthes.ContainsKey(minDay.ToString("yyyy-MM")))
+                if (!monthes.ContainsKey(curDay.ToString("yyyy-MM")))
                 {
-                    monthes.Add(minDay.ToString("yyyy-MM"), new DateTime(minDay.Year, minDay.Month, 1));
+                    monthes.Add(curDay.ToString("yyyy-MM"), new DateTime(curDay.Year, curDay.Month, 1));
                 }
 
                 curDay = curDay.AddDays(1);

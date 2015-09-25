@@ -11,13 +11,25 @@ namespace ServiceClaim.Controllers
     [Compress]
     public class ServiceIssuePlanController : BaseController
     {
-        // GET: Issue
+        [HttpGet]
         public ActionResult Planing(DateTime? month)
         {
             if (!month.HasValue) return RedirectToAction("Planing", new { month = $"{DateTime.Now:yyyy-MM}" });
 
             ViewBag.IssueCityList = ServiceIssue.GetPlaningCityList(month.Value);
 
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Planing()
+        {
+            //if (!month.HasValue) return RedirectToAction("Planing", new { month = $"{DateTime.Now:yyyy-MM}" });
+
+            DateTime month = Request.Form["month"]!= null ? DateTime.Parse(Request.Form["month"]) : DateTime.Now;
+            string serviceEngeneerSid = Request.Form["engeneersSelect"] ?? String.Empty;
+            TempData["serviceEngeneerSid"] = serviceEngeneerSid;
+            ViewBag.IssueCityList = ServiceIssue.GetPlaningCityList(month, serviceEngeneerSid);
+            //return RedirectToAction("Planing", new {month = month, serviceEngeneerSid = serviceEngeneerSid});
             return View();
         }
 

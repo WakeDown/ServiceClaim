@@ -152,6 +152,7 @@
     <Compile Include="Models\PlanServiceIssue.cs" />
     <Compile Include="Models\ServiceIssue.cs" />
     <Compile Include="Models\ServiceIssuePeriodItem.cs" />
+    <Compile Include="Models\ServiceIssuePeriodItemMonth.cs" />
     <Compile Include="Models\ServiceIssuePlan.cs" />
     <Compile Include="Models\ServiceIssuePlaningItem.cs" />
     <Compile Include="Models\ServiceIssuePlaningResult.cs" />

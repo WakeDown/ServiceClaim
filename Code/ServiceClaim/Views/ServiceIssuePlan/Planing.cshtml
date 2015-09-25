@@ -11,18 +11,22 @@
 
 <div class="row pad-b-md navbar-fixed-top sub-menu-fixed-top bg-primary">
     <div class="col-lg-3">
-        <div>
-            <input id="month" type="text" class="form-control" value="@String.Format("{0:MMMM yyyy}", DateTime.Now)" />
-        </div>
-        <div>
-            @*@Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), new {id="engeneersSelect", @class = "form-control", multiple = "multiple" })*@
-            <select id="engeneersSelect" class="form-control" multiple="multiple">
-                @foreach (var eng in ServiceIssue.GetEngeneerList())
-                {
-                    <option value="@eng.Key" selected="selected">@eng.Value</option>
-                }
-            </select>
-        </div>
+        @using (Html.BeginForm("Planing", "ServiceIssuePlan", FormMethod.Post))
+        {
+            <div>
+                <input id="month" name="month" type="text" class="form-control" mthdate="@String.Format("{0:yyyy-MM}", date)" value="@String.Format("{0:MMMM yyyy}", date)"/>
+            </div>
+            <div>
+                @*@Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), new {id="engeneersSelect", @class = "form-control", multiple = "multiple" })*@
+                <select id="engeneersSelect" name="engeneersSelect" class="form-control" multiple="multiple">
+                    @foreach (var eng in ServiceIssue.GetEngeneerList())
+                    {
+                        <option value="@eng.Key" @(TempData["serviceEngeneerSid"] != null && TempData["serviceEngeneerSid"].ToString().Contains(eng.Key) ? "selected=\"selected\"" : "")>@eng.Value</option>
+                    }
+                </select>
+                <button class="btn btn-info" id="search" type="submit"><i class="fa fa-search"></i></button>
+            </div>
+        }
     </div>
     <div class="col-lg-9">
         <div class="row">
@@ -63,7 +67,9 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function () {
+        $(function() {
+
+            //$('#search').click(reloadWithParams);
             $('#engeneersSelect').multiselect({
                 includeSelectAllOption: true,
                 selectAllText: 'все',
@@ -75,18 +81,21 @@
                 format: "MM yyyy",
                 autoclose: true,
                 language: "ru"
-            }).on('changeDate', function (ev) {
-                window.location = '@Url.Action("Planing")?month=' + ev.format('yyyy-mm');
-            });;
+            });
+                @*.on('changeDate', function (ev) {
+                $('#month').attr('mthdate', ev.format('yyyy-mm'));
+                reloadWithParams();
+                //window.location = '@Url.Action("Planing")?month=' + ev.format('yyyy-mm');
+            });*@
             $('[name="city"]').click(fillAddressList);
-            $('#btnIssuePlanSave').click(function () {
+            $('#btnIssuePlanSave').click(function() {
                 var serviceIssueId = $('#selectedIssueName').attr('sid');
                 var periodStr = $('#selPeriod').val();
                 $.ajax({
                     url: '@Url.Action("SaveServiceIssuePlan")',
                     method: 'POST',
                     data: { serviceIssueId: serviceIssueId, periodStr: periodStr },
-                    success: function (data) {
+                    success: function(data) {
                         if (!data.error) {
                             appendServiceIssue(data);
                         } else {
@@ -95,13 +104,41 @@
                     }
                 });
             });
+
+            fill();
         });
+
+        @*function fill() {
+            var servEngChks = $('#engeneersSelect [type="checkbox"]');
+            var selServEng = '@Request.QueryString[qsServEngName]';
+            var selEnrArr = selServEng.split(',');
+
+            for (var i = 0; i < selEnrArr.length; i++) {
+                alert($(servEngChks).find('[value="' + selEnrArr[i] + '"]'));
+                $(servEngChks).find('[value="' + selEnrArr[i] + '"]').prop('checked', true);
+            }
+        }*@
+
+        @*function reloadWithParams() {
+            var month = $('#month').attr('mthdate');
+            var servEngVals = [];
+            var servEng = $('#engeneersSelect :checked');
+            for (var i = 0; i < servEng.length; i++) {
+                servEngVals.push($(servEng[i]).val());
+            }
+            
+            $.post({
+                type: "POST",
+                url: '@Url.Action("Planing")',
+                data: { month:month, serviceEngeneerSid: servEngVals}
+            });
+        }*@
 
         function appendServiceIssue(data) {
             $.ajax({
                 url: '@Url.Action("GetServiceIssuePlanItem")?id=' + data.Id,
                 method: 'GET',
-                success: function (html) {
+                success: function(html) {
                     var $issueItem = $(html);
                     if ($issueItem.attr('name') === 'issueItem') {
                         $($issueItem).addClass('updated-issue-item');
@@ -115,7 +152,7 @@
                     //$tr.addClass('updated--issue-item');
                     //initTaskList($tr);
                 },
-                error: function (json) {
+                error: function(json) {
                     alert(json.error);
                 }
             });
@@ -129,7 +166,7 @@
                 url: '@Url.Action("GetAddressList")',
                 method: 'POST',
                 data: { month: month, idCity: cid },
-                success: function (data) {
+                success: function(data) {
 
                     if (data.length) {
                         var $container = $('[name="addressContainer"][cid="' + cid + '"]');
@@ -144,7 +181,7 @@
                     }
                     hideSpinner();
                 },
-                error: function (data) {
+                error: function(data) {
                     alert(data.error);
                     hideSpinner();
                 }
@@ -160,7 +197,7 @@
                 url: '@Url.Action("GetClientList")',
                 method: 'POST',
                 data: { month: month, idCity: cid, address: aid },
-                success: function (data) {
+                success: function(data) {
                     if (data.length) {
                         var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
                         $container.html('');
@@ -174,7 +211,7 @@
                     }
                     hideSpinner();
                 },
-                error: function (data) {
+                error: function(data) {
                     alert(data.error);
                     hideSpinner();
                 }
@@ -191,7 +228,7 @@
                 url: '@Url.Action("GetDeviceIssueList")',
                 method: 'POST',
                 data: { month: month, idCity: cid, address: aid, idClient: clid },
-                success: function (data) {
+                success: function(data) {
                     if (data.length) {
                         var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
                         $container.html('');
@@ -205,7 +242,7 @@
                     }
                     hideSpinner();
                 },
-                error: function (data) {
+                error: function(data) {
                     alert(data.error);
                     hideSpinner();
                 }
@@ -236,7 +273,7 @@
                 $issueNameInput.text(dname);
                 $issueNameInput.attr('sid', sid);
                 $issueNameInput.removeClass('updated-input');
-                setTimeout(function () {
+                setTimeout(function() {
                     $issueNameInput.addClass('updated-input');
                 }, 100);
             }
