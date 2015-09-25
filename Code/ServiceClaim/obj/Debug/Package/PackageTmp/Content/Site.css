@@ -299,7 +299,7 @@ blockquote.bg-success {
 }
 
 a.async-sel {
-    border-bottom: 1px dashed #000080;
+    /*border-bottom: 1px dashed #000080 !important;*/
 }
 
 a.async-sel:hover, a.async-sel:focus {
@@ -393,6 +393,23 @@ a.async-sel:visited {
     cursor: pointer;
 }
 
+.issue-item-sm {
+    border: 1px solid #999;
+    color: #000;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 3px;
+    font-size: 0.9em; 
+    cursor: pointer;
+    display: block;
+}
+
+.issue-item-sm:hover {
+    /*background-color: #3c763d;
+    color: #fff;*/
+    text-decoration: none;
+}
+
 .updated-input {
     /*border: 1px solid red;*/
     -webkit-animation-name: updated-input; /* Chrome, Safari, Opera */
@@ -412,3 +429,16 @@ a.async-sel:visited {
     0% {background-color: #ffecb3;}
     100% {background-color: #fff;}
 }
+
+.issues-count {
+    width: 40px !important;
+}
+
+.label-as-badge {
+    border-radius: 1em;
+}
+
+#issueContainer {
+    overflow-x: auto;
+}
+

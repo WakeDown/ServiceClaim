@@ -39,6 +39,9 @@ namespace ServiceClaim.Models
         public string CurTechSid { get; set; }
         public string CurManagerSid { get; set; }
 
+        public string DateStateChangeStr => string.Format("{0:dd.MM.yy hh:mm}", DateStateChange);
+        public string DateCreateStr => string.Format("{0:dd.MM.yy hh:mm}", DateCreate);
+
         public string StateChangeDateDiffStr
         {
             get
@@ -128,9 +131,9 @@ namespace ServiceClaim.Models
             CurManagerSid = model.CurManagerSid;
         }
 
-        public async Task<ListResult<Claim>> GetList(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null)
+        public async Task<ListResult<Claim>> GetListAsync(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetList?servAdminSid={servAdminSid}&idEngeneer={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}");
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetList?servAdminSid={servAdminSid}&servEngeneerSid={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}&managerSid={managerSid}&techSid={techSid}&serialNum={serialNum}&idDevice={idDevice}");
             string jsonString = await GetApiClientAsync().GetStringAsync(uri);
             var model = JsonConvert.DeserializeObject<ListResult<Claim>>(jsonString);
             return model;

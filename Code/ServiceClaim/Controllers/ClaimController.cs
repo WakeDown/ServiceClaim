@@ -152,7 +152,7 @@ namespace ServiceClaim.Controllers
                 !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
                     AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator)) return HttpNotFound();
 
-            ListResult<Claim> result = await new Claim().GetList(topRows: 10);
+            ListResult<Claim> result = await new Claim().GetListAsync(topRows: 10);
             return View(result);
         }
 
@@ -536,6 +536,12 @@ namespace ServiceClaim.Controllers
             if (!id.HasValue) return HttpNotFound();
             var model = new ServiceSheet(id.Value);
             return View(model);
+        }
+
+        public async Task<JsonResult> GetClaimList(int? idDevice, string serialNum)
+        {
+            var list = await new Claim().GetListAsync(idDevice: idDevice,serialNum: serialNum);
+            return Json(list); 
         }
     }
 }

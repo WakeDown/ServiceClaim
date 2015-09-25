@@ -38,7 +38,7 @@
                 <td>@claim.Device.FullName</td>
                 <td>@claim.Device.SerialNum</td>
                 <td>@claim.StateChangeDateDiffStr</td>
-                <td style="background-color: #@claim.State.BackgroundColor; color: #@claim.State.ForegroundColor">@claim.State.Name<div class="small">@String.Format("{0:dd.MM.yy hh:mm}", claim.DateStateChange)</div></td>
+                <td style="background-color: #@claim.State.BackgroundColor; color: #@claim.State.ForegroundColor">@claim.State.Name<div class="small">@claim.DateStateChangeStr</div></td>
                 <td>@claim.CreateDateDiffStr</td>
                 <td>@String.Format("{0:dd.MM.yy hh:mm}", claim.DateCreate)</td>
             </tr>
