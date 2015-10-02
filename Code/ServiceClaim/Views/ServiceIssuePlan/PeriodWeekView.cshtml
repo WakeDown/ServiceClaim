@@ -1,0 +1,56 @@
+﻿@using ServiceClaim.Models
+@model IEnumerable<ServiceClaim.Models.ServiceIssuePeriodItem>
+
+@{
+    var monthes = ServiceIssuePlan.GroupByMonthes(Model);
+    int mColLenght = 12 / monthes.Count();
+    int rowWidth = Model.Count()*250;
+}
+
+@if (Model.Any())
+{
+    <div class="row" style="width: @(rowWidth)px !important">
+        @foreach (var mth in monthes)
+        {
+            <div class="col-lg-@mColLenght">
+                <h3>@mth.Date.ToString("MMMM yyyy")</h3>
+                <div class="row">
+                    @{
+                        int pColLenght = 12/mth.Periods.Count();
+                    }
+                    @foreach (var period in mth.Periods)
+                    {
+
+                        <div class="col-lg-@pColLenght">
+                            <h4 name="periodTitle" value="@period.ListValue" class="cursor-pointer">@period.ListName <span class="label label-info label-as-badge">@period.DaysDiff</span></h4>
+
+                            @{
+                                var issueList = period.GetServiceIssueList();
+                            }
+                            <div id="periodContainer-@period.IdValue">
+                                @if (issueList.Any())
+                                {
+                                    foreach (var issue in issueList)
+                                    {
+                                        @Html.Partial("ServiceIssuePlanItem", issue)
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+                    }
+
+<script type="text/javascript">
+    $(function () {
+        $('[name="periodTitle"]').click(function () {
+            var val = $(this).attr('value');
+            $('#selPeriod').val(val);
+        });
+    });
+
+    
+</script>

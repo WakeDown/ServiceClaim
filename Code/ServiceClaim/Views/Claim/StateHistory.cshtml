@@ -1,4 +1,5 @@
-﻿@using ServiceClaim.Helpers
+﻿@using System.Configuration
+@using ServiceClaim.Helpers
 @model System.Collections.Generic.IEnumerable<ServiceClaim.Models.Claim2ClaimState>
 
 @foreach (var state in Model)
@@ -11,6 +12,12 @@
             {
                 <div>
                     <a href="@Url.Action("ServiceSheet", new {id=state.IdServiceSheet.Value})" target="_blank">Сервисный лист №@state.IdServiceSheet.Value</a>
+                </div>
+            }
+            @if (state.ZipClaimId.HasValue)
+            {
+                <div>
+                    <a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@state.ZipClaimId.Value})" target="_blank">Заявка на ЗИП №@state.ZipClaimId.Value</a>
                 </div>
             }
         </p>

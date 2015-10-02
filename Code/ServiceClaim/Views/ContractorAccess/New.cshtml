@@ -55,6 +55,7 @@
                 <label class="col-lg-2 control-label" for="orgName">Наименование организации</label>
                 <div class="col-lg-8">
                     @Html.TextBoxFor(m => m.OrgName, new { id = "orgName", @class = "form-control required-mark", required = "required", data_error = "Введите Наименование организации" })
+                    <small>Кавычки и другие спецсимволы недопустимы</small>
                     <span class="help-block with-errors"></span>
                 </div>
             </div>

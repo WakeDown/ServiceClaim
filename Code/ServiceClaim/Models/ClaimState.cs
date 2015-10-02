@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
+using ServiceClaim.Objects;
 
 namespace ServiceClaim.Models
 {
-    public class ClaimState
+    public class ClaimState:DbModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -15,6 +17,7 @@ namespace ServiceClaim.Models
         public string Descr { get; set; }
         public string BackgroundColor { get; set; }
         public string ForegroundColor { get; set; }
+        public int ClaimCount { get; set; }
 
         public static IEnumerable<ClaimState> GetHistory(int idClaim)
         {
@@ -25,6 +28,14 @@ namespace ServiceClaim.Models
             }
             //list = list.OrderByDescending(s => s.DateCreate).ToList();
             return list;
+        }
+
+        public static IEnumerable<ClaimState> GetFilterList()
+        {
+            Uri uri = new Uri(String.Format("{0}/ClaimState/GetFilterList", OdataServiceUri));
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ClaimState>>(jsonString);
+            return model;
         }
 
         //public static ClaimState GetFake(int i)

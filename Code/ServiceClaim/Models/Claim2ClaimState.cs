@@ -17,6 +17,7 @@ namespace ServiceClaim.Models
         public string SpecialistSid { get; set; }
         public int IdWorkType { get; set; }
         public int? IdServiceSheet { get; set; }
+        public int? ZipClaimId { get; set; }
 
         public Claim2ClaimState() { }
     }

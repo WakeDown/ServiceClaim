@@ -49,7 +49,19 @@ function showSpinner(obj, offset, offsetTop, offsetLeft) {
         stOf = "top:" + offsetTop + "px;left:" + offsetLeft + "px";
     }
     var loading = "<div class='spinner active " + of + "' style='" + stOf + "'><i class='fa fa-spin fa-spinner'></i></div>";
+    $(obj).find('.spinner.active').remove();
     $(obj).before(loading);
+}
+
+function showSpinnerAfter(obj, offset, offsetTop, offsetLeft) {
+    var of = "";
+    var stOf = "";
+    if (offset) {
+        of = "on-element";
+        stOf = "top:" + offsetTop + "px;left:" + offsetLeft + "px";
+    }
+    var loading = "<div class='spinner active " + of + "' style='" + stOf + "'><i class='fa fa-spin fa-spinner'></i></div>";
+    $(obj).after(loading);
 }
 
 function hideSpinner(obj) {

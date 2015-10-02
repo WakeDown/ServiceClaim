@@ -1,6 +1,7 @@
 ﻿body {
     font-family: Arial;
     background: #B4B4B4 url(../Content/images/bg1.png) repeat left top;
+    padding-top: 50px;
 }
 
 
@@ -12,7 +13,7 @@
 
 .body-content {
     background: #fff;
-    padding-top: 70px;
+    padding-top: 20px;
 }
 
 .body-content {
@@ -218,11 +219,11 @@ ul.tree {
 }
 
 .text-sm {
-    font-size: 0.9em;
+    font-size: 0.9em !important;
 }
 
 .text-xs {
-    font-size: 0.7em;
+    font-size: 0.7em !important;
 }
 
 .info-top {
@@ -296,4 +297,158 @@ blockquote.bg-success {
 .planing-sel-list .pad-3 {
     margin-left: 15px;
     font-size: 0.9em;
+}
+
+a.async-sel {
+    /*border-bottom: 1px dashed #000080 !important;*/
+}
+
+a.async-sel:hover, a.async-sel:focus {
+    text-decoration: none;
+    /*border-bottom: none;*/
+}
+
+a.async-sel:visited {
+    text-decoration: none;
+}
+
+.pad-b-md {
+    padding-bottom: 15px;
+}
+
+.btn-xl {
+    height: 100%;
+}
+
+.sub-menu-fixed-top {
+    padding-left: 10px;
+    padding-top: 10px;
+    margin-top: 50px;
+}
+.sub-menu-fixed-top-marginer {
+    margin-bottom: 70px;
+}
+.sub-menu-fixed-top-padding {
+    padding-top: 70px;
+}
+
+.updated-issue-item {
+    /*border: 1px solid red;*/
+    -webkit-animation-name: updated-issue-item; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: updated-issue-item;
+    animation-duration: 4s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes updated-issue-item {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}
+
+/* Standard syntax */
+@keyframes updated-issue-item {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}
+
+.accent-issue-item {
+    /*border: 1px solid red;*/
+    -webkit-animation-name: accent-issue-item; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: accent-issue-item;
+    animation-duration: 4s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes accent-issue-item {
+    0% {background-color: #3c763d;}
+    100% {background-color: #fff;}
+}
+
+/* Standard syntax */
+@keyframes accent-issue-item {
+    0% {background-color: #3c763d;}
+    100% {background-color: #fff;}
+}
+
+.issue-plan-item {
+    border: 1px solid #3c763d;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 3px;
+    font-size: 0.8em;
+}
+
+.issue-plan-item:hover {
+    cursor: pointer;
+    background-color: #3c763d;
+}
+
+.issue-item {
+   border: 1px solid #3c763d;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 3px;
+    font-size: 0.9em; 
+    cursor: pointer;
+}
+
+.issue-item-sm {
+    border: 1px solid #999;
+    color: #000;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 3px;
+    font-size: 0.9em; 
+    cursor: pointer;
+    display: block;
+}
+
+.issue-item-sm:hover {
+    /*background-color: #3c763d;
+    color: #fff;*/
+    text-decoration: none;
+}
+
+.updated-input {
+    /*border: 1px solid red;*/
+    -webkit-animation-name: updated-input; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: updated-input;
+    animation-duration: 4s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes updated-input {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}
+
+/* Standard syntax */
+@keyframes updated-input {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}
+
+.issues-count {
+    width: 40px !important;
+}
+
+.label-as-badge {
+    border-radius: 1em;
+}
+
+#issueContainer {
+    overflow-x: auto;
+}
+
+.filter-state-inem {
+    float: left;
+    margin: 3px;
+}
+
+.filter-state-inem a {
+    display: block;
+    padding: 5px;
 }

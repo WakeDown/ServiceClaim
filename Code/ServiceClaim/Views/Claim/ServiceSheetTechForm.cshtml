@@ -29,7 +29,14 @@
     <div class="row" id="commentContainer">
         <label class="col-lg-2 text-right">Комментарий</label>
         <div class="col-lg-6">
-            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new { id = "comment", @class = "form-control required-mark", required = "required" })
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new {id = "comment", @class = "form-control required-mark", required = "required"})
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="noCounterContainer">
+        <label class="col-lg-2 text-right">Счетчик предусмотрен</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.NoCounter, false, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.NoCounter, true) нет
             <span class="help-block with-errors"></span>
         </div>
     </div>
@@ -47,13 +54,6 @@
             <span class="help-block with-errors"></span>
         </div>
     </div>
-    <div class="row" id="noCounterContainer">
-        <label class="col-lg-2 text-right">Счетчик предусмотрен</label>
-        <div class="col-lg-2">
-            @Html.RadioButtonFor(m => m.ServiceSheet4Save.NoCounter, false, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.NoCounter, true) нет
-            <span class="help-block with-errors"></span>
-        </div>
-    </div>
     <div class="row" id="countersContainer">
         <label class="col-lg-2 text-right">Счетчик</label>
         @*<div class="col-lg-2">
@@ -61,7 +61,7 @@
             <span class="help-block with-errors"></span>
         </div>*@
         <div class="col-lg-2">
-            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control", placeholder = "Черно/Белый" })
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control required-mark", placeholder = "Черно/Белый" })
             <span class="help-block with-errors"></span>
         </div>
         <div class="col-lg-2">

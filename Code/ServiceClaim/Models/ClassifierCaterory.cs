@@ -18,6 +18,7 @@ namespace ServiceClaim.Models
         //public decimal Price { get; set; }
         //public decimal CostPeople { get; set; }
         //public decimal CostCompany { get; set; }
+        public string ListName => $"{Number} {Name}";
 
         private void FillSelf(ClassifierCaterory model)
         {

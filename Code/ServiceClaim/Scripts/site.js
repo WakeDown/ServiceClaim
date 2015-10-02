@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     //editMulticolSelects();
-
+    
 });
 
 function editMulticolSelects() {
@@ -50,6 +50,17 @@ function showSpinner(obj, offset, offsetTop, offsetLeft) {
     }
     var loading = "<div class='spinner active " + of + "' style='" + stOf + "'><i class='fa fa-spin fa-spinner'></i></div>";
     $(obj).before(loading);
+}
+
+function showSpinnerAfter(obj, offset, offsetTop, offsetLeft) {
+    var of = "";
+    var stOf = "";
+    if (offset) {
+        of = "on-element";
+        stOf = "top:" + offsetTop + "px;left:" + offsetLeft + "px";
+    }
+    var loading = "<div class='spinner active " + of + "' style='" + stOf + "'><i class='fa fa-spin fa-spinner'></i></div>";
+    $(obj).after(loading);
 }
 
 function hideSpinner(obj) {

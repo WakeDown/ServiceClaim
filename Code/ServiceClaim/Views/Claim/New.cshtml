@@ -16,7 +16,7 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="ctrFind">Клиент</label>
             <div class="col-lg-2">
-                <input id="ctrFind" type="text" placeholder="поиск клиента" class="form-control"/>
+                <input id="ctrFind" type="text" placeholder="поиск клиента" class="form-control" />
                 <small class="text-danger"></small>
             </div>
             <div class="col-lg-4">
@@ -50,7 +50,7 @@
             <label class="col-lg-2 control-label" for="devFind">Аппарат</label>
             <div class="col-lg-2">
                 <p>
-                    <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control"/>
+                    <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control" />
                     <input id="devSnFind" type="text" placeholder="cерийный номер" class="form-control" />
                 </p>
             </div>
@@ -58,7 +58,7 @@
                 <div class="input-group" style="width: 100%">
                     <span id="devSpinner" class="spinner on-input"><i class="fa fa-spinner fa-spin"></i></span>
                     <select id="devList" name="devList" class="form-control required-mark" required="required" data-error="Выберите Аппарат"></select>
-                    <input id="devListData" type="hidden" value=""/>
+                    <input id="devListData" type="hidden" value="" />
                     <div class="input-group-addon" style="width: 50px">
                         <span id="devListCount" class="label label-info"></span>
                     </div>
@@ -70,41 +70,49 @@
             <div class="col-lg-2"><span class="help-block with-errors"></span></div>
         </div>
         <div class="form-group">
+            <div class="col-lg-push-2 col-lg-6">
+                <div id="claimsContainer" class="row">
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-lg-2 control-label" for="descr">Описание</label>
             <div class="col-lg-6">
                 <textarea id="descr" name="descr" type="text" placeholder="Что случилось?" class="form-control required-mark" required="required" rows="3" data-error="Введите описание заявки"></textarea>
             </div>
             <div class="col-lg-2"><span class="help-block with-errors"></span></div>
         </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label" for="client_sd_num">№ SD заказчика</label>
-            <div class="col-lg-2">
-                <input id="client_sd_num" name="client_sd_num" type="text" class="form-control" data-error="Введите № SD заказчика" />
+            <div class="form-group">
+                <label class="col-lg-2 control-label" for="client_sd_num">№ SD заказчика</label>
+                <div class="col-lg-2">
+                    <input id="client_sd_num" name="client_sd_num" type="text" class="form-control" data-error="Введите № SD заказчика" />
+                </div>
+                <div class="col-lg-2"><span class="help-block with-errors"></span></div>
             </div>
-            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
-        </div>
-        <div class="form-group">
-            <div class="col-lg-push-2 col-lg-5">
-                @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@
-                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;добавить</button>
-                <p class="text-danger">
-                    @TempData["error"]
-                </p>
+            <div class="form-group">
+                <div class="col-lg-push-2 col-lg-5">
+                    @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@
+                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;добавить</button>
+                    <a class="btn btn-default" href="@Url.Action("New")"><i class="fa fa-refresh"></i>&nbsp;очистить</a>
+                    <p class="text-danger">
+                        @TempData["error"]
+                    </p>
+                </div>
             </div>
-        </div>
     }
 }
 
 @section scripts
 {
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#ctrFind').keypress(function(e) {
+        $(document).ready(function () {
+            $('#ctrFind').keypress(function (e) {
                 if (e.which !== 13) return;
                 ctrFind(e);
             });
-                //.blur(ctrFind);
-            $('#contFind').keypress(function(e) {
+            //.blur(ctrFind);
+            $('#contFind').keypress(function (e) {
                 if (e.which !== 13) return;
                 e.preventDefault();
                 displayCtrs();
@@ -115,12 +123,12 @@
             //    displayCtrs();
             //    displayConts();
             //});
-            $('#devFind').keypress(function(e) {
+            $('#devFind').keypress(function (e) {
                 if (e.which !== 13) return;
                 e.preventDefault();
                 displayDevs(true);
                 $('#devList').focus();
-            });//.blur(function () { displayDevs(true); });
+            }); //.blur(function () { displayDevs(true); });
             $('#devSnFind').keypress(function (e) {
                 if (e.which !== 13) return;
                 e.preventDefault();
@@ -132,6 +140,30 @@
             $('#devList').change(setDevCtrNcont);
             $('#ctrFind').focus();
         });
+
+        function showClaims() {
+            $('#claimsContainer').empty();
+            showSpinner($('#claimsContainer'));
+            var devId = $('#devList').val();
+            $.ajax({
+                url: '@Url.Action("GetClaimList")?idDevice=' + devId,
+                method: 'POST',
+                success: function (data) {
+                    $('#claimsContainer').empty();
+                    if (data.List.length > 0) {
+                        for (var i = 0; i < data.List.length; i++) {
+                            var item = data.List[i];
+                            $('#claimsContainer').append('<div class="col-lg-3"><a class="issue-item-sm" style="border: 1px solid #' + item.State.BackgroundColor + '; background-color: #' + item.State.BackgroundColor + '; color: #' + item.State.ForegroundColor + '" target="_blank" href="@Url.Action("Index")/' + item.Id + '">№' + item.Id + ' (кл№' + item.ClientSdNum + ')<br /><small>Создано ' + item.DateCreateStr + '</small><br />' + item.State.Name + '<br /><small>' + item.DateStateChangeStr + '</small></a></div>');
+                        }
+                    }
+                    hideSpinner($('#claimsContainer'));
+                },
+                error: function () {
+                    $('#claimsContainer').empty();
+                    hideSpinner($('#claimsContainer'));
+                }
+            });
+        }
 
         //function fidLists(e) {
         //    if (e.which !== 13) return;
@@ -184,6 +216,7 @@
             $('#contListCount').text(0);
             displayCtrs();
             displayConts();
+            showClaims();
         }
 
         function displayDevs(updateCtrNcontLists) {
@@ -204,7 +237,7 @@
                 url: '@Url.Action("GetDevices")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName, serialNum: serialNum },
-                success: function(data) {
+                success: function (data) {
                     var $devList = $('#devList');
                     var $vFltrCntnr = $('#vendorFilterCntnr');
                     $devList.find('option').remove();
@@ -227,17 +260,20 @@
                             //    $devList.append($("<option></option>").attr("value", dev.Id).text(dev.SelListName));
                             //}
                             filterDeviceList('');
-                        } else { $('#devListCount').text(0); }
+                        } else {
+                            $('#devListCount').text(0);
+                        }
                         //else {
                         //    var help = $ctrList.next('small');
                         //    help.text('ничего не найдено');
                         //}
                         if (updateCtrNcontLists) setDevCtrNcont();
+                    } else {
+                        $('#devListCount').text(0);
                     }
-                    else { $('#devListCount').text(0); }
                     $('#devSpinner').removeClass('active');
                 },
-                error: function() {
+                error: function () {
                     $('#devSpinner').removeClass('active');
                 }
             });
@@ -288,7 +324,7 @@
                 url: '@Url.Action("GetConts")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
-                success: function(data) {
+                success: function (data) {
                     if (data) {
                         if (data.length > 0) {
                             var contList = $('#contList');
@@ -301,11 +337,15 @@
                                 contList.append($("<option></option>").attr("value", cont.Id).text(cont.Number));
                             }
                             $('#contListCount').text(data.length);
-                        } else { $('#contListCount').text(0); }
-                    } else { $('#contListCount').text(0); }
+                        } else {
+                            $('#contListCount').text(0);
+                        }
+                    } else {
+                        $('#contListCount').text(0);
+                    }
                     $('#contSpinner').removeClass('active');
                 },
-                error:function() {
+                error: function () {
                     $('#contSpinner').removeClass('active');
                 }
             });
@@ -319,7 +359,7 @@
             var contId = $('#contList').val();
             var devId = $('#devList').val();
             var devName = $('#devFind').val();
-            
+
             if (ctrName === '' && ctrId === null && contId === null && devId === null) {
                 $('#ctrList').find('option').remove();
                 return;
@@ -329,7 +369,7 @@
                 url: '@Url.Action("GetCtors")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
-                success: function(data) {
+                success: function (data) {
                     var $ctrList = $('#ctrList');
                     $ctrList.find('option').remove();
 
@@ -341,12 +381,12 @@
                             }
                             $('#ctrListCount').text(data.length);
                         } else {
-                            
+
                             $('#ctrListCount').text(0);
                         }
-                        
+
                         if (updateConNdevLists) {
-                            
+
                             setCtrContNdev();
                         }
                         //else {
@@ -358,7 +398,7 @@
                     }
                     $('#ctrSpinner').removeClass('active');
                 },
-                error:function() {
+                error: function () {
                     $('#ctrSpinner').removeClass('active');
                 }
             });

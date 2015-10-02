@@ -53,24 +53,24 @@ namespace ServiceClaim.Objects
                         user.Sid = sid;
                         var login = wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
                         user.Login = login;
-                        //var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
-                        //if (userPrincipal != null)
-                        //{
-                        //    var mail = userPrincipal.EmailAddress;
-                        //    var name = userPrincipal.DisplayName;
-                        //    user.Email = mail;
-                        //    user.FullName = name;
-                        //    user.AdGroups = new List<AdGroup>();
-                        //    var wp = new WindowsPrincipal(wi);
-                        //    foreach (var role in AdUserGroup.GetList())
-                        //    {
-                        //        var grpSid = new SecurityIdentifier(role.Sid);
-                        //        if (wp.IsInRole(grpSid))
-                        //        {
-                        //            user.AdGroups.Add(role.Group);
-                        //        }
-                        //    }
-                        //}
+                        var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
+                        if (userPrincipal != null)
+                        {
+                            var mail = userPrincipal.EmailAddress;
+                            var name = userPrincipal.DisplayName;
+                            user.Email = mail;
+                            user.FullName = name;
+                            //user.AdGroups = new List<AdGroup>();
+                            //var wp = new WindowsPrincipal(wi);
+                            //foreach (var role in AdUserGroup.GetList())
+                            //{
+                            //    var grpSid = new SecurityIdentifier(role.Sid);
+                            //    if (wp.IsInRole(grpSid))
+                            //    {
+                            //        user.AdGroups.Add(role.Group);
+                            //    }
+                            //}
+                        }
                     }
                 }
             }
@@ -87,6 +87,14 @@ namespace ServiceClaim.Objects
             CurUser = GetCurUser();
             if (CurUser == new AdUser()) RedirectToAction("AccessDenied", "Error");
             ViewBag.CurUser = CurUser;
+            //ViewBag.TechAccess = CurUser.HasAccess(AdGroup.ServiceTech);
+            //ViewBag.AdminAccess = CurUser.HasAccess(AdGroup.ServiceAdmin);
+            //ViewBag.ManagerAccess = CurUser.HasAccess(AdGroup.ServiceManager);
+            //ViewBag.EngeneerAccess = CurUser.HasAccess(AdGroup.ServiceEngeneer);
+            //ViewBag.UserIsTech = CurUser.Is(AdGroup.ServiceTech);
+            //ViewBag.UserIsAdmin = CurUser.Is(AdGroup.ServiceAdmin);
+            //ViewBag.UserIsManager = CurUser.Is(AdGroup.ServiceManager);
+            //ViewBag.UserIsEngeneer = CurUser.Is(AdGroup.ServiceEngeneer);
             return CurUser;
         }
     }

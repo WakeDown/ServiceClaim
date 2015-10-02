@@ -1,0 +1,27 @@
+﻿@model ServiceClaim.Models.ServiceSheet
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ServiceSheer</title>
+</head>
+<body>
+<div>
+    Id @Model.Id <br/>
+    ProcessEnabled @Model.ProcessEnabled <br />
+    DeviceEnabled @Model.DeviceEnabled <br />
+    ZipClaim @Model.ZipClaim <br />
+    Descr @Model.Descr <br />
+    CounterUnavailable @Model.CounterUnavailable <br />
+    NoCounter @Model.NoCounter <br />
+    CounterTotal @Model.CounterTotal <br />
+    CounterMono @Model.CounterMono <br />
+    CounterColor @Model.CounterColor <br />
+</div>
+</body>
+</html>

@@ -9,19 +9,98 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>ServiceSheer</title>
+    @Styles.Render("~/Content/bootstrapcss")
+    <style type="text/css">
+        .center-block {
+            width: 800px;
+        }
+
+        .sheet {
+            margin-top: 50px;
+            padding: 10px;
+            background-color: #eceadc;
+        }
+
+        .tbl td {
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
-<div>
-    Id @Model.Id <br/>
-    ProcessEnabled @Model.ProcessEnabled <br />
-    DeviceEnabled @Model.DeviceEnabled <br />
-    ZipClaim @Model.ZipClaim <br />
-    Descr @Model.Descr <br />
-    CounterUnavailable @Model.CounterUnavailable <br />
-    NoCounter @Model.NoCounter <br />
-    CounterTotal @Model.CounterTotal <br />
-    CounterMono @Model.CounterMono <br />
-    CounterColor @Model.CounterColor <br />
-</div>
+    <p>
+        <div class="row">
+            <div class="center-block sheet">
+                <table class="tbl">
+                    <tr>
+                        <td>№ сервисного листа</td>
+                        <td>@Model.Id</td>
+                    </tr>
+                    <tr>
+                        <td>№ заявки</td>
+                        <td>@Model.IdClaim</td>
+                    </tr>
+                    <tr>
+                        <td>S/N</td>
+                        <td>@Model.Device.SerialNum</td>
+                    </tr>
+                    <tr>
+                        <td>Аппарат</td>
+                        <td>@Model.Device.Vendor @Model.Device.ModelName</td>
+                    </tr>
+                    <tr>
+                        <td>Классификатор</td>
+                        <td>@Model.DeviceClassifierCaterory.ListName</td>
+                    </tr>
+                    <tr>
+                        <td>Тип работ</td>
+                        <td>@Model.WorkType.ListName</td>
+                    </tr>
+                    <tr>
+                        <td>Счетчик</td>
+                        <td>@Model.CounterMono</td>
+                    </tr>
+                    <tr>
+                        <td>Счетчик цветной</td>
+                        <td>@Model.CounterColor</td>
+                    </tr>
+                    @if (!String.IsNullOrEmpty(Model.CounterDescr))
+                    {
+                        <tr>
+                            <td>Комментарий к счетчику</td>
+                            <td>@Model.CounterDescr</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Комментарий</td>
+                        <td>@Model.Descr</td>
+                    </tr>
+                    <tr>
+                        <td>Инженер</td>
+                        <td>@Model.Engeneer.DisplayName</td>
+                    </tr>
+                    <tr>
+                        <td>Сервисный администратор</td>
+                        <td>@Model.Admin.DisplayName</td>
+                    </tr>
+                    <tr>
+                        <td>Время работы</td>
+                        <td>@Model.TimeOnWorkMinutes мин</td>
+                    </tr>
+                </table>
+                @*<div> </div>
+                <div>
+                    ProcessEnabled @Model.ProcessEnabled <br />
+                    DeviceEnabled @Model.DeviceEnabled <br />
+                    ZipClaim @Model.ZipClaim <br />
+                    Descr @Model.Descr <br />
+                    CounterUnavailable @Model.CounterUnavailable <br />
+                    NoCounter @Model.NoCounter <br />
+                    CounterTotal @Model.CounterTotal <br />
+                    CounterMono @Model.CounterMono <br />
+                    CounterColor @Model.CounterColor <br />
+                </div>*@
+            </div>
+        </div>
+    </p>
 </body>
 </html>
