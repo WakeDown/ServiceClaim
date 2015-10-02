@@ -5,18 +5,33 @@
 @{
     ViewBag.Title = "Список заявок";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var filterStates = ClaimState.GetFilterList();
 }
 
 <p>
-    <a class="btn btn-primary" href="@Url.Action("New")"><i class="fa fa-plus-circle"></i> новая</a>
-</p>
+    <div class="col-lg-4">
+        @Html.DropDownList("clientFilter", new SelectList(Contractor.GetServiceClaimFilterList(), "Id", "ListName", Request.QueryString["client"]), "--все клиенты--", new { @class = "form-control" })
+    </div>
+    @if (filterStates != null && filterStates.Any())
+    {
+        @*<ul class="list-inline">*@
+        <a class="btn btn-primary" href="@Url.Action("List")">все</a>
+        foreach (ClaimState st in filterStates)
+        {
+            <a class="btn" style="color: #@st.ForegroundColor; background-color: #@st.BackgroundColor" href="@Url.Action("List")?state=@st.Id&client=@Request.QueryString["client"]">@st.Name (@st.ClaimCount)</a>
 
+        }
+        @*</ul>*@
+    }
+</p>
+<p>
+
+</p>
 @if (Model.List.Any())
 {
-    <p class="text-info">
-        @*<span class="">показано записей <span class="label label-warning label-badge">@Model.List.Count()</span> из <span class="label label-success label-badge">@Model.TotalCount</span></span>*@
-        <span class="">показано записей <span class="bold">@Model.List.Count()</span> из @Model.TotalCount</span>
-    </p>
+    @*<p class="text-info">
+            <span class="">показано записей <span class="bold">@Model.List.Count()</span> из @Model.TotalCount</span>
+        </p>*@
     <table id="claimList" class="table table-bordered sel-list">
         <tr class="bg-primary">
             <th class="min-width">№</th>
@@ -31,7 +46,7 @@
         </tr>
         @foreach (var claim in Model.List)
         {
-            <tr claimid="@claim.Id" onclick="window.location = '@Url.Action("Index")/@claim.Id';">
+            <tr claimid="@claim.Id">
                 <th>@claim.Id</th>
                 <th>@claim.ClientSdNum</th>
                 <td>@claim.Contractor.FullName</td>
@@ -44,11 +59,43 @@
             </tr>
         }
     </table>
+    if (Model.List.Count() < Model.TotalCount)
+    {
+        <div class="row">
+            <blockquote class="alert-danger pull-right">
+                показать
+                @if (Model.TotalCount > 99)
+                {
+                    <button name="displayRows" value="100" class="btn btn-default">показать 100</button>
+                }
+                @if (Model.TotalCount > 299)
+                {
+                    <button name="displayRows" value="300" class="btn btn-default">показать 300</button>
+                }
+                @if (Model.TotalCount > 999)
+                {
+                    <button name="displayRows" value="1000" class="btn btn-default">показать 1000</button>
+                }
+                <button name="displayRows" value="@Model.TotalCount" class="btn btn-link">показать все</button>
+                показаны @Model.List.Count() из @Model.TotalCount
+            </blockquote>
+        </div>
+    }
     <script type="text/javascript">
+        $('[name="displayRows"]').click(function () {
+            var rows = $(this).attr('value');
+            reload(rows);
+        });
+        function reload(topRows) {
+            var client = $('#clientFilter').val();
+            var url = '@Url.Action("List")?client=' + client + '&state=@Request.QueryString["state"]' + '&topRows=' + topRows;
+            window.location = url;
+        }
         $(document).ready(function () {
-            
-            $('#claimList tr').click(function() {
-                window.location = '@Url.Action("Index")/'+ $(this).attr('claimid');
+            window.location.hash = 'claimList';
+            $('#clientFilter').change(reload);
+            $('#claimList tr[claimid]').click(function () {
+                window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
             });
 
             //setTimeout(function () {window.location.reload(1);}, 60000);

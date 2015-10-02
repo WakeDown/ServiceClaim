@@ -1,6 +1,7 @@
 ﻿body {
     font-family: Arial;
     background: #B4B4B4 url(../Content/images/bg1.png) repeat left top;
+    padding-top: 50px;
 }
 
 
@@ -12,7 +13,7 @@
 
 .body-content {
     background: #fff;
-    padding-top: 70px;
+    padding-top: 20px;
 }
 
 .body-content {
@@ -442,3 +443,12 @@ a.async-sel:visited {
     overflow-x: auto;
 }
 
+.filter-state-inem {
+    float: left;
+    margin: 3px;
+}
+
+.filter-state-inem a {
+    display: block;
+    padding: 5px;
+}

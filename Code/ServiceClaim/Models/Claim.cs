@@ -139,13 +139,13 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        //public static ListResult<Claim> GetList(int? idAdmin = null, int? idEngeneer = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null)
-        //{
-        //    Uri uri = new Uri($"{OdataServiceUri}/Claim/GetList?idAdmin={idAdmin}&idEngeneer={idEngeneer}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}");
-        //    string jsonString = GetJson(uri);
-        //    var model = JsonConvert.DeserializeObject<ListResult<Claim>>(jsonString);
-        //    return model;
-        //}
+        public static ListResult<Claim> GetList(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool activeClaimsOnly = false, int? idClaimState = null, int? clientId = null)
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetList?servAdminSid={servAdminSid}&servEngeneerSid={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}&managerSid={managerSid}&techSid={techSid}&serialNum={serialNum}&idDevice={idDevice}&activeClaimsOnly={activeClaimsOnly}&idClaimState={idClaimState}&clientId={clientId}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<ListResult<Claim>>(jsonString);
+            return model;
+        }
 
         public async Task<ResponseMessage> SaveAsync()
         {

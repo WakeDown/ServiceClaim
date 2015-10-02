@@ -1,14 +1,16 @@
 ﻿
+@using System.Configuration
 @using ServiceClaim.Models
 @using ServiceClaim.Objects
 @model ServiceClaim.Models.Claim
 
-@using (Html.BeginForm("ZipOrder", "Claim", FormMethod.Post, new { @id = "ConfirmWorkForm", @class = "form-horizontal", data_toggle = "validator", role = "form" }))
+@using (Html.BeginForm("ZipOrder", "Claim", FormMethod.Post, new { @id = "ZipCheckForm", @class = "form-horizontal", data_toggle = "validator", role = "form" }))
 {
     @Html.HiddenFor(m => m.Id)
     <div class="row">
         <div class="col-lg-push-2 col-lg-10">
-            <button type="submit" class="btn btn-success">ЗИП заказан</button>
+            @*<a id="zipClaim"  class="btn btn-primary">Заказать ЗИП</a>*@
+            <button type="submit" class="btn btn-success">Заказать ЗИП</button>
         </div>
     </div>
     <div class="row">
@@ -17,6 +19,12 @@
         </div>
     </div>
 }
-
-
-
+<script type="text/javascript">
+    @*$(function () {
+        $('#zipClaim').click(function () {
+            var zipClaimLink = "@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?snum=@Model.Device.SerialNum&ssid=@lastServSheet.Id&servid=@Model.Id&esid=@(String.IsNullOrEmpty(Model.CurEngeneerSid)? Model.CurTechSid : Model.CurEngeneerSid)&asid=@Model.CurAdminSid&csdnum=@Model.ClientSdNum&cmnt=@Url.Encode(lastServSheet.Descr)&cntr=@lastServSheet.CounterMono&cntrc=@lastServSheet.CounterColor&dvst=@lastServSheet.DeviceEnabled";
+            window.open(zipClaimLink);
+            $('#ZipCheckForm').submit();
+        });
+    });*@
+</script>
