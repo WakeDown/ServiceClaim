@@ -53,24 +53,24 @@ namespace ServiceClaim.Objects
                         user.Sid = sid;
                         var login = wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
                         user.Login = login;
-                        //var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
-                        //if (userPrincipal != null)
-                        //{
-                        //    var mail = userPrincipal.EmailAddress;
-                        //    var name = userPrincipal.DisplayName;
-                        //    user.Email = mail;
-                        //    user.FullName = name;
-                        //    user.AdGroups = new List<AdGroup>();
-                        //    var wp = new WindowsPrincipal(wi);
-                        //    foreach (var role in AdUserGroup.GetList())
-                        //    {
-                        //        var grpSid = new SecurityIdentifier(role.Sid);
-                        //        if (wp.IsInRole(grpSid))
-                        //        {
-                        //            user.AdGroups.Add(role.Group);
-                        //        }
-                        //    }
-                        //}
+                        var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
+                        if (userPrincipal != null)
+                        {
+                            var mail = userPrincipal.EmailAddress;
+                            var name = userPrincipal.DisplayName;
+                            user.Email = mail;
+                            user.FullName = name;
+                            //user.AdGroups = new List<AdGroup>();
+                            //var wp = new WindowsPrincipal(wi);
+                            //foreach (var role in AdUserGroup.GetList())
+                            //{
+                            //    var grpSid = new SecurityIdentifier(role.Sid);
+                            //    if (wp.IsInRole(grpSid))
+                            //    {
+                            //        user.AdGroups.Add(role.Group);
+                            //    }
+                            //}
+                        }
                     }
                 }
             }

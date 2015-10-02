@@ -9,5 +9,6 @@ namespace ServiceClaim.Objects
     {
         public string ErrorMessage { get; set; }
         public int Id { get; set; }
+        public string RedirectUrl { get; set; }
     }
 }

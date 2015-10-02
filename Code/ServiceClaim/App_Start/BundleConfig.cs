@@ -44,6 +44,14 @@ namespace ServiceClaim
                       "~/Content/bootstrap-timepicker.min.css",
                       "~/Content/bootstrap-multiselect.min.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include(
+                      "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-theme.css",
+                      "~/Content/font-awesome.css",
+                      "~/Content/bootstrap-datepicker3.css",
+                      "~/Content/bootstrap-timepicker.min.css",
+                      "~/Content/bootstrap-multiselect.min.css"));
             BundleTable.EnableOptimizations = true;
         }
     }

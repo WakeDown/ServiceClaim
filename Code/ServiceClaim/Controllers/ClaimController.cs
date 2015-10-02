@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -146,13 +147,13 @@ namespace ServiceClaim.Controllers
         //    }
         //    return Json(new { });
         //}
-        public async Task<ActionResult> List()
+        public async Task<ActionResult> List(int? state, int? client)
         {
             if (
                 !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
                     AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator)) return HttpNotFound();
 
-            ListResult<Claim> result = await new Claim().GetListAsync(topRows: 10);
+            ListResult<Claim> result = await new Claim().GetListAsync(topRows: 10, idClaimState: state, clientId:client);
             return View(result);
         }
 
@@ -438,19 +439,24 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ZipCheck(Claim model)
+        public ActionResult ZipOrder(Claim model)
         {
-            //try
-            //{
-            //    ResponseMessage responseMessage;
-            //    bool complete = model.Go(out responseMessage);
-            //    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-            //}
-            //catch (Exception ex)
-            //{
-            //    TempData["error"] = ex.Message;
-            //    return RedirectToAction("Index", new { id = model.Id });
-            //}
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.Go(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                var claim = new Claim(model.Id);
+                ServiceSheet lastServSheet = claim.GetLastServiceSheet();
+                string zipOrderUrl =
+                    $"{ConfigurationManager.AppSettings["zipClaimHost"]}/Claims/Editor?snum={claim.Device.SerialNum}&ssid={lastServSheet.Id}&servid={claim.Id}&esid={(String.IsNullOrEmpty(claim.CurEngeneerSid) ? claim.CurTechSid : claim.CurEngeneerSid)}&asid={claim.CurAdminSid}&csdnum={claim.ClientSdNum}&cmnt={Url.Encode(lastServSheet.Descr)}&cntr={lastServSheet.CounterMono}&cntrc={lastServSheet.CounterColor}&dvst={lastServSheet.DeviceEnabled}";
+                return Redirect(zipOrderUrl);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
 
             return RedirectToAction("List");
         }
@@ -474,7 +480,7 @@ namespace ServiceClaim.Controllers
         }
         
             [HttpPost]
-        public ActionResult ZipOrder(Claim model)
+        public ActionResult ZipOrdered(Claim model)
         {
             try
             {
@@ -534,7 +540,7 @@ namespace ServiceClaim.Controllers
         public ActionResult ServiceSheet(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
-            var model = new ServiceSheet(id.Value);
+            var model = Models.ServiceSheet.Get(id.Value);
             return View(model);
         }
 

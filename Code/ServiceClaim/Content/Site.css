@@ -442,3 +442,12 @@ a.async-sel:visited {
     overflow-x: auto;
 }
 
+.filter-state-inem {
+    float: left;
+    margin: 3px;
+}
+
+.filter-state-inem a {
+    display: block;
+    padding: 5px;
+}

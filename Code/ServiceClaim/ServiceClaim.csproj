@@ -258,9 +258,9 @@
     <Content Include="Views\ContractorAccess\AccessSheet.cshtml" />
     <Content Include="Views\Claim\SetServEngOnWork.cshtml" />
     <Content Include="Views\ServiceIssuePlan\Planing.cshtml" />
-    <Content Include="Views\Claim\ZipCheck.cshtml" />
-    <Content Include="Views\Claim\ZipConfirm.cshtml" />
     <Content Include="Views\Claim\ZipOrder.cshtml" />
+    <Content Include="Views\Claim\ZipConfirm.cshtml" />
+    <Content Include="Views\Claim\ZipOrdered.cshtml" />
     <Content Include="Views\Claim\ZipOrderConfirm.cshtml" />
     <Content Include="Views\Claim\ServiceSheet.cshtml" />
     <Content Include="Views\Claim\ServiceSheetTechForm.cshtml" />
