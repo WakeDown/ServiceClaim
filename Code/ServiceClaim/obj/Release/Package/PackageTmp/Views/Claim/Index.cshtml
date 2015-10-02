@@ -20,10 +20,17 @@
 
     <div class="row">
         <div class="col-lg-9">
-            <div class="bg-warning text-danger">
-                @TempData["error"]
-            </div>
-            <div>
+            @if (TempData["error"] != null)
+            {
+                <div class="row">
+                    <div class="col-lg-push-2 col-lg-10">
+                        <blockquote class="alert-danger">
+                            @TempData["error"]
+                        </blockquote>
+                    </div>
+                </div>
+            }
+            <div class="row">
                 @if (!String.IsNullOrEmpty(Model.ClientSdNum))
                 {
                     <div class="row"><label class="col-lg-2 text-right">№ SD клиента</label> <span class="col-lg-10">@Model.ClientSdNum</span></div>
@@ -71,9 +78,10 @@
                 {
                     @Html.Partial("ServiceSheetForm", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("ZIPCHECK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
+                @if ((Model.State.SysName.ToUpper().Equals("ZIPORDER") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
+                     || (Model.State.SysName.ToUpper().Equals("ZIPCLINWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech) && Model.CurTechSid == ViewBag.CurUser.Sid))
                 {
-                    @Html.Partial("ZipCheck", Model)
+                    @Html.Partial("ZipOrder", Model)
                 }
                 @if (Model.State.SysName.ToUpper().Equals("ZIPCHECKED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
                 {
@@ -81,7 +89,7 @@
                 }
                 @if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRMED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
                 {
-                    @Html.Partial("ZipOrder", Model)
+                    @Html.Partial("ZipOrdered", Model)
                 }
                 @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
                 {
