@@ -151,15 +151,21 @@ namespace ServiceClaim.Controllers
         {
             if (
                 !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
-                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator)) return HttpNotFound();
+                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
+                return HttpNotFound();
 
-            ListResult<Claim> result = await new Claim().GetListAsync(topRows: topRows, idClaimState: state, clientId:client);
+            ListResult<Claim> result = await new Claim().GetListAsync(topRows: topRows, idClaimState: state, clientId: client);
             return View(result);
         }
 
-        //public ActionResult List()
+        //public ActionResult List(int? state, int? client, int? topRows)
         //{
-        //    ListResult<Claim> result = Claim.GetList(topRows: 10);
+        //    if (
+        //        !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
+        //            AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
+        //        return HttpNotFound();
+
+        //    ListResult<Claim> result = Claim.GetList(topRows: topRows, idClaimState: state, clientId: client);
         //    return View(result);
         //}
 

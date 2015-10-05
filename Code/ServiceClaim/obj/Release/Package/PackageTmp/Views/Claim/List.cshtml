@@ -30,7 +30,7 @@
 @if (Model.List.Any())
 {
     @*<p class="text-info">
-            <span class="">показано записей <span class="bold">@Model.List.Count()</span> из @Model.TotalCount</span>
+        <span class="">показано записей <span class="bold">@Model.List.Count()</span> из @Model.TotalCount</span>
         </p>*@
     <table id="claimList" class="table table-bordered sel-list">
         <tr class="bg-primary">
@@ -63,7 +63,6 @@
     {
         <div class="row">
             <blockquote class="alert-danger pull-right">
-                показать
                 @if (Model.TotalCount > 99)
                 {
                     <button name="displayRows" value="100" class="btn btn-default">показать 100</button>
@@ -82,24 +81,30 @@
         </div>
     }
     <script type="text/javascript">
-        $('[name="displayRows"]').click(function () {
+        $('[name="displayRows"]').click(function() {
             var rows = $(this).attr('value');
             reload(rows);
         });
+
         function reload(topRows) {
             var client = $('#clientFilter').val();
             var url = '@Url.Action("List")?client=' + client + '&state=@Request.QueryString["state"]' + '&topRows=' + topRows;
             window.location = url;
         }
-        $(document).ready(function () {
+
+        $(document).ready(function() {
             window.location.hash = 'claimList';
             $('#clientFilter').change(reload);
-            $('#claimList tr[claimid]').click(function () {
+            $('#claimList tr[claimid]').click(function() {
                 window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
             });
 
             //setTimeout(function () {window.location.reload(1);}, 60000);
         });
     </script>
+}
+else
+{
+    @:пусто
 }
 
