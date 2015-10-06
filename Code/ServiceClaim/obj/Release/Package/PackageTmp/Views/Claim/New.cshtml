@@ -1,7 +1,7 @@
 ﻿@using ServiceClaim.Objects
 
 @{
-    ViewBag.Title = "New";
+    ViewBag.Title = "Новая заявка";
     Layout = "~/Views/Shared/_Editor.cshtml";
 }
 
@@ -106,13 +106,13 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#ctrFind').keypress(function (e) {
+        $(document).ready(function() {
+            $('#ctrFind').keypress(function(e) {
                 if (e.which !== 13) return;
                 ctrFind(e);
             });
             //.blur(ctrFind);
-            $('#contFind').keypress(function (e) {
+            $('#contFind').keypress(function(e) {
                 if (e.which !== 13) return;
                 e.preventDefault();
                 displayCtrs();
@@ -123,24 +123,25 @@
             //    displayCtrs();
             //    displayConts();
             //});
-            $('#devFind').keypress(function (e) {
+            $('#devFind').keypress(function(e) {
                 if (e.which !== 13) return;
                 e.preventDefault();
                 displayDevs(true);
                 $('#devList').focus();
             }); //.blur(function () { displayDevs(true); });
-            $('#devSnFind').keypress(function (e) {
+            $('#devSnFind').keypress(function(e) {
                 if (e.which !== 13) return;
                 e.preventDefault();
                 displayDevs(true);
                 $('#devList').focus();
             });
             $('#ctrList').change(setCtrContNdev);
-            $('#contList').change(setContВev);
+            $('#contList').change(setContDev);
             $('#devList').change(setDevCtrNcont);
             $('#ctrFind').focus();
         });
 
+//Список активных заявок
         function showClaims() {
             $('#claimsContainer').empty();
             showSpinner($('#claimsContainer'));
@@ -148,7 +149,7 @@
             $.ajax({
                 url: '@Url.Action("GetClaimList")?idDevice=' + devId,
                 method: 'POST',
-                success: function (data) {
+                success: function(data) {
                     $('#claimsContainer').empty();
                     if (data.List.length > 0) {
                         for (var i = 0; i < data.List.length; i++) {
@@ -158,7 +159,7 @@
                     }
                     hideSpinner($('#claimsContainer'));
                 },
-                error: function () {
+                error: function() {
                     $('#claimsContainer').empty();
                     hideSpinner($('#claimsContainer'));
                 }
@@ -182,10 +183,12 @@
         //    e.preventDefault();
         //}
 
-        function setContВev() {
+        function setContDev() {
             $('#devList').find('option').remove();
             $('#devListCount').text(0);
             displayDevs();
+
+
         }
 
         function ctrFind(e) {
@@ -237,7 +240,7 @@
                 url: '@Url.Action("GetDevices")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName, serialNum: serialNum },
-                success: function (data) {
+                success: function(data) {
                     var $devList = $('#devList');
                     var $vFltrCntnr = $('#vendorFilterCntnr');
                     $devList.find('option').remove();
@@ -272,8 +275,9 @@
                         $('#devListCount').text(0);
                     }
                     $('#devSpinner').removeClass('active');
+
                 },
-                error: function () {
+                error: function() {
                     $('#devSpinner').removeClass('active');
                 }
             });
@@ -305,6 +309,18 @@
             $('#devListCount').text(cnt);
         }
 
+        function setSdNumRequiredOrNot() {
+            var sdrequired = $('#contList :selected').attr('sdrequired');
+            var $sdnum = $('#client_sd_num');
+            if (sdrequired === "true") {
+                $sdnum.prop('required', true);
+                $sdnum.addClass('required-mark');
+            } else {
+                $sdnum.prop('required', false);
+                $sdnum.removeClass('required-mark');
+            }
+        }
+
         function displayConts() {
             $('#contSpinner').addClass('active');
             var ctrName = $('#ctrFind').val();
@@ -324,7 +340,7 @@
                 url: '@Url.Action("GetConts")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
-                success: function (data) {
+                success: function(data) {
                     if (data) {
                         if (data.length > 0) {
                             var contList = $('#contList');
@@ -334,7 +350,7 @@
                             }
                             for (var i = 0; i < data.length; i++) {
                                 var cont = data[i];
-                                contList.append($("<option></option>").attr("value", cont.Id).text(cont.Number));
+                                contList.append($("<option></option>").attr("value", cont.Id).attr('sdrequired', cont.ClientSdNumRequired).text(cont.Number));
                             }
                             $('#contListCount').text(data.length);
                         } else {
@@ -344,8 +360,9 @@
                         $('#contListCount').text(0);
                     }
                     $('#contSpinner').removeClass('active');
+                    setSdNumRequiredOrNot();
                 },
-                error: function () {
+                error: function() {
                     $('#contSpinner').removeClass('active');
                 }
             });
@@ -369,7 +386,7 @@
                 url: '@Url.Action("GetCtors")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
-                success: function (data) {
+                success: function(data) {
                     var $ctrList = $('#ctrList');
                     $ctrList.find('option').remove();
 
@@ -398,7 +415,7 @@
                     }
                     $('#ctrSpinner').removeClass('active');
                 },
-                error: function () {
+                error: function() {
                     $('#ctrSpinner').removeClass('active');
                 }
             });
