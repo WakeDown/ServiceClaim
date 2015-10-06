@@ -50,7 +50,7 @@
                 {
                     @Html.Partial("SetWorkType", Model)
                 }
-                @if ((Model.State.SysName.ToUpper().Equals("NEWADD") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager)) || (Model.State.SysName.ToUpper().Equals("SRVADMWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (Model.State.SysName.ToUpper().Equals("SERVADMSETWAIT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager)) || (Model.State.SysName.ToUpper().Equals("SERVENGSETWAIT")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
+                @if ((Model.State.SysName.ToUpper().Equals("NEWADD") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager)) || (Model.State.SysName.ToUpper().Equals("SRVADMWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (Model.State.SysName.ToUpper().Equals("SERVADMSETWAIT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager, AdGroup.ServiceTech)) || (Model.State.SysName.ToUpper().Equals("SERVENGSETWAIT")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
                 {
                     @Html.Partial("SpecialistSelect", Model)
                 }

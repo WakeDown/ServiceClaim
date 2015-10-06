@@ -339,28 +339,19 @@ namespace ServiceClaim.Controllers
                 else if (!String.IsNullOrEmpty(Request.Form["ServiceSheetCancel"]))
                 {
                     complete = model.GoBack(out responseMessage);
-
+                    return RedirectToAction("Index");
                 }
                 
                 if (responseMessage == null)responseMessage = new ResponseMessage();
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
-                if (!String.IsNullOrEmpty(Request.Form["ServiceSheetSave"]))
-                {
-                    return RedirectToAction("List");
-                }
-                else if (!String.IsNullOrEmpty(Request.Form["ServiceSheetCancel"]))
-                {
-                    return RedirectToAction("Index");
-                }
+                return RedirectToAction("List");
             }
             catch (Exception ex)
             {
                 TempData["error"] = ex.Message;
                 return RedirectToAction("Index", new { id = model.Id });
             }
-
-            
         }
 
         [HttpPost]
