@@ -69,6 +69,7 @@ namespace ServiceClaim.Objects
             bool result = false;
             if (String.IsNullOrEmpty(Sid)) return false;
             if (AdHelper.UserInGroup(Sid, AdGroup.SuperAdmin)) return true;
+            if (AdHelper.UserInGroup(Sid, AdGroup.ServiceControler)) return true;
             result = AdHelper.UserInGroup(Sid, groups);
             return result;
         }

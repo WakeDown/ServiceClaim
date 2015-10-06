@@ -19,7 +19,6 @@
         foreach (ClaimState st in filterStates)
         {
             <a class="btn" style="color: #@st.ForegroundColor; background-color: #@st.BackgroundColor" href="@Url.Action("List")?state=@st.Id&client=@Request.QueryString["client"]">@st.Name (@st.ClaimCount)</a>
-
         }
         @*</ul>*@
     }
