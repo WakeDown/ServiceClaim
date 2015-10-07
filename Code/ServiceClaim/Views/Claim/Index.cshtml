@@ -58,7 +58,7 @@
                 {
                     @Html.Partial("TechConfirm", Model)
                 }
-                @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+                @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin) && (ViewBag.CurUser.Is(AdGroup.ServiceAdmin) && Model.SpecialistSid.Equals(ViewBag.CurUser.Sid))) || (Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer)&&(ViewBag.CurUser.Is(AdGroup.ServiceEngeneer) && Model.SpecialistSid.Equals(ViewBag.CurUser.Sid)))
                 {
                     @Html.Partial("ConfirmWork", Model)
                 }
