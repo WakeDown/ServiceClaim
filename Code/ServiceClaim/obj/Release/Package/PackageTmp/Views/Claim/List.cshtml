@@ -62,17 +62,17 @@
     {
         <div class="row">
             <blockquote class="alert-danger pull-right">
-                @if (Model.TotalCount > 99)
+                @if (Model.TotalCount > 100)
                 {
-                    <button name="displayRows" value="100" class="btn btn-default">показать 100</button>
+                    <button name="displayRows" value="100" class="btn btn-link">показать 100</button>
                 }
-                @if (Model.TotalCount > 299)
+                @if (Model.TotalCount > 300)
                 {
-                    <button name="displayRows" value="300" class="btn btn-default">показать 300</button>
+                    <button name="displayRows" value="300" class="btn btn-link">показать 300</button>
                 }
-                @if (Model.TotalCount > 999)
+                @if (Model.TotalCount > 1000)
                 {
-                    <button name="displayRows" value="1000" class="btn btn-default">показать 1000</button>
+                    <button name="displayRows" value="1000" class="btn btn-link">показать 1000</button>
                 }
                 <button name="displayRows" value="@Model.TotalCount" class="btn btn-link">показать все</button>
                 показаны @Model.List.Count() из @Model.TotalCount
