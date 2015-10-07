@@ -139,6 +139,7 @@
         if (zipEnab) {//Необходим заказ ЗИП
             $('#commentContainer').show();
             $('#commentContainer').prop('required', true);
+            $('#commentLabel').innerText = 'Список ЗИП';
             $('#comment').attr('placeholder', 'Укажите список ЗИП');
             $('#comment').prop('required', true);
             //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
@@ -146,6 +147,7 @@
         else if (zipDisab && ((devDisab && procDisab) || (devDisab && procEnab))) {//НЕ необходим заказ ЗИП
             $('#commentContainer').show();
             $('#commentContainer').prop('required', true);
+            $('#commentLabel').innerText = 'Что случилось?';
             $('#comment').attr('placeholder', 'Укажите что случилось');
             $('#comment').prop('required', true);
             //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);

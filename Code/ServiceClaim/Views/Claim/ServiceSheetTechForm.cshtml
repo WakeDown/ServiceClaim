@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="row" id="commentContainer">
-        <label class="col-lg-2 text-right">Комментарий</label>
+        <label class="col-lg-2 text-right" id="commentLabel">Комментарий</label>
         <div class="col-lg-6">
             @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new {id = "comment", @class = "form-control required-mark", required = "required"})
             <span class="help-block with-errors"></span>
@@ -162,6 +162,7 @@
         if (zipEnab) {//Необходим заказ ЗИП
             $('#commentContainer').show();
             $('#commentContainer').prop('required', true);
+            $('#commentLabel').innerText = 'Список ЗИП';
             $('#comment').attr('placeholder', 'Укажите список ЗИП');
             $('#comment').prop('required', true);
             //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
@@ -169,6 +170,7 @@
         else if (zipDisab && ((devDisab && procDisab) || (devDisab && procEnab))) {//НЕ необходим заказ ЗИП
             $('#commentContainer').show();
             $('#commentContainer').prop('required', true);
+            $('#commentLabel').innerText = 'Что случилось?';
             $('#comment').attr('placeholder', 'Укажите что случилось');
             $('#comment').prop('required', true);
             //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
