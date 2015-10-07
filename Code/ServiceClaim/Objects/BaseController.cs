@@ -68,6 +68,11 @@ namespace ServiceClaim.Objects
 
                 //////return user;
 
+                string fakeSid = null;
+                string fakeLosgin = null;
+                //fakeSid = "S-1-5-21-1970802976-3466419101-4042325969-3837";
+                //fakeLosgin = "olga.skidan";
+
                 using (WindowsImpersonationContextFacade impersonationContext
                     = new WindowsImpersonationContextFacade(
                         nc))
@@ -76,9 +81,9 @@ namespace ServiceClaim.Objects
                     if (wi.User != null)
                     {
                         var domain = new PrincipalContext(ContextType.Domain);
-                        string sid = wi.User.Value;
+                        string sid = fakeSid??wi.User.Value;
                         user.Sid = sid;
-                        var login = wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
+                        var login = fakeLosgin??wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
                         user.Login = login;
                         var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
                         if (userPrincipal != null)

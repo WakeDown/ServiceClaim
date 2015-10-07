@@ -39,6 +39,13 @@
                         <td>№ заявки</td>
                         <td>@Model.IdClaim</td>
                     </tr>
+                    @if (!String.IsNullOrEmpty(Model.ClientSdNum))
+                    {
+                        <tr>
+                            <td>№ SD клиента</td>
+                            <td>@Model.ClientSdNum</td>
+                        </tr>
+                    }
                     <tr>
                         <td>S/N</td>
                         <td>@Model.Device.SerialNum</td>

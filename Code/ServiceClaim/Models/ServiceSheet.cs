@@ -35,6 +35,7 @@ namespace ServiceClaim.Models
         public EmployeeSm Admin { get; set; }
         public EmployeeSm Creator { get; set; }
         public EmployeeSm Engeneer { get; set; }
+        public string ClientSdNum { get; set; }
 
         public ServiceSheet()
         {

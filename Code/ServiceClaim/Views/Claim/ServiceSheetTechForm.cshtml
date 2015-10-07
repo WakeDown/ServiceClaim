@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="row" id="commentContainer">
-        <label class="col-lg-2 text-right">Комментарий</label>
+        <label class="col-lg-2 text-right" id="commentLabel">Комментарий</label>
         <div class="col-lg-6">
             @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new {id = "comment", @class = "form-control required-mark", required = "required"})
             <span class="help-block with-errors"></span>
@@ -127,6 +127,7 @@
 
     function displayElements() {
         setVars();
+
         if (procEnab && devEnab) {
             $('#zipClaimContainer').hide();
             $('[name="ServiceSheet4Save.ZipClaim"]:checked').prop('checked', false);
@@ -149,12 +150,19 @@
                 $('#counterUnavailableContainer').show();
                 $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', true);
             }
+
+            if (devEnab || !devDisab) {//Nothin select
+                $('#zipClaimContainer').hide();
+                $('[name="ServiceSheet4Save.ZipClaim"]:checked').prop('checked', false);
+                $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', false);
+            }
         }
         setVars();
-
+        
         if (zipEnab) {//Необходим заказ ЗИП
             $('#commentContainer').show();
             $('#commentContainer').prop('required', true);
+            $('#commentLabel').innerText = 'Список ЗИП';
             $('#comment').attr('placeholder', 'Укажите список ЗИП');
             $('#comment').prop('required', true);
             //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
@@ -162,6 +170,7 @@
         else if (zipDisab && ((devDisab && procDisab) || (devDisab && procEnab))) {//НЕ необходим заказ ЗИП
             $('#commentContainer').show();
             $('#commentContainer').prop('required', true);
+            $('#commentLabel').innerText = 'Что случилось?';
             $('#comment').attr('placeholder', 'Укажите что случилось');
             $('#comment').prop('required', true);
             //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
@@ -173,27 +182,41 @@
             //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', false);
         }
 
+        
+        if (countHas) {//Счетчик предусмотрен
+            $('#counterUnavailableContainer').show();
+            $('#countersContainer').show();
+            $('#counterMono').prop('required', true);
+        } else if (countNotHas) {//Счетчик НЕ предусмотрен
+            $('#counterUnavailableContainer').hide();
+            $('#countersContainer').hide();
+            $('#counterMono').prop('required', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+        } else {//ничего не выбрано
+            $('#counterUnavailableContainer').hide();
+            $('#countersContainer').hide();
+            $('#counterMono').prop('required', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+        }
+
+        setVars();
         if (countAvail) {//Счетчик доступен
-            $('#commentCounterContainer').hide();
+            $('#countersContainer').show();
+            $('#counterMono').prop('required', true);
+            
+            $('#commentCounterContainer').hide(); 
             $('#counterComment').prop('required', false);
         }
         else if (countNotAvail) {//Счетчик НЕ доступен
+            $('#countersContainer').hide();
+            $('#counterMono').prop('required', false);
             $('#commentCounterContainer').show();
             $('#counterComment').prop('required', true);
         } else {//ничего не выбрано
+            $('#countersContainer').hide();
+            $('#counterMono').prop('required', false);
             $('#commentCounterContainer').hide();
             $('#counterComment').prop('required', false);
-        }
-        if (countHas) {//Счетчик предусмотрен
-            $('#countersContainer').show();
-            $('#counterMono').prop('required', true);
-
-        } else if (countNotHas) {//Счетчик НЕ предусмотрен
-            $('#countersContainer').hide();
-            $('#counterMono').prop('required', false);
-        } else {//ничего не выбрано
-            $('#countersContainer').hide();
-            $('#counterMono').prop('required', false);
         }
     }
 
