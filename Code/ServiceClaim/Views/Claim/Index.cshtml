@@ -58,7 +58,7 @@
                 {
                     @Html.Partial("TechConfirm", Model)
                 }
-                @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin) && (ViewBag.CurUser.Is(AdGroup.ServiceAdmin) && Model.SpecialistSid.Equals(ViewBag.CurUser.Sid))) || (Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer)&&(ViewBag.CurUser.Is(AdGroup.ServiceEngeneer) && Model.SpecialistSid.Equals(ViewBag.CurUser.Sid)))
+                @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin) ) || (Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
                 {
                     @Html.Partial("ConfirmWork", Model)
                 }
@@ -78,6 +78,7 @@
                 {
                     @Html.Partial("ServiceSheetForm", Model)
                 }
+                @*Доступ только текущему СТП*@
                 @if ((Model.State.SysName.ToUpper().Equals("ZIPORDER") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
                      || (Model.State.SysName.ToUpper().Equals("ZIPCLINWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech) && Model.CurTechSid == ViewBag.CurUser.Sid))
                 {

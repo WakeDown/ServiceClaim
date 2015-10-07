@@ -267,6 +267,7 @@
     <Content Include="Views\Claim\ServiceSheetForm.cshtml" />
     <Content Include="Views\ServiceIssuePlan\PeriodWeekView.cshtml" />
     <Content Include="Views\ServiceIssuePlan\ServiceIssuePlanItem.cshtml" />
+    <Content Include="Views\Shared\WindowClose.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
