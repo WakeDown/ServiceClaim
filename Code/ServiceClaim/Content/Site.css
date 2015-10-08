@@ -452,3 +452,7 @@ a.async-sel:visited {
     display: block;
     padding: 5px;
 }
+
+.no-marg-bot {
+    margin-bottom: 0 !important;
+}

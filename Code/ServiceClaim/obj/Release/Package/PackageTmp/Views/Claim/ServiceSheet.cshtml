@@ -1,4 +1,5 @@
-﻿@model ServiceClaim.Models.ServiceSheet
+﻿@using ServiceClaim.Helpers
+@model ServiceClaim.Models.ServiceSheet
 @{
     Layout = null;
 }
@@ -74,12 +75,12 @@
                     {
                         <tr>
                             <td>Комментарий к счетчику</td>
-                            <td>@Model.CounterDescr</td>
+                            <td>@Html.Nl2Br(Model.CounterDescr)</td>
                         </tr>
                     }
                     <tr>
                         <td>Комментарий</td>
-                        <td>@Model.Descr</td>
+                        <td>@Html.Nl2Br(Model.Descr)</td>
                     </tr>
                     <tr>
                         <td>Инженер</td>

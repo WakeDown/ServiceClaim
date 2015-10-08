@@ -4,22 +4,26 @@
 
 @foreach (var state in Model)
 {
-    <div style="background-color: #@state.State.BackgroundColor; color:#@state.State.ForegroundColor" class="padding-lg history-state-block" id="@state.State.SysName@state.Id">
-        @state.DateCreate.ToString("g") - @state.Creator.DisplayName - <strong>@state.State.Name</strong>
-        <p>
-            @Html.Nl2Br(state.Descr)
-            @if (state.IdServiceSheet.HasValue)
-            {
-                <div>
-                    <a href="@Url.Action("ServiceSheet", new {id=state.IdServiceSheet.Value})" target="_blank">Сервисный лист №@state.IdServiceSheet.Value</a>
-                </div>
-            }
-            @if (state.ZipClaimId.HasValue)
-            {
-                <div>
-                    <a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@state.ZipClaimId.Value})" target="_blank">Заявка на ЗИП №@state.ZipClaimId.Value</a>
-                </div>
-            }
-        </p>
+    <div style="background-color: #@state.State.BackgroundColor; color: #@state.State.ForegroundColor" class="padding-sm history-state-block" id="@state.State.SysName@state.Id">
+        <strong>@state.State.Name</strong><br/>
+        @state.DateCreate.ToString("g") - @state.Creator.DisplayName
+        @if (!String.IsNullOrEmpty(state.Descr))
+        {
+            <p class="no-marg-bot">
+                @Html.Nl2Br(state.Descr)
+                @if (state.IdServiceSheet.HasValue)
+                {
+                    <div>
+                        <a href="@Url.Action("ServiceSheet", new {id = state.IdServiceSheet.Value})" target="_blank">Сервисный лист №@state.IdServiceSheet.Value</a>
+                    </div>
+                }
+                @if (state.ZipClaimId.HasValue)
+                {
+                    <div>
+                        <a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@state.ZipClaimId.Value})" target="_blank">Заявка на ЗИП №@state.ZipClaimId.Value</a>
+                    </div>
+                }
+            </p>
+        }
     </div>
 }
