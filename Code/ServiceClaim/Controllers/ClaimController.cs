@@ -340,13 +340,13 @@ namespace ServiceClaim.Controllers
                 else if (!String.IsNullOrEmpty(Request.Form["ServiceSheetCancel"]))
                 {
                     complete = model.GoBack(out responseMessage);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("List");
                 }
                 
                 if (responseMessage == null)responseMessage = new ResponseMessage();
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
-                return RedirectToAction("List");
+                return RedirectToAction("Index", new { id = model.Id });
             }
             catch (Exception ex)
             {
