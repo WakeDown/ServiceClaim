@@ -161,6 +161,8 @@
                             var item = data.List[i];
                             $('#claimsContainer').append('<div class="col-lg-3"><a class="issue-item-sm" style="border: 1px solid #' + item.State.BackgroundColor + '; background-color: #' + item.State.BackgroundColor + '; color: #' + item.State.ForegroundColor + '" target="_blank" href="@Url.Action("Index")/' + item.Id + '">№' + item.Id + ' (кл№' + item.ClientSdNum + ')<br /><small>Создано ' + item.DateCreateStr + '</small><br />' + item.State.Name + '<br /><small>' + item.DateStateChangeStr + '</small></a></div>');
                         }
+                    } else {
+                        $('#claimsContainer').append('<blockquote class="alert-warning">не найдено активных заявок для выбранного аппарата</blockquote>');
                     }
                     hideSpinner($('#claimsContainer'));
                 },
