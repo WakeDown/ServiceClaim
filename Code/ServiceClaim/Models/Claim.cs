@@ -131,9 +131,9 @@ namespace ServiceClaim.Models
             CurManagerSid = model.CurManagerSid;
         }
 
-        public async Task<ListResult<Claim>> GetListAsync(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool activeClaimsOnly = false, int? idClaimState = null, int? clientId = null)
+        public async Task<ListResult<Claim>> GetListAsync(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool activeClaimsOnly = false, int? idClaimState = null, int? clientId = null, string clientSdNum = null)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetList?servAdminSid={servAdminSid}&servEngeneerSid={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}&managerSid={managerSid}&techSid={techSid}&serialNum={serialNum}&idDevice={idDevice}&activeClaimsOnly={activeClaimsOnly}&idClaimState={idClaimState}&clientId={clientId}");
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetList?servAdminSid={servAdminSid}&servEngeneerSid={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}&managerSid={managerSid}&techSid={techSid}&serialNum={serialNum}&idDevice={idDevice}&activeClaimsOnly={activeClaimsOnly}&idClaimState={idClaimState}&clientId={clientId}&clientSdNum={clientSdNum}");
             string jsonString = await GetApiClientAsync().GetStringAsync(uri);
             var model = JsonConvert.DeserializeObject<ListResult<Claim>>(jsonString);
             return model;

@@ -261,7 +261,8 @@ namespace ServiceClaim.Controllers
                 bool complete = model.Go(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
-                return RedirectToAction("List", new { id = responseMessage.Id });
+                return View("WindowClose");
+                return RedirectToAction("List");
             }
             catch (Exception ex)
             {
@@ -283,7 +284,9 @@ namespace ServiceClaim.Controllers
                 bool complete = model.Go(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
-                return RedirectToAction("List", new { id = responseMessage.Id });
+                return View("WindowClose");
+
+                return RedirectToAction("List");
             }
             catch (Exception ex)
             {
@@ -560,9 +563,9 @@ namespace ServiceClaim.Controllers
             return View(model);
         }
 
-        public async Task<JsonResult> GetClaimList(int? idDevice, string serialNum)
+        public async Task<JsonResult> GetClaimList(int? idDevice, string serialNum, string clientSdNum)
         {
-            var list = await new Claim().GetListAsync(idDevice: idDevice,serialNum: serialNum);
+            var list = await new Claim().GetListAsync(idDevice: idDevice,serialNum: serialNum, clientSdNum: clientSdNum);
             return Json(list); 
         }
     }

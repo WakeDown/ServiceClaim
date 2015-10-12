@@ -51,7 +51,8 @@
             <div class="col-lg-2">
                 <p>
                     <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control" />
-                    <input id="devSnFind" type="text" placeholder="cерийный номер" class="form-control" />
+                    <input id="devSnFind" type="text" placeholder="cерийный номер" class="form-control"/>
+                    <input id="devClientSdFind" type="text" placeholder="№ SD клиента" class="form-control" />
                 </p>
             </div>
             <div class="col-lg-4">
@@ -125,18 +126,11 @@
             //    displayCtrs();
             //    displayConts();
             //});
-            $('#devFind').keypress(function(e) {
+            $('#devFind').keypress(devFind);
+            $('#devSnFind').keypress(devFind);
+            $('#devClientSdFind').keypress(function (e) {
                 if (e.which !== 13) return;
-                displayDevs(true);
-                $('#devList').focus();
-            }); //.blur(function () { displayDevs(true); });
-            $('#devSnFind').keypress(function(e) {
-                if (e.which !== 13) return;
-                $('#ctrFind').text('');
-                $('#contFind').text('');
-                $('#devFind').text('');
-                displayDevs(true);
-                $('#devList').focus();
+                showClaims();
             });
             $('#ctrList').change(setCtrContNdev);
             $('#contList').change(setContDev);
@@ -146,13 +140,23 @@
             $('#ctrFind').focus();
         });
 
+        function devFind(e) {
+            if (e.which !== 13) return;
+            $('#ctrFind').text('');
+            $('#contFind').text('');
+            $('#devFind').text('');
+            displayDevs(true);
+            $('#devList').focus();
+        }
+
 //Список активных заявок
         function showClaims() {
             $('#claimsContainer').empty();
             showSpinner($('#claimsContainer'));
             var devId = $('#devList').val();
+            var clientSdNum = $('#devClientSdFind').val();
             $.ajax({
-                url: '@Url.Action("GetClaimList")?idDevice=' + devId,
+                url: '@Url.Action("GetClaimList")?idDevice=' + devId + '&clientSdNum=' + clientSdNum + '&serialNum=',
                 method: 'POST',
                 success: function(data) {
                     $('#claimsContainer').empty();

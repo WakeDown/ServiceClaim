@@ -51,7 +51,8 @@
             <div class="col-lg-2">
                 <p>
                     <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control" />
-                    <input id="devSnFind" type="text" placeholder="cерийный номер" class="form-control" />
+                    <input id="devSnFind" type="text" placeholder="cерийный номер" class="form-control"/>
+                    <input id="devClientSdFind" type="text" placeholder="№ SD клиента" class="form-control" />
                 </p>
             </div>
             <div class="col-lg-4">
@@ -106,6 +107,8 @@
 @section scripts
 {
     <script type="text/javascript">
+        var updCtorList = false;
+        var updContList = false;
         $(document).ready(function() {
             $('#ctrFind').keypress(function(e) {
                 if (e.which !== 13) return;
@@ -123,31 +126,37 @@
             //    displayCtrs();
             //    displayConts();
             //});
-            $('#devFind').keypress(function(e) {
+            $('#devFind').keypress(devFind);
+            $('#devSnFind').keypress(devFind);
+            $('#devClientSdFind').keypress(function (e) {
                 if (e.which !== 13) return;
-                e.preventDefault();
-                displayDevs(true);
-                $('#devList').focus();
-            }); //.blur(function () { displayDevs(true); });
-            $('#devSnFind').keypress(function(e) {
-                if (e.which !== 13) return;
-                e.preventDefault();
-                displayDevs(true);
-                $('#devList').focus();
+                showClaims();
             });
             $('#ctrList').change(setCtrContNdev);
             $('#contList').change(setContDev);
-            $('#devList').change(setDevCtrNcont);
+            //$('#devList').change(function() {
+            //    setDevCtrNcont(false);
+            //});
             $('#ctrFind').focus();
         });
+
+        function devFind(e) {
+            if (e.which !== 13) return;
+            $('#ctrFind').text('');
+            $('#contFind').text('');
+            $('#devFind').text('');
+            displayDevs(true);
+            $('#devList').focus();
+        }
 
 //Список активных заявок
         function showClaims() {
             $('#claimsContainer').empty();
             showSpinner($('#claimsContainer'));
             var devId = $('#devList').val();
+            var clientSdNum = $('#devClientSdFind').val();
             $.ajax({
-                url: '@Url.Action("GetClaimList")?idDevice=' + devId,
+                url: '@Url.Action("GetClaimList")?idDevice=' + devId + '&clientSdNum=' + clientSdNum + '&serialNum=',
                 method: 'POST',
                 success: function(data) {
                     $('#claimsContainer').empty();
@@ -156,6 +165,8 @@
                             var item = data.List[i];
                             $('#claimsContainer').append('<div class="col-lg-3"><a class="issue-item-sm" style="border: 1px solid #' + item.State.BackgroundColor + '; background-color: #' + item.State.BackgroundColor + '; color: #' + item.State.ForegroundColor + '" target="_blank" href="@Url.Action("Index")/' + item.Id + '">№' + item.Id + ' (кл№' + item.ClientSdNum + ')<br /><small>Создано ' + item.DateCreateStr + '</small><br />' + item.State.Name + '<br /><small>' + item.DateStateChangeStr + '</small></a></div>');
                         }
+                    } else {
+                        $('#claimsContainer').append('<blockquote class="alert-warning">не найдено активных заявок для выбранного аппарата</blockquote>');
                     }
                     hideSpinner($('#claimsContainer'));
                 },
@@ -186,7 +197,7 @@
         function setContDev() {
             $('#devList').find('option').remove();
             $('#devListCount').text(0);
-            displayDevs();
+            displayDevs(false);
 
 
         }
@@ -209,7 +220,8 @@
             $('#devListCount').text(0);
             $('#conListCount').text(0);
             displayConts();
-            displayDevs();
+            displayDevs(false);
+            
         }
 
         function setDevCtrNcont() {
@@ -217,13 +229,12 @@
             $('#ctrList').find('option').remove();
             $('#ctrListCount').text(0);
             $('#contListCount').text(0);
-            displayCtrs();
-            displayConts();
-            showClaims();
+                displayCtrs();
+                displayConts();
+                showClaims();
         }
 
         function displayDevs(updateCtrNcontLists) {
-            $('#devSpinner').addClass('active');
             var ctrName = $('#ctrFind').val();
             var ctrId = $('#ctrList').val();
             var contName = $('#contFind').val();
@@ -231,10 +242,12 @@
             var devId = $('#devList').val();
             var devName = $('#devFind').val();
             var serialNum = $('#devSnFind').val();
-            if (ctrId === null && contId === null && devName === '' && serialNum === '') {
+
+            if ((ctrId === null || ctrId == 0) && (contId === null || contId == 0) && devName === '' && serialNum === '') {
                 $('#devList').find('option').remove();
                 return;
             }
+            $('#devSpinner').addClass('active');
             $('#devListCount').text('');
             $.ajax({
                 url: '@Url.Action("GetDevices")',
@@ -264,14 +277,19 @@
                             //}
                             filterDeviceList('');
                         } else {
+                            $('#devList').append($("<option>аппарат не найден</option>").attr("value", 0));
                             $('#devListCount').text(0);
                         }
                         //else {
                         //    var help = $ctrList.next('small');
                         //    help.text('ничего не найдено');
                         //}
-                        if (updateCtrNcontLists) setDevCtrNcont();
+
+                        if (updateCtrNcontLists === true) {
+                            setDevCtrNcont();
+                        }
                     } else {
+                        $('#devList').append($("<option>аппарат не найден</option>").attr("value", 0));
                         $('#devListCount').text(0);
                     }
                     $('#devSpinner').removeClass('active');
@@ -305,7 +323,7 @@
                     cnt++;
                 }
             }
-            setDevCtrNcont();
+            displayDevs(false);
             $('#devListCount').text(cnt);
         }
 
@@ -322,19 +340,21 @@
         }
 
         function displayConts() {
-            $('#contSpinner').addClass('active');
+            
             var ctrName = $('#ctrFind').val();
             var ctrId = $('#ctrList').val();
             var contName = $('#contFind').val();
             var contId = $('#contList').val();
             var devId = $('#devList').val();
             var devName = $('#devFind').val();
-
+            
+            if (ctrId == 0 || devId == 0) return;
+            
             if ((ctrName === '' || ctrId === null) && (contName === '' || contId === null) && devId === null) {
                 $('#contList').find('option').remove();
                 return;
             }
-
+            $('#contSpinner').addClass('active');
             $('#contListCount').text('');
             $.ajax({
                 url: '@Url.Action("GetConts")',
@@ -354,9 +374,11 @@
                             }
                             $('#contListCount').text(data.length);
                         } else {
+                            $('#contList').append($("<option>договор не найден</option>").attr("value", 0));
                             $('#contListCount').text(0);
                         }
                     } else {
+                        $('#contList').append($("<option>договор не найден</option>").attr("value", 0));
                         $('#contListCount').text(0);
                     }
                     $('#contSpinner').removeClass('active');
@@ -369,7 +391,7 @@
         }
 
         function displayCtrs(updateConNdevLists) {
-            $('#ctrSpinner').addClass('active');
+            
             var ctrName = $('#ctrFind').val();
             var ctrId = $('#ctrList').val();
             var contName = $('#contFind').val();
@@ -377,10 +399,13 @@
             var devId = $('#devList').val();
             var devName = $('#devFind').val();
 
+            if (devId == 0 || contId == 0) return;
+
             if (ctrName === '' && ctrId === null && contId === null && devId === null) {
                 $('#ctrList').find('option').remove();
                 return;
             }
+            $('#ctrSpinner').addClass('active');
             $('#ctrListCount').text('');
             $.ajax({
                 url: '@Url.Action("GetCtors")',
@@ -398,7 +423,7 @@
                             }
                             $('#ctrListCount').text(data.length);
                         } else {
-
+                            $('#ctrList').append($("<option>клиент не найден</option>").attr("value", 0));
                             $('#ctrListCount').text(0);
                         }
 
@@ -411,6 +436,7 @@
                         //    help.text('ничего не найдено');
                         //}
                     } else {
+                        $('#ctrList').append($("<option>клиент не найден</option>").attr("value", 0));
                         $('#ctrListCount').text(0);
                     }
                     $('#ctrSpinner').removeClass('active');
