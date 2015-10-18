@@ -157,8 +157,10 @@
     <Compile Include="Models\ServiceIssuePlaningItem.cs" />
     <Compile Include="Models\ServiceIssuePlaningResult.cs" />
     <Compile Include="Models\ServiceSheet.cs" />
+    <Compile Include="Models\ServiceSheetZipItem.cs" />
     <Compile Include="Models\UserList.cs" />
     <Compile Include="Models\WorkType.cs" />
+    <Compile Include="Models\ZipClaim.cs" />
     <Compile Include="Objects\AdGroup.cs" />
     <Compile Include="Objects\AdUser.cs" />
     <Compile Include="Objects\AdUserGroup.cs" />
@@ -268,6 +270,7 @@
     <Content Include="Views\ServiceIssuePlan\PeriodWeekView.cshtml" />
     <Content Include="Views\ServiceIssuePlan\ServiceIssuePlanItem.cshtml" />
     <Content Include="Views\Shared\WindowClose.cshtml" />
+    <Content Include="Views\Claim\ZipIssue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

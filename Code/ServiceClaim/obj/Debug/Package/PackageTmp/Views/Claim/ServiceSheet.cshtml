@@ -1,6 +1,8 @@
-﻿@model ServiceClaim.Models.ServiceSheet
+﻿@using ServiceClaim.Helpers
+@model ServiceClaim.Models.ServiceSheet
 @{
     Layout = null;
+    var engeneerZipItemsList = Model.GetZipItemList();
 }
 
 <!DOCTYPE html>
@@ -24,6 +26,9 @@
         .tbl td {
             padding: 5px;
         }
+        table.zip td, table.zip th {
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
@@ -39,6 +44,13 @@
                         <td>№ заявки</td>
                         <td>@Model.IdClaim</td>
                     </tr>
+                    @if (!String.IsNullOrEmpty(Model.ClientSdNum))
+                    {
+                        <tr>
+                            <td>№ SD клиента</td>
+                            <td>@Model.ClientSdNum</td>
+                        </tr>
+                    }
                     <tr>
                         <td>S/N</td>
                         <td>@Model.Device.SerialNum</td>
@@ -67,12 +79,12 @@
                     {
                         <tr>
                             <td>Комментарий к счетчику</td>
-                            <td>@Model.CounterDescr</td>
+                            <td>@Html.Nl2Br(Model.CounterDescr)</td>
                         </tr>
                     }
                     <tr>
                         <td>Комментарий</td>
-                        <td>@Model.Descr</td>
+                        <td>@Html.Nl2Br(Model.Descr)</td>
                     </tr>
                     <tr>
                         <td>Инженер</td>
@@ -86,6 +98,29 @@
                         <td>Время работы</td>
                         <td>@Model.TimeOnWorkMinutes мин</td>
                     </tr>
+                    @if (engeneerZipItemsList.Any())
+                    {
+                        <tr>
+                            <td>Заказ ЗИП</td>
+                            <td>
+                                <table class="zip">
+                                    <tr>
+                                        <th>Парт номер</th>
+                                        <th>Наименование</th>
+                                        <th>Количество</th>
+                                    </tr>
+                                    @foreach (var item in engeneerZipItemsList)
+                                    {
+                                        <tr>
+                                            <td>@item.PartNum</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Count</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    }
                 </table>
                 @*<div> </div>
                 <div>

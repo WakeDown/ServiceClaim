@@ -11,7 +11,7 @@ using ServiceClaim.Objects;
 
 namespace ServiceClaim.Objects
 {
-    [Compress]
+    //[Compress]
     public class BaseController : Controller
     {
         private static NetworkCredential nc = GetAdUserCredentials();

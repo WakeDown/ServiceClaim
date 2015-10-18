@@ -2,6 +2,7 @@
 @model ServiceClaim.Models.ServiceSheet
 @{
     Layout = null;
+    var engeneerZipItemsList = Model.GetZipItemList();
 }
 
 <!DOCTYPE html>
@@ -23,6 +24,9 @@
         }
 
         .tbl td {
+            padding: 5px;
+        }
+        table.zip td, table.zip th {
             padding: 5px;
         }
     </style>
@@ -94,6 +98,29 @@
                         <td>Время работы</td>
                         <td>@Model.TimeOnWorkMinutes мин</td>
                     </tr>
+                    @if (engeneerZipItemsList.Any())
+                    {
+                        <tr>
+                            <td>Заказ ЗИП</td>
+                            <td>
+                                <table class="zip">
+                                    <tr>
+                                        <th>Парт номер</th>
+                                        <th>Наименование</th>
+                                        <th>Количество</th>
+                                    </tr>
+                                    @foreach (var item in engeneerZipItemsList)
+                                    {
+                                        <tr>
+                                            <td>@item.PartNum</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Count</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    }
                 </table>
                 @*<div> </div>
                 <div>
