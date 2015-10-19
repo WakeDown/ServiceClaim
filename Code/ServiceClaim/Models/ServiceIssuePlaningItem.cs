@@ -11,6 +11,7 @@ namespace ServiceClaim.Models
         public string Name { get; set; }
         public int IssuesCount { get; set; }
         public string ShortName { get; set; }
+        public string IssuesIdList { get; set; }
 
         public ServiceIssuePlaningItem(int id, string name, int issuesCount, string shortName)
         {

@@ -38,6 +38,14 @@ namespace ServiceClaim.Models
             return result;
         }
 
+        public static bool SaveList(IEnumerable<ServiceIssuePlan> list,out ResponseMessage responseMessage)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceIssuePlan/SaveList", OdataServiceUri));
+            string json = JsonConvert.SerializeObject(list);
+            bool result = PostJson(uri, json, out responseMessage);
+            return result;
+        }
+
         public static ServiceIssuePlan Get(int id)
         {
             Uri uri = new Uri(String.Format("{0}/ServiceIssuePlan/Get?id={1}", OdataServiceUri, id));

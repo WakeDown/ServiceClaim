@@ -36,6 +36,7 @@ namespace ServiceClaim.Models
         public EmployeeSm Creator { get; set; }
         public EmployeeSm Engeneer { get; set; }
         public string ClientSdNum { get; set; }
+        public DateTime DateCreate { get; set; }
 
         public ServiceSheet()
         {
@@ -71,6 +72,14 @@ namespace ServiceClaim.Models
             Uri uri = new Uri($"{OdataServiceUri}/ServiceSheet/GetList?idClaim={idClaim}&idClaim2ClaimState={idClaim2ClaimState}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<ListResult<ServiceSheet>>(jsonString);
+            return model;
+        }
+
+        public IEnumerable<ServiceSheetZipItem> GetZipItemList()
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetList?serviceSheetId={Id}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
             return model;
         }
 

@@ -4,12 +4,13 @@
 
 @foreach (var state in Model)
 {
-    <div style="background-color: #@state.State.BackgroundColor; color: #@state.State.ForegroundColor" class="padding-sm history-state-block" id="@state.State.SysName@state.Id">
+    <div style="background-color: #@state.State.BackgroundColor; color: #@state.State.ForegroundColor" class="padding-sm history-state-block text-sm" id="@state.State.SysName@state.Id">
         <strong>@state.State.Name</strong><br/>
-        @state.DateCreate.ToString("g") - @state.Creator.DisplayName
+        @state.DateCreate.ToString("g") - @state.Creator.DisplayName<br/>
+        <small>@state.Creator.PositionName</small>
         @if (!String.IsNullOrEmpty(state.Descr) || state.IdServiceSheet.HasValue || state.ZipClaimId.HasValue)
         {
-            <p class="no-marg-bot">
+            <div class="no-marg-bot">
                 @if (!String.IsNullOrEmpty(state.Descr))
                 {
                     @Html.Nl2Br(state.Descr)
@@ -26,7 +27,11 @@
                         <a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@state.ZipClaimId.Value" target="_blank">Заявка на ЗИП №@state.ZipClaimId.Value</a>
                     </div>
                 }
-            </p>
+            </div>
         }
     </div>
+}
+@if (!ViewBag.ShowBtnGetAll)
+{
+    <button id="showAllHistory" class="btn btn-default btn-xs">еще...</button>
 }

@@ -33,6 +33,7 @@ $(document).on('submit', 'form', function () {
     var button = $(this).find("[type='submit']");
     setTimeout(function () {
         button.prop('disabled', true);
+        showSpinnerAppend(button);
     }, 0);
 
     //var button2 = $(this).find("button");
@@ -61,6 +62,28 @@ function showSpinnerAfter(obj, offset, offsetTop, offsetLeft) {
     }
     var loading = "<div class='spinner active " + of + "' style='" + stOf + "'><i class='fa fa-spin fa-spinner'></i></div>";
     $(obj).after(loading);
+}
+
+function showSpinnerAppend(obj, offset, offsetTop, offsetLeft) {
+    var of = "";
+    var stOf = "";
+    if (offset) {
+        of = "on-element";
+        stOf = "top:" + offsetTop + "px;left:" + offsetLeft + "px";
+    }
+    var loading = "<div class='spinner active " + of + "' style='" + stOf + "'><i class='fa fa-spin fa-spinner'></i></div>";
+    $(obj).prepend(loading);
+}
+
+function showSpinnerPrepend(obj, offset, offsetTop, offsetLeft) {
+    var of = "";
+    var stOf = "";
+    if (offset) {
+        of = "on-element";
+        stOf = "top:" + offsetTop + "px;left:" + offsetLeft + "px";
+    }
+    var loading = "<div class='spinner active " + of + "' style='" + stOf + "'><i class='fa fa-spin fa-spinner'></i></div>";
+    $(obj).prepend(loading);
 }
 
 function hideSpinner(obj) {

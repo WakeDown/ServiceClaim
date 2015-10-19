@@ -4,25 +4,26 @@
 @{
     var monthes = ServiceIssuePlan.GroupByMonthes(Model);
     int mColLenght = 12 / monthes.Count();
-    int rowWidth = Model.Count()*250;
+    //int rowWidth = Model.Count()*240;
 }
 
 @if (Model.Any())
 {
-    <div class="row" style="width: @(rowWidth)px !important">
+    @*<div class="row" style="width: @(rowWidth)px !important">*@
+    <div class="row">
         @foreach (var mth in monthes)
         {
             <div class="col-lg-@mColLenght">
                 <h3>@mth.Date.ToString("MMMM yyyy")</h3>
-                <div class="row">
+                <div>
                     @{
-                        int pColLenght = 12/mth.Periods.Count();
+                        int pColLenght = 12 / mth.Periods.Count();
                     }
                     @foreach (var period in mth.Periods)
                     {
 
-                        <div class="col-lg-@pColLenght">
-                            <h4 name="periodTitle" value="@period.ListValue" class="cursor-pointer">@period.ListName <span class="label label-info label-as-badge">@period.DaysDiff</span></h4>
+                        <div class="col-lg-@pColLenght period-container nomargin nopadding" id="period-container-@period.IdValue" name="period-container">
+                            <h5 name="periodTitle" value="@period.ListValue" idval="@period.IdValue" class="cursor-pointer period-title nomargin">@period.ListName <span class="label label-info label-as-badge">@period.DaysDiff дн.</span></h5>
 
                             @{
                                 var issueList = period.GetServiceIssueList();
@@ -37,18 +38,21 @@
                                 }
                             </div>
                         </div>
-                    }
+                                }
                 </div>
             </div>
-        }
+                                }
     </div>
-                    }
+                                }
 
 <script type="text/javascript">
     $(function () {
         $('[name="periodTitle"]').click(function () {
             var val = $(this).attr('value');
             $('#selPeriod').val(val);
+            var idval = $(this).attr('idval');
+            $('[name="period-container"]').removeClass('selected');
+            $('#period-container-' + idval).addClass('selected');
         });
     });
 

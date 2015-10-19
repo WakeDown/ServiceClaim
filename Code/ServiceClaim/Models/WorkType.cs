@@ -14,6 +14,8 @@ namespace ServiceClaim.Models
         public int IdParent { get; set; }
         public string Name { get; set; }
         public string SysName { get; set; }
+        public bool ZipInstall { get; set; }//Установка ЗИП
+        public bool ZipOrder { get; set; }//Заказ ЗИП
 
         public string ListName
         {

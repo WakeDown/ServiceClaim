@@ -4,13 +4,13 @@
 @using ServiceClaim.Objects
 @model ServiceClaim.Models.Claim
 
-@using (Html.BeginForm("ZipOrder", "Claim", FormMethod.Post, new { @id = "ZipCheckForm", @class = "form-horizontal", data_toggle = "validator", role = "form" }))
+@using (Html.BeginForm("ZipOrder", "Claim", FormMethod.Post, new { @id = "ZipCheckForm", role = "form" }))
 {
     @Html.HiddenFor(m => m.Id)
     <div class="row">
         <div class="col-lg-push-2 col-lg-10">
             @*<a id="zipClaim"  class="btn btn-primary">Заказать ЗИП</a>*@
-            <button type="submit" class="btn btn-success">Заказать ЗИП</button>
+            <button type="submit" class="btn btn-success">Оформить заказ ЗИП</button>
         </div>
     </div>
     <div class="row">

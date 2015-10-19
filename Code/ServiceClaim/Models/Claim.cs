@@ -221,6 +221,23 @@ namespace ServiceClaim.Models
             var model = JsonConvert.DeserializeObject<IEnumerable<Claim2ClaimState>>(jsonString);
             return model;
         }
+
+        public static IEnumerable<Claim2ClaimState> GetClaimStateHistory(int idClaim, int? topRows)
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetStateHistory?id={idClaim}&topRows={topRows}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<Claim2ClaimState>>(jsonString);
+            return model;
+        }
+
+        //public static IEnumerable<Claim2ClaimState> GetStateHistory()
+        //{
+        //    Uri uri = new Uri(String.Format("{0}/Claim/GetStateHistory?id={1}", OdataServiceUri, Id));
+        //    string jsonString = GetJson(uri);
+        //    var model = JsonConvert.DeserializeObject<IEnumerable<Claim2ClaimState>>(jsonString);
+        //    return model;
+        //}
+
         public static IEnumerable<KeyValuePair<string, string>> GetWorkTypeSpecialistSelectionList(int idWorkType)
         {
             Uri uri = new Uri(String.Format("{0}/Claim/GetWorkTypeSpecialistSelectionList?idWorkType={1}", OdataServiceUri, idWorkType));
@@ -246,5 +263,22 @@ namespace ServiceClaim.Models
             var model = JsonConvert.DeserializeObject<ServiceSheet>(jsonString);
             return model;
         }
+
+        public IEnumerable<ServiceSheet> GetClaimServiceSheetList()
+        {
+            Uri uri = new Uri(String.Format("{0}/Claim/GetClaimServiceSheetList?idClaim={1}", OdataServiceUri, Id));
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheet>>(jsonString);
+            return model;
+        }
+
+        public IEnumerable<ZipClaim> GetClaimZipClaimList()
+        {
+            Uri uri = new Uri(String.Format("{0}/Claim/GetClaimZipClaimList?idClaim={1}", OdataServiceUri, Id));
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ZipClaim>>(jsonString);
+            return model;
+        }
+        
     }
 }

@@ -19,7 +19,7 @@ namespace ServiceClaim.Objects
             if (encodingsAccepted.Contains("deflate"))
             {
                 response.AppendHeader("Content-encoding", "deflate");
-                response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
+                    response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
             }
             else if (encodingsAccepted.Contains("gzip"))
             {

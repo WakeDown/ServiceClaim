@@ -439,9 +439,6 @@ a.async-sel:visited {
     border-radius: 1em;
 }
 
-#issueContainer {
-    overflow-x: auto;
-}
 
 .filter-state-inem {
     float: left;
@@ -455,4 +452,43 @@ a.async-sel:visited {
 
 .no-marg-bot {
     margin-bottom: 0 !important;
+}
+
+.nav-btn-primary {
+    color: #fff !important;
+  background-color: #337ab7 !important;   
+}
+
+.nav-btn-primary:hover {
+    color: #fff !important;
+  background-color: #286090 !important;
+  border-color: #204d74 !important;
+}
+
+.bg-white {
+    background-color: #fff;
+}
+
+#engeneersSelect {
+max-height: 500px;
+overflow-y: auto;
+overflow-x: hidden;
+}
+
+.period-container {
+    border: 2px solid transparent;
+}
+
+.period-container .period-title {
+    padding: 5px;
+}
+
+.period-container.selected .period-title {
+    
+    background-color: #ffecb3;
+}
+
+.period-container.selected {
+    
+    border: 2px solid #ffecb3;
 }

@@ -456,3 +456,14 @@ a.async-sel:visited {
 .no-marg-bot {
     margin-bottom: 0 !important;
 }
+
+.nav-btn-primary {
+    color: #fff !important;
+  background-color: #337ab7 !important;   
+}
+
+.nav-btn-primary:hover {
+    color: #fff !important;
+  background-color: #286090 !important;
+  border-color: #204d74 !important;
+}

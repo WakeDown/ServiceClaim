@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using ServiceClaim.Helpers;
 using ServiceClaim.Models;
 using ServiceClaim.Objects;
@@ -411,7 +412,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
+            return RedirectToAction("Index", new { id = model.Id });
+            //return View("WindowClose");
             //return RedirectToAction("List");
         }
 
@@ -463,8 +465,18 @@ namespace ServiceClaim.Controllers
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
                 var claim = new Claim(model.Id);
                 ServiceSheet lastServSheet = claim.GetLastServiceSheet();
-                string zipOrderUrl =
-                    $"{ConfigurationManager.AppSettings["zipClaimHost"]}/Claims/Editor?snum={claim.Device.SerialNum}&ssid={lastServSheet.Id}&servid={claim.Id}&esid={(String.IsNullOrEmpty(claim.CurEngeneerSid) ? claim.CurTechSid : claim.CurEngeneerSid)}&asid={(String.IsNullOrEmpty(claim.CurAdminSid) ? claim.CurTechSid : claim.CurAdminSid)}&csdnum={claim.ClientSdNum}&cmnt={Url.Encode(lastServSheet.Descr)}&cntr={lastServSheet.CounterMono}&cntrc={lastServSheet.CounterColor}&dvst={lastServSheet.DeviceEnabled}";
+                var zipList = lastServSheet.GetZipItemList();
+                string zipListStr = JsonConvert.SerializeObject(zipList);
+
+                //string zipListStr = "{\"zipList\":[";
+                //foreach (var item in zipList)
+                //{
+                //    zipListStr += $"{{\"PartNum\":\"{item.PartNum}\",\"Name\":\"{item.Name}\",\"Count\":\"{item.Count}\"}}";
+                //}
+                //zipListStr += "]}";
+
+                 string zipOrderUrl =
+                    $"{ConfigurationManager.AppSettings["zipClaimHost"]}/Claims/Editor?snum={claim.Device.SerialNum}&ssid={lastServSheet.Id}&servid={claim.Id}&esid={(String.IsNullOrEmpty(claim.CurEngeneerSid) ? claim.CurTechSid : claim.CurEngeneerSid)}&asid={(String.IsNullOrEmpty(claim.CurAdminSid) ? claim.CurTechSid : claim.CurAdminSid)}&csdnum={claim.ClientSdNum}&cmnt={Url.Encode(lastServSheet.Descr)}&cntr={lastServSheet.CounterMono}&cntrc={lastServSheet.CounterColor}&dvst={lastServSheet.DeviceEnabled}&zip={zipListStr}";
                 return Redirect(zipOrderUrl);
             }
             catch (Exception ex)
@@ -567,6 +579,84 @@ namespace ServiceClaim.Controllers
         {
             var list = await new Claim().GetListAsync(idDevice: idDevice,serialNum: serialNum, clientSdNum: clientSdNum);
             return Json(list); 
+        }
+
+        //[HttpGet]
+        //public ActionResult FullClaimHistory(int? idClaim)
+        //{
+        //    var stateHistory = Claim.GetStateHistory();
+        //}
+
+        [HttpGet]
+        public ActionResult СlaimStateHistory(int? idClaim, bool? full = false)
+        {
+            if (!idClaim.HasValue) return HttpNotFound();
+            int? topRows = null;
+            if (full.HasValue && !full.Value)
+            {
+                topRows = 3;
+            }
+            
+            var stateHistory = Claim.GetClaimStateHistory(idClaim.Value, topRows);
+
+            ViewBag.ShowBtnGetAll = !topRows.HasValue || stateHistory.Count() < topRows.Value;
+            return PartialView("StateHistory", stateHistory);
+        }
+        [HttpPost]
+        public JsonResult AddServiceSheetZipItem(ServiceSheetZipItem model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.Save(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                return Json(new { id = responseMessage.Id });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+
+            return Json(new { });
+        }
+
+        [HttpPost]
+        public JsonResult ServiceSheetZipItemDelete(int id)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = ServiceSheetZipItem.Delete(id, out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+            return null;
+        }
+
+
+        [HttpPost]
+        public ActionResult ZipIssue(Claim model)
+        {
+            try
+            {
+                    ResponseMessage responseMessage;
+                    bool complete = model.Go(out responseMessage);
+                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                return View("WindowClose");
+                //return RedirectToAction("Index", new { id = responseMessage.Id });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+
+            //return View("WindowClose");
+            //return RedirectToAction("List");
         }
     }
 }

@@ -3,31 +3,15 @@
 @{
     ViewBag.Title = "Планирование поездки";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    DateTime date = DateTime.Parse(Request.QueryString["month"]);
+    DateTime date = DateTime.Parse(Request.QueryString["date"]);
+    string dateStr = date.ToString("yyyy-MM-dd");
     int year = date.Year;
     int month = date.Month;
-    var periodList = ServiceIssuePlan.GetPeriodMonthCurPrevNextList(year, month);
+    int day = date.Day;
+    var periodList = ServiceIssuePlan.GetPeriodMonthList(year, month);
 }
 
-<div class="row pad-b-md navbar-fixed-top sub-menu-fixed-top bg-primary">
-    <div class="col-lg-3">
-        @using (Html.BeginForm("Planing", "ServiceIssuePlan", FormMethod.Post))
-        {
-            <div>
-                <input id="month" name="month" type="text" class="form-control" mthdate="@String.Format("{0:yyyy-MM}", date)" value="@String.Format("{0:MMMM yyyy}", date)"/>
-            </div>
-            <div>
-                @*@Html.DropDownList("engeneers", ServiceIssue.GetEngeneerSelectionList(), new {id="engeneersSelect", @class = "form-control", multiple = "multiple" })*@
-                <select id="engeneersSelect" name="engeneersSelect" class="form-control" multiple="multiple">
-                    @foreach (var eng in ServiceIssue.GetEngeneerList())
-                    {
-                        <option value="@eng.Key" @(TempData["serviceEngeneerSid"] != null && TempData["serviceEngeneerSid"].ToString().Contains(eng.Key) ? "selected=\"selected\"" : "")>@eng.Value</option>
-                    }
-                </select>
-                <button class="btn btn-info" id="search" type="submit"><i class="fa fa-search"></i></button>
-            </div>
-        }
-    </div>
+@*<div class="row pad-b-md navbar-fixed-top sub-menu-fixed-top bg-primary">
     <div class="col-lg-9">
         <div class="row">
             <div class="col-lg-4">
@@ -39,25 +23,45 @@
                 </div>
             </div>
             <div class="col-lg-8">
-                <button id="btnIssuePlanSave" class="btn btn-success btn-xl">сохранить</button>
+                
             </div>
         </div>
     </div>
-</div>
-<div class="sub-menu-fixed-top-padding">
+</div>*@
+<div >
+    @*class="sub-menu-fixed-top-padding"*@
     <div class="row">
         <div class="col-lg-3">
+            @using (Html.BeginForm("Planing", "ServiceIssuePlan", FormMethod.Post))
+            {
+                <div id="calendar"></div>
+                <input id="date" name="date" type="hidden" value="@String.Format("{0:yyyy-MM-dd}", date)"/>
+                <p>
+                    <select id="engeneersSelect" name="engeneersSelect" class="form-control" multiple="multiple">
+                        @foreach (var eng in ServiceIssue.GetEngeneerList())
+                        {
+                            <option value="@eng.Key" @(TempData["serviceEngeneerSid"] != null && TempData["serviceEngeneerSid"].ToString().Contains(eng.Key) ? "selected=\"selected\"" : "")>@eng.Value</option>
+                        }
+                    </select>
+                    <button class="btn btn-info" id="search" type="submit"><i class="fa fa-search"></i></button>
+                </p>
+            }
             <div id="planingIssueList" class="planing-sel-list">
                 @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
                 {
                     <a class="async-sel row nomargin nopadding" href="#!" name="city" cid="@city.Id" data-toggle="tooltip" title="@city.Name">
-                        <div class="issues-count col-lg-2"><span class="pull-right">@city.IssuesCount</span></div><div class="col-lg-10">@city.ShortName</div></a>
-                                    <div name="addressContainer" cid="@city.Id" class="pad-1">
-                                    </div>
+                        <div class="issues-count col-lg-2"><span class="pull-right">@city.IssuesCount</span></div>
+                        <div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-@city.Id" issueids="@city.IssuesIdList"/>&nbsp;@city.ShortName</div>
+                    </a>
+                    <div name="addressContainer" cid="@city.Id" class="pad-1"></div>
                 }
             </div>
         </div>
         <div class="col-lg-9">
+            <p>
+                <span class="label label-info">выбрано заявок - <span id="selIssueIdsCount" class="label-badge">0</span></span>&nbsp;<button id="btnIssuePlanSave" class="btn btn-success btn-xs">добавить в план</button>
+                <input id="selPeriod" name="selPeriod" type="hidden" value="" />
+            </p>
             <div id="issueContainer">
                 @Html.Partial("PeriodWeekView", periodList)
             </div>
@@ -68,33 +72,62 @@
 {
     <script type="text/javascript">
         $(function() {
+            $('[name="all-city"]').click(setCheckedIssueIds);
 
+            $('#calendar').datepicker({
+                //minViewMode: 'months',
+                language: "ru",
+                todayHighlight: true
+            }).on('changeDate', function(e) {
+                $('#date').val(e.format('yyyy-mm-dd'));
+            });
+            $('#calendar').on('changeMonth', function(e) {
+                //var currMonth = new Date(e.date).getMonth() + 1;
+                var curDate = new Date(e.date);
+                var curDateStr = (curDate.getYear() + 1900).toString() + '-' + (curDate.getMonth() + 1).toString() + '-' + curDate.getDate().toString();
+                $('#calendar').datepicker('update', curDate);
+                //alert(e.date.getDate().toString());
+                $('#date').val(curDateStr);
+            });
+            var startDate = new Date(@year, @(month - 1), @day);
+            $('#calendar').datepicker('update', startDate);
             //$('#search').click(reloadWithParams);
             $('#engeneersSelect').multiselect({
                 includeSelectAllOption: true,
                 selectAllText: 'все',
                 selectAllValue: '',
-                enableFiltering: true
+                enableFiltering: true,
+                nonSelectedText: 'выберите инженера(-ов)'
             });
-            $('#month').datepicker({
-                minViewMode: 'months',
-                format: "MM yyyy",
-                autoclose: true,
-                language: "ru"
-            });
-                @*.on('changeDate', function (ev) {
+            //$('#month').datepicker({
+            //    minViewMode: 'months',
+            //    format: "MM yyyy",
+            //    autoclose: true,
+            //    language: "ru",
+            //    inline: true
+            //});
+            @*.on('changeDate', function (ev) {
                 $('#month').attr('mthdate', ev.format('yyyy-mm'));
                 reloadWithParams();
                 //window.location = '@Url.Action("Planing")?month=' + ev.format('yyyy-mm');
             });*@
             $('[name="city"]').click(fillAddressList);
             $('#btnIssuePlanSave').click(function() {
-                var serviceIssueId = $('#selectedIssueName').attr('sid');
+                //var serviceIssueIdList = $('#selectedIssueName').attr('sid');
+                if (issueIdsArr.length == 0) {
+                    alert('Выберите заявку.');
+                    return;
+                }
+
                 var periodStr = $('#selPeriod').val();
+                if (periodStr == '') {
+                    alert('Выберите период.');
+                    return;
+                }
                 $.ajax({
                     url: '@Url.Action("SaveServiceIssuePlan")',
                     method: 'POST',
-                    data: { serviceIssueId: serviceIssueId, periodStr: periodStr },
+                    data: { serviceIssueIdList: issueIdsArr, periodStr: periodStr },
                     success: function(data) {
                         if (!data.error) {
                             appendServiceIssue(data);
@@ -107,6 +140,34 @@
 
             fill();
         });
+
+        var issueIdsArr = [];
+
+        function setCheckedIssueIds(e) {
+            var issueids = $(this).attr('issueids');
+            var arr = issueids.split(',');
+            
+
+            if ($(this).is(':checked')) {
+                for (var i = 0; i < arr.length; i++) {
+                    var index = issueIdsArr.indexOf(arr[i]);
+                    if (index == -1) {
+                        issueIdsArr.splice(issueIdsArr.length-1, 0, arr[i]);
+                    }
+                }
+                //issueIdsArr = issueIdsArr.concat(arr);
+            } else {
+                for (var i = 0; i < arr.length; i++) {
+                    var index = issueIdsArr.indexOf(arr[i]);
+                    if (index > -1) {
+                        issueIdsArr.splice(index, 1);
+                    }
+                }
+                
+            }
+            $('#selIssueIdsCount').text(issueIdsArr.length);
+            e.stopPropagation();
+        }
 
         @*function fill() {
             var servEngChks = $('#engeneersSelect [type="checkbox"]');
@@ -126,7 +187,7 @@
             for (var i = 0; i < servEng.length; i++) {
                 servEngVals.push($(servEng[i]).val());
             }
-            
+
             $.post({
                 type: "POST",
                 url: '@Url.Action("Planing")',
@@ -161,11 +222,11 @@
         function fillAddressList() {
             showSpinnerAfter(this, false);
             var cid = $(this).attr('cid');
-            var month = new Date($('#month').val());
+            var date = new Date($('#date').val());
             $.ajax({
                 url: '@Url.Action("GetAddressList")',
                 method: 'POST',
-                data: { month: month, idCity: cid },
+                data: { date: date.toDateString(), idCity: cid },
                 success: function(data) {
 
                     if (data.length) {
@@ -173,11 +234,12 @@
                         $container.html('');
                         for (var i = 0; i < data.length; i++) {
                             var address = data[i];
-                            var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10">' + address.Name + '</div></a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
+                            var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-addr" id="all-addr-' + address.Name.replace(' ', '') + '" issueids="' + address.IssuesIdList + '" />&nbsp;' + address.Name + '</div></a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
                             $container.append(addresItem);
                         }
 
                         $('[name="address"]', $container).click(fillClientList);
+                        $('[name="all-addr"]', $container).click(setCheckedIssueIds);
                     }
                     hideSpinner();
                 },
@@ -192,22 +254,23 @@
             showSpinnerAfter(this, false);
             var cid = $(this).attr('cid');
             var aid = $(this).attr('aid');
-            var month = new Date($('#month').val());
+            var date = new Date($('#date').val());
             $.ajax({
                 url: '@Url.Action("GetClientList")',
                 method: 'POST',
-                data: { month: month, idCity: cid, address: aid },
+                data: { date: date.toDateString(), idCity: cid, address: aid },
                 success: function(data) {
                     if (data.length) {
                         var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
                         $container.html('');
                         for (var i = 0; i < data.length; i++) {
                             var client = data[i];
-                            var clientItem = '<a href="#!" class="async-sel row nomargin nopadding" name="client" cid="' + cid + '" aid="' + aid + '" clid="' + client.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + client.IssuesCount + '</span></div><div class="col-lg-10">' + client.Name + '</div></a><div name="deviceContainer"  cid="' + cid + '" aid="' + aid + '"  clid="' + client.Id + '" class="pad-3"></div>';
+                            var clientItem = '<a href="#!" class="async-sel row nomargin nopadding" name="client" cid="' + cid + '" aid="' + aid + '" clid="' + client.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + client.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-cl" id="all-cl-' + client.Id + '" issueids="' + client.IssuesIdList + '" />&nbsp;' + client.Name + '</div></a><div name="deviceContainer"  cid="' + cid + '" aid="' + aid + '"  clid="' + client.Id + '" class="pad-3"></div>';
                             $container.append(clientItem);
                         }
 
                         $('[name="client"]', $container).click(fillDeviceList);
+                        $('[name="all-cl"]', $container).click(setCheckedIssueIds);
                     }
                     hideSpinner();
                 },
@@ -223,22 +286,23 @@
             var cid = $(this).attr('cid');
             var aid = $(this).attr('aid');
             var clid = $(this).attr('clid');
-            var month = new Date($('#month').val());
+            var date = new Date($('#date').val());
             $.ajax({
                 url: '@Url.Action("GetDeviceIssueList")',
                 method: 'POST',
-                data: { month: month, idCity: cid, address: aid, idClient: clid },
+                data: { date: date.toDateString(), idCity: cid, address: aid, idClient: clid },
                 success: function(data) {
                     if (data.length) {
                         var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
                         $container.html('');
                         for (var i = 0; i < data.length; i++) {
                             var deviceIssue = data[i];
-                            var deviceItem = '<a href="#!" class="async-sel row nomargin nopadding" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + deviceIssue.IssuesCount + '</span></div><div class="col-lg-10">' + deviceIssue.Name + '</div></a>';
+                            var deviceItem = '<a href="#!" class="async-sel row nomargin nopadding" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + deviceIssue.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-dev" id="all-dev-' + deviceIssue.Id + '" issueids="' + deviceIssue.Id + '" />&nbsp;' + deviceIssue.Name + '</div></a>';
                             $container.append(deviceItem);
                         }
 
                         $('[name="deviceIssue"]', $container).click(setIssue);
+                        $('[name="all-dev"]', $container).click(setCheckedIssueIds);
                     }
                     hideSpinner();
                 },
