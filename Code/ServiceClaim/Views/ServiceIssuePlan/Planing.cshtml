@@ -11,7 +11,7 @@
     var periodList = ServiceIssuePlan.GetPeriodMonthList(year, month);
 }
 
-<div class="row pad-b-md navbar-fixed-top sub-menu-fixed-top bg-primary">
+@*<div class="row pad-b-md navbar-fixed-top sub-menu-fixed-top bg-primary">
     <div class="col-lg-9">
         <div class="row">
             <div class="col-lg-4">
@@ -23,18 +23,19 @@
                 </div>
             </div>
             <div class="col-lg-8">
-                <button id="btnIssuePlanSave" class="btn btn-success btn-xl">сохранить</button>
+                
             </div>
         </div>
     </div>
-</div>
-<div class="sub-menu-fixed-top-padding">
+</div>*@
+<div >
+    @*class="sub-menu-fixed-top-padding"*@
     <div class="row">
         <div class="col-lg-3">
             @using (Html.BeginForm("Planing", "ServiceIssuePlan", FormMethod.Post))
             {
                 <div id="calendar"></div>
-                <input id="date" name="date" type="hidden" value="@String.Format("{0:yyyy-MM-dd}", date)" />
+                <input id="date" name="date" type="hidden" value="@String.Format("{0:yyyy-MM-dd}", date)"/>
                 <p>
                     <select id="engeneersSelect" name="engeneersSelect" class="form-control" multiple="multiple">
                         @foreach (var eng in ServiceIssue.GetEngeneerList())
@@ -50,7 +51,7 @@
                 {
                     <a class="async-sel row nomargin nopadding" href="#!" name="city" cid="@city.Id" data-toggle="tooltip" title="@city.Name">
                         <div class="issues-count col-lg-2"><span class="pull-right">@city.IssuesCount</span></div>
-                        <div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-@city.Id" issueids="@city.IssuesIdList" />&nbsp;@city.ShortName</div>
+                        <div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-@city.Id" issueids="@city.IssuesIdList"/>&nbsp;@city.ShortName</div>
                     </a>
                     <div name="addressContainer" cid="@city.Id" class="pad-1"></div>
                 }
@@ -58,7 +59,8 @@
         </div>
         <div class="col-lg-9">
             <p>
-                <span class="label label-info">выбрано заявок - <span id="selIssueIdsCount" class="label-badge">0</span></span>
+                <span class="label label-info">выбрано заявок - <span id="selIssueIdsCount" class="label-badge">0</span></span>&nbsp;<button id="btnIssuePlanSave" class="btn btn-success btn-xs">добавить в план</button>
+                <input id="selPeriod" name="selPeriod" type="hidden" value="" />
             </p>
             <div id="issueContainer">
                 @Html.Partial("PeriodWeekView", periodList)
@@ -111,12 +113,21 @@
             });*@
             $('[name="city"]').click(fillAddressList);
             $('#btnIssuePlanSave').click(function() {
-                var serviceIssueId = $('#selectedIssueName').attr('sid');
+                //var serviceIssueIdList = $('#selectedIssueName').attr('sid');
+                if (issueIdsArr.length == 0) {
+                    alert('Выберите заявку.');
+                    return;
+                }
+
                 var periodStr = $('#selPeriod').val();
+                if (periodStr == '') {
+                    alert('Выберите период.');
+                    return;
+                }
                 $.ajax({
                     url: '@Url.Action("SaveServiceIssuePlan")',
                     method: 'POST',
-                    data: { serviceIssueId: serviceIssueId, periodStr: periodStr },
+                    data: { serviceIssueIdList: issueIdsArr, periodStr: periodStr },
                     success: function(data) {
                         if (!data.error) {
                             appendServiceIssue(data);

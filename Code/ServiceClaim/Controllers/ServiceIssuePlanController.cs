@@ -62,27 +62,37 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveServiceIssuePlan(int serviceIssueId, string periodStr)
+        public JsonResult SaveServiceIssuePlan(int[] serviceIssueIdList, string periodStr)
         {
-            if (serviceIssueId <= 0) return Json(new { error = "Не указана заявка" });
+            if (serviceIssueIdList == null || !serviceIssueIdList.Any()) return Json(new { error = "Не указана заявка" });
             var dts = periodStr.Split('|');
             if (!dts.Any()) return Json(new { error = "Не указан период" });
 
             DateTime periodStart = DateTime.Parse(dts[0]);
             DateTime periodEnd = DateTime.Parse(dts[1]);
-            ServiceIssuePlan plan = new ServiceIssuePlan(serviceIssueId, 1, periodStart, periodEnd);
+            var planIssueList = new List<ServiceIssuePlan>();
+            foreach (int id in serviceIssueIdList)
+            {
+                ServiceIssuePlan plan = new ServiceIssuePlan(id, 1, periodStart, periodEnd);
+                planIssueList.Add(plan);
+            }
+            
             try
             {
                 ResponseMessage responseMessage;
-                bool result = plan.Save(out responseMessage);
+                bool result = ServiceIssuePlan.SaveList(planIssueList, out responseMessage);
                 if (!result) throw new Exception(responseMessage.ErrorMessage);
-                plan.Id = responseMessage.Id;
+                string idList = responseMessage.IdArr;
+                //ResponseMessage responseMessage;
+                //bool result = plan.Save(out responseMessage);
+                //if (!result) throw new Exception(responseMessage.ErrorMessage);
+                //plan.Id = responseMessage.Id;
             }
             catch (Exception ex)
             {
                 return Json(new { error = ex.Message });
             }
-            return Json(plan);
+            return Json(new {});
         }
 
         public PartialViewResult PeriodWeekView(int? year, int? month)
