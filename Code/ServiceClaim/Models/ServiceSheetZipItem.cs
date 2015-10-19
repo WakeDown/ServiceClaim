@@ -17,6 +17,10 @@ namespace ServiceClaim.Models
         public int? ZipClaimUnitId { get; set; }
         public DateTime DateCreate { get; set; }
         public string CreatorSid { get; set; }
+        public bool Installed { get; set; }
+        public string InstalledSid { get; set; }
+        public string InstalledCancelSid { get; set; }
+        public int InstalledServiceSheetId { get; set; }
 
         public static ServiceSheetZipItem Get(int id)
         {
@@ -49,6 +53,14 @@ namespace ServiceClaim.Models
         public static bool Delete(int id, out ResponseMessage responseMessage)
         {
             Uri uri = new Uri(String.Format("{0}/ServiceSheetZipItem/Close?id={1}", OdataServiceUri, id));
+            string json = String.Empty;
+            bool result = PostJson(uri, json, out responseMessage);
+            return result;
+        }
+
+        public static bool SetInstalled(int id, int idServiceSheet, out ResponseMessage responseMessage, bool? installed = true)
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/SetInstalled?id={id}&idServiceSheet={idServiceSheet}&installed={installed}");
             string json = String.Empty;
             bool result = PostJson(uri, json, out responseMessage);
             return result;

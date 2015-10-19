@@ -658,5 +658,37 @@ namespace ServiceClaim.Controllers
             //return View("WindowClose");
             //return RedirectToAction("List");
         }
+
+        [HttpPost]
+        public JsonResult ServiceSheetZipItemSetInstalled(int id, int idServiceSheet)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = ServiceSheetZipItem.SetInstalled(id, idServiceSheet,  out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+            return null;
+        }
+
+        [HttpPost]
+        public JsonResult ServiceSheetZipItemSetInstalledCancel(int id, int idServiceSheet)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = ServiceSheetZipItem.SetInstalled(id, idServiceSheet, out responseMessage, false);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+            return null;
+        }
     }
 }

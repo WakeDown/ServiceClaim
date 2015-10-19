@@ -279,6 +279,13 @@ namespace ServiceClaim.Models
             var model = JsonConvert.DeserializeObject<IEnumerable<ZipClaim>>(jsonString);
             return model;
         }
-        
+
+        public IEnumerable<ServiceSheetZipItem> GetIssuedZipItemList(int? notInserviceSheetId)
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetIssuedZipItemList?claimId={Id}&notInserviceSheetId={notInserviceSheetId}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
+            return model;
+        }
     }
 }

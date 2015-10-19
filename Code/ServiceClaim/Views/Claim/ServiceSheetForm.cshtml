@@ -139,8 +139,8 @@
                 $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', false);
             }
         }
-        setVars();
 
+        setVars();
         if (zipEnab) {//Необходим заказ ЗИП
             $('#commentContainer').hide();
             $('#commentContainer').prop('required', false);
@@ -167,21 +167,24 @@
             //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', false);
         }
 
-
+        setVars();
         if (countHas) {//Счетчик предусмотрен
             $('#counterUnavailableContainer').show();
             $('#countersContainer').show();
             $('#counterMono').prop('required', true);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', true);
         } else if (countNotHas) {//Счетчик НЕ предусмотрен
             $('#counterUnavailableContainer').hide();
             $('#countersContainer').hide();
             $('#counterMono').prop('required', false);
             $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
         } else {//ничего не выбрано
             $('#counterUnavailableContainer').hide();
             $('#countersContainer').hide();
             $('#counterMono').prop('required', false);
             $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
         }
 
         setVars();
