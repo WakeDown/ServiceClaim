@@ -130,7 +130,8 @@
                     data: { serviceIssueIdList: issueIdsArr, periodStr: periodStr },
                     success: function(data) {
                         if (!data.error) {
-                            appendServiceIssue(data);
+                            //appendServiceIssue(data);
+                            updateSelectedPeriod();
                         } else {
                             alert(data.error);
                         }

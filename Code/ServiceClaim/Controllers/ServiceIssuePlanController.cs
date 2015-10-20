@@ -113,6 +113,12 @@ namespace ServiceClaim.Controllers
             return PartialView("ServiceIssuePlanItem", issue);
         }
 
+        [HttpPost]
+        public JsonResult GetPlanServiceIssueList(DateTime startDate, DateTime endDate, string engeneerSid)
+        {
+            return Json(ServiceIssuePeriodItem.GetServiceIssueList(startDate, endDate, engeneerSid));
+        }
+
         //public JsonResult CheckServiceIssueIsExists(int idServiceIssue, int idServiceIssueType)
         //{
         //    var model = ServiceIssuePlan.Get(idServiceIssue, idServiceIssueType);

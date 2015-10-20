@@ -19,6 +19,9 @@ namespace ServiceClaim.Models
            return ServiceIssuePlan.GetList(StartDate, EndDate);
         }
 
-        
+        public static IEnumerable<ServiceIssuePlan> GetServiceIssueList(DateTime startDate, DateTime endDate, string engeneerSid = null)
+        {
+            return ServiceIssuePlan.GetList(startDate, endDate, engeneerSid);
+        }
     }
 }

@@ -64,9 +64,10 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        public static IEnumerable<ServiceIssuePlan> GetList(DateTime periodStart, DateTime periodEnd)
+        public static IEnumerable<ServiceIssuePlan> GetList(DateTime periodStart, DateTime periodEnd, string engeneerSid = null)
         {
-            Uri uri = new Uri(String.Format("{0}/ServiceIssuePlan/GetList?periodStart={1:yyyy-MM-dd}&periodEnd={2:yyyy-MM-dd}", OdataServiceUri, periodStart, periodEnd));
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/ServiceIssuePlan/GetList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&engeneerSid={engeneerSid}");
             string jsonString = GetApiClient().DownloadString(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlan>>(jsonString);
 
