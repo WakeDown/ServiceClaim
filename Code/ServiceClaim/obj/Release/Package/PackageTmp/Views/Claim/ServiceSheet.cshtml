@@ -3,6 +3,7 @@
 @{
     Layout = null;
     var engeneerZipItemsList = Model.GetZipItemList();
+    var installedZipItemsList = Model.GetInstalledZipItemList();
 }
 
 <!DOCTYPE html>
@@ -98,10 +99,33 @@
                         <td>Время работы</td>
                         <td>@Model.TimeOnWorkMinutes мин</td>
                     </tr>
+                    @if (installedZipItemsList.Any())
+                    {
+                        <tr>
+                            <td style="vertical-align: top">Установлен ЗИП</td>
+                            <td>
+                                <table class="zip">
+                                    <tr>
+                                        <th>Парт номер</th>
+                                        <th>Наименование</th>
+                                        <th>Количество</th>
+                                    </tr>
+                                    @foreach (var item in installedZipItemsList)
+                                    {
+                                        <tr>
+                                            <td>@item.PartNum</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Count</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    }
                     @if (engeneerZipItemsList.Any())
                     {
                         <tr>
-                            <td>Заказ ЗИП</td>
+                            <td style="vertical-align: top">Заказ ЗИП</td>
                             <td>
                                 <table class="zip">
                                     <tr>

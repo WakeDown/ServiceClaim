@@ -22,8 +22,7 @@ namespace ServiceClaim.Models
         public string ContractorName { get; set; }
         public string ContractName { get; set; }
         public string DeviceName { get; set; }
-        public EmployeeSm Admin { get; set; }
-        public EmployeeSm Engeneer { get; set; }
+       
         public ClaimState State { get; set; }
         public DateTime DateStateChange { get; set; }
         public int? IdWorkType { get; set; }
@@ -38,6 +37,11 @@ namespace ServiceClaim.Models
         public string CurAdminSid { get; set; }
         public string CurTechSid { get; set; }
         public string CurManagerSid { get; set; }
+        public EmployeeSm Admin { get; set; }
+        public EmployeeSm Engeneer { get; set; }
+        public EmployeeSm Manager { get; set; }
+        public EmployeeSm Tech { get; set; }
+        public EmployeeSm Changer { get; set; }
 
         public string DateStateChangeStr => string.Format("{0:dd.MM.yy hh:mm}", DateStateChange);
         public string DateCreateStr => string.Format("{0:dd.MM.yy hh:mm}", DateCreate);
@@ -97,39 +101,40 @@ namespace ServiceClaim.Models
             //Engeneer=new EmployeeSm();
         }
 
-        public Claim(int id):this()
+        public static Claim Get(int id)
         {
             Uri uri = new Uri(String.Format("{0}/Claim/Get?id={1}", OdataServiceUri, id));
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<Claim>(jsonString);
-            FillSelf(model);
+            return model;
+            //FillSelf(model);
         }
 
-        private void FillSelf(Claim model)
-        {
-            Id = model.Id;
-            Sid = model.Sid;
-            Contractor = model.Contractor;
-            Contract = model.Contract;
-            Device = model.Device;
-            ContractorName = model.ContractorName;
-            ContractName = model.ContractName;
-            DeviceName = model.DeviceName;
-            Admin = model.Admin;
-            Engeneer = model.Engeneer;
-            State = model.State;
-            IdWorkType = model.IdWorkType;
-            WorkType = model.WorkType;
-            SpecialistSid = model.SpecialistSid;
-            Specialist = model.Specialist;
-            DateCreate = model.DateCreate;
-            DateStateChange = model.DateStateChange;
-            ClientSdNum = model.ClientSdNum;
-            CurEngeneerSid = model.CurEngeneerSid;
-            CurAdminSid = model.CurAdminSid;
-            CurTechSid = model.CurTechSid;
-            CurManagerSid = model.CurManagerSid;
-        }
+        //private void FillSelf(Claim model)
+        //{
+        //    Id = model.Id;
+        //    Sid = model.Sid;
+        //    Contractor = model.Contractor;
+        //    Contract = model.Contract;
+        //    Device = model.Device;
+        //    ContractorName = model.ContractorName;
+        //    ContractName = model.ContractName;
+        //    DeviceName = model.DeviceName;
+        //    Admin = model.Admin;
+        //    Engeneer = model.Engeneer;
+        //    State = model.State;
+        //    IdWorkType = model.IdWorkType;
+        //    WorkType = model.WorkType;
+        //    SpecialistSid = model.SpecialistSid;
+        //    Specialist = model.Specialist;
+        //    DateCreate = model.DateCreate;
+        //    DateStateChange = model.DateStateChange;
+        //    ClientSdNum = model.ClientSdNum;
+        //    CurEngeneerSid = model.CurEngeneerSid;
+        //    CurAdminSid = model.CurAdminSid;
+        //    CurTechSid = model.CurTechSid;
+        //    CurManagerSid = model.CurManagerSid;
+        //}
 
         public async Task<ListResult<Claim>> GetListAsync(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool activeClaimsOnly = false, int? idClaimState = null, int? clientId = null, string clientSdNum = null)
         {

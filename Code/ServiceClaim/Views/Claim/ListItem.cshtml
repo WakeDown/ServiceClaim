@@ -1,0 +1,43 @@
+﻿@using ServiceClaim.Objects
+@model ServiceClaim.Models.Claim
+    
+<tr id="claim-@Model.Id" claimid="@Model.Id">
+    <th class="valign-middle">@Model.Id</th>
+    <th class="valign-middle">@Model.ClientSdNum</th>
+    <td class="valign-middle">
+        @if (Model.State.SysName.ToUpper().Equals("SERVENGOUTWAIT") && ViewBag.userIsEngeneer)
+        {
+            <button id="StateEngOutWait" class="btn btn-success" clid="@Model.Id">Выехал</button>
+        }
+        @if (Model.State.SysName.ToUpper().Equals("SRVENGWENT") && ViewBag.userIsEngeneer)
+        {
+            <button id="SetServEngOnWork" class="btn btn-success" clid="@Model.Id">В работе</button>
+        }
+    </td>
+    <td class="valign-middle">@Model.Contractor.FullName</td>
+    <td class="valign-middle">@Model.Device.FullName</td>
+    <td class="valign-middle">@Model.Device.SerialNum</td>
+    @*<td>@Model.StateChangeDateDiffStr</td>*@
+    <td>
+        <div>
+            <span class="small"><span class="bold monospace">МСЦ:</span>&nbsp;@(Model.Manager != null ? Model.Manager.DisplayName : "&nbsp;")</span>
+        </div>
+        <div>
+            <span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;@(Model.Admin != null ? Model.Admin.DisplayName : "&nbsp;")
+        </span>
+        </div>
+        <div>
+            <span class="small"><span class="bold monospace">СТП:</span>&nbsp;@(Model.Tech != null ? Model.Tech.DisplayName : "&nbsp;")
+        </span>
+        </div>
+        <div>
+            <span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;@(Model.Engeneer != null ? Model.Engeneer.DisplayName : "&nbsp;")
+        </span>
+        </div>
+    </td>
+    <td style="background-color: #@Model.State.BackgroundColor; color: #@Model.State.ForegroundColor" class="valign-middle">@Model.State.Name<div class="small">@Model.DateStateChangeStr - @(Model.Changer != null ? Model.Changer.DisplayName : String.Empty)</div></td>
+    
+    @*<td>@Model.CreateDateDiffStr</td>*@
+    <td class="valign-middle">@String.Format("{0:dd.MM.yy hh:mm}", Model.DateCreate)</td>
+</tr>
+

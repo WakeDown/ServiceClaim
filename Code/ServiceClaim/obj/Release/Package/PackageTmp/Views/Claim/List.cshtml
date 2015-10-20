@@ -1,11 +1,14 @@
 ﻿@using System.Linq
 @using System.ServiceModel.Configuration
 @using ServiceClaim.Models;
+@using ServiceClaim.Objects
 @model ListResult<Claim>
 @{
     ViewBag.Title = "Список заявок";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var filterStates = ClaimState.GetFilterList();
+
+
 }
 
 <div class="row">
@@ -13,13 +16,13 @@
         @Html.DropDownList("clientFilter", new SelectList(Contractor.GetServiceClaimFilterList(), "Id", "ListName", Request.QueryString["client"]), "--все клиенты--", new { @class = "form-control" })
     </div>
     @*@if (filterStates != null && filterStates.Any())
-    {
-        <a class="btn btn-primary" href="@Url.Action("List")">все</a>
-        foreach (ClaimState st in filterStates)
         {
-            <a class="btn" style="color: #@st.ForegroundColor; background-color: #@st.BackgroundColor" href="@Url.Action("List")?state=@st.Id&client=@Request.QueryString["client"]">@st.Name (@st.ClaimCount)</a>
-        }
-    }*@
+            <a class="btn btn-primary" href="@Url.Action("List")">все</a>
+            foreach (ClaimState st in filterStates)
+            {
+                <a class="btn" style="color: #@st.ForegroundColor; background-color: #@st.BackgroundColor" href="@Url.Action("List")?state=@st.Id&client=@Request.QueryString["client"]">@st.Name (@st.ClaimCount)</a>
+            }
+        }*@
 </div>
 
 @if (Model.List.Any())
@@ -30,29 +33,45 @@
             </p>*@
         <table id="claimList" class="table table-bordered sel-list">
             <tr class="bg-primary">
+
                 <th class="min-width">№</th>
                 <th class="min-width">№ SD клиента</th>
+                <th></th>
                 <th>Контрагент</th>
                 <th>Аппарат</th>
                 <th>S/N</th>
-                <th>Последнее изменение</th>
+                @*<th>Последнее изменение</th>*@
+                <th>Менеджер<br />Администратор<br />СТП<br />Инженер</th>
                 <th>Статус</th>
-                <th>Время с момента создания</th>
+                @*<th>Время с момента создания</th>*@
+                
                 <th>Дата создания</th>
             </tr>
             @foreach (var claim in Model.List)
             {
-                <tr claimid="@claim.Id">
-                    <th>@claim.Id</th>
-                    <th>@claim.ClientSdNum</th>
-                    <td>@claim.Contractor.FullName</td>
-                    <td>@claim.Device.FullName</td>
-                    <td>@claim.Device.SerialNum</td>
-                    <td>@claim.StateChangeDateDiffStr</td>
-                    <td style="background-color: #@claim.State.BackgroundColor; color: #@claim.State.ForegroundColor">@claim.State.Name<div class="small">@claim.DateStateChangeStr</div></td>
-                    <td>@claim.CreateDateDiffStr</td>
-                    <td>@String.Format("{0:dd.MM.yy hh:mm}", claim.DateCreate)</td>
-                </tr>
+                @Html.Partial("ListItem", claim);
+
+                @*<tr claimid="@claim.Id">
+                        <th>@claim.Id</th>
+                        <th>@claim.ClientSdNum</th>
+                        <td>
+                            @if (claim.State.SysName.ToUpper().Equals("SERVENGOUTWAIT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+                            {
+                                <button id="StateEngOutWait" class="btn btn-success" clid="@claim.Id">Выехал</button>
+                            }
+                            @if (claim.State.SysName.ToUpper().Equals("SRVENGWENT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+                            {
+                                    <button id="SetServEngOnWork" class="btn btn-success" clid="@claim.Id">В работе</button>
+                            }
+                        </td>
+                        <td>@claim.Contractor.FullName</td>
+                        <td>@claim.Device.FullName</td>
+                        <td>@claim.Device.SerialNum</td>
+                        <td>@claim.StateChangeDateDiffStr</td>
+                        <td style="background-color: #@claim.State.BackgroundColor; color: #@claim.State.ForegroundColor">@claim.State.Name<div class="small">@claim.DateStateChangeStr</div></td>
+                        <td>@claim.CreateDateDiffStr</td>
+                        <td>@String.Format("{0:dd.MM.yy hh:mm}", claim.DateCreate)</td>
+                    </tr>*@
             }
         </table>
     </p>
@@ -78,7 +97,7 @@
         </div>
     }
     <script type="text/javascript">
-        $('[name="displayRows"]').click(function() {
+        $('[name="displayRows"]').click(function () {
             var rows = $(this).attr('value');
             reload(rows);
         });
@@ -89,14 +108,87 @@
             window.location = url;
         }
 
-        $(document).ready(function() {
-            window.location.hash = 'claimList';
-            $('#clientFilter').change(reload);
-            $('#claimList tr[claimid]').click(function() {
-                window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
+        function updateListItem(claimId) {
+            $.ajax({
+                url: '@Url.Action("GetListItem")',
+                method: 'POST',
+                data: { claimId: claimId },
+                success: function (html) {
+                    if (html != '') {
+                        $('#claim-' + claimId).replaceWith(html);
+                        var $tr = $('#claim-' + claimId);
+                        $tr.addClass('updated');
+                        initListButtons($tr);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        function initListButtons($container) {
+            if ($container == null) {
+                $('tr[claimid]', $('#claimList')).click(function () {
+                    window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
+                });
+                $container = $('#claimList');
+            } else {
+                $container.click(function () {
+                    window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
+                });
+            }
+
+            $('#StateEngOutWait', $container).click(function (e) {
+                var $btn = $(this);
+                var clid = $btn.attr('clid');
+                $.ajax({
+                    url: '@Url.Action("StateEngOutWaitAsync", "Claim")',
+                    method: 'POST',
+                    data: { claimId: clid },
+                    success: function(data) {
+                        showSpinnerAppend($btn);
+                        updateListItem(clid);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.responseText);
+                    }
+                });
+                e.stopPropagation();
+            });
+            $('#SetServEngOnWork', $container).click(function(e) {
+                var $btn = $(this);
+                var clid = $btn.attr('clid');
+                $.ajax({
+                    url: '@Url.Action("SetServEngOnWorkAsync", "Claim")',
+                    method: 'POST',
+                    data: { claimId: clid },
+                    success: function(data) {
+                        showSpinnerAppend($btn);
+                        updateListItem(clid);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.responseText);
+                    }
+                });
+                e.stopPropagation();
             });
 
-            setTimeout(function () {window.location.reload(1);}, 60000);
+            if ($container == null) {
+                $('tr[claimid]', $container).click(function() {
+                    window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
+            });
+            }
+        }
+
+        $(document).ready(function () {
+
+
+            window.location.hash = 'claimList';
+            $('#clientFilter').change(reload);
+            initListButtons();
+
+            setTimeout(function () { window.location.reload(1); }, 60000);
         });
     </script>
 }

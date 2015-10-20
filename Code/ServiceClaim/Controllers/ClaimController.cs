@@ -13,7 +13,7 @@ using ServiceClaim.Objects;
 
 namespace ServiceClaim.Controllers
 {
-    
+
     public class ClaimController : BaseController
     {
         //[HttpGet]
@@ -34,16 +34,16 @@ namespace ServiceClaim.Controllers
                 return HttpNotFound();
 
             if (!id.HasValue || id <= 0) return RedirectToAction("New");
-            Claim model=new Claim();
+            Claim model = new Claim();
             try
             {
-                model = new Claim(id.Value);
+                model = Claim.Get(id.Value);
             }
             catch (Exception ex)
             {
-                return RedirectToAction("HandledError", "Error", new { message= ex.Message});
+                return RedirectToAction("HandledError", "Error", new { message = ex.Message });
             }
-            
+
             return View(model);
         }
 
@@ -59,13 +59,13 @@ namespace ServiceClaim.Controllers
             //try
             //{
             if (!id.HasValue) throw new ArgumentException("Не указана заявка!");
-                ResponseMessage responseMessage;
-                var model = new Claim();
-                model.Id = id.Value;
-                model.Descr = descr;
-                 await model.SaveAsync();
-                //bool complete = model.Save(out responseMessage);
-                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            ResponseMessage responseMessage;
+            var model = new Claim();
+            model.Id = id.Value;
+            model.Descr = descr;
+            await model.SaveAsync();
+            //bool complete = model.Save(out responseMessage);
+            //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             //}
             //catch (Exception ex)
             //{
@@ -97,13 +97,13 @@ namespace ServiceClaim.Controllers
         {
             //try
             //{
-                if (!id.HasValue) throw new ArgumentException("Не указана заявка!");
-                ResponseMessage responseMessage;
-                var model = new Claim();
-                model.Id = id.Value;
-                model.Descr = descr;
-                await model.SaveAsync();
-                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            if (!id.HasValue) throw new ArgumentException("Не указана заявка!");
+            ResponseMessage responseMessage;
+            var model = new Claim();
+            model.Id = id.Value;
+            model.Descr = descr;
+            await model.SaveAsync();
+            //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             //}
             //catch (Exception ex)
             //{
@@ -150,13 +150,23 @@ namespace ServiceClaim.Controllers
         //}
         public async Task<ActionResult> List(int? state, int? client, int? topRows)
         {
-            if (
-                !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
+            if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
                     AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
                 return HttpNotFound();
 
+            ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
+
             ListResult<Claim> result = await new Claim().GetListAsync(topRows: topRows, idClaimState: state, clientId: client);
             return View(result);
+        }
+
+        [HttpPost]
+        public PartialViewResult GetListItem(int? claimId)
+        {
+            if (!claimId.HasValue) return null;
+            var claim = Claim.Get(claimId.Value);
+            ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
+            return PartialView("ListItem", claim);
         }
 
         //public ActionResult List(int? state, int? client, int? topRows)
@@ -252,7 +262,7 @@ namespace ServiceClaim.Controllers
             return Json(result);
         }
 
-       
+
         [HttpPost]
         public ActionResult SetWorkType(Claim model)
         {
@@ -268,10 +278,10 @@ namespace ServiceClaim.Controllers
             catch (Exception ex)
             {
                 TempData["error"] = ex.Message;
-                return RedirectToAction("Index", new {id=model.Id});
+                return RedirectToAction("Index", new { id = model.Id });
             }
         }
-        
+
 
         [HttpPost]
         public ActionResult SpecialistSelect(Claim model)
@@ -346,8 +356,8 @@ namespace ServiceClaim.Controllers
                     complete = model.GoBack(out responseMessage);
                     return RedirectToAction("List");
                 }
-                
-                if (responseMessage == null)responseMessage = new ResponseMessage();
+
+                if (responseMessage == null) responseMessage = new ResponseMessage();
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
                 return RedirectToAction("Index", new { id = model.Id });
@@ -395,6 +405,16 @@ namespace ServiceClaim.Controllers
 
             return View("WindowClose");
             //return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public JsonResult StateEngOutWaitAsync(int claimId)
+        {
+            ResponseMessage responseMessage;
+            bool complete = (new Claim() { Id = claimId }).Go(out responseMessage);
+            if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+            return Json(new { });
         }
 
         [HttpPost]
@@ -456,6 +476,23 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
+        public JsonResult SetServEngOnWorkAsync(int claimId)
+        {
+            //try
+            //{
+            ResponseMessage responseMessage;
+            bool complete = (new Claim() { Id = claimId }).Go(out responseMessage);
+            if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return Json(new {error= ex.Message });
+            //}
+
+            return Json(new { });
+        }
+
+        [HttpPost]
         public ActionResult ZipOrder(Claim model)
         {
             try
@@ -463,7 +500,7 @@ namespace ServiceClaim.Controllers
                 ResponseMessage responseMessage;
                 bool complete = model.Go(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
-                var claim = new Claim(model.Id);
+                var claim = Claim.Get(model.Id);
                 ServiceSheet lastServSheet = claim.GetLastServiceSheet();
                 var zipList = lastServSheet.GetZipItemList();
                 string zipListStr = JsonConvert.SerializeObject(zipList);
@@ -475,8 +512,8 @@ namespace ServiceClaim.Controllers
                 //}
                 //zipListStr += "]}";
 
-                 string zipOrderUrl =
-                    $"{ConfigurationManager.AppSettings["zipClaimHost"]}/Claims/Editor?snum={claim.Device.SerialNum}&ssid={lastServSheet.Id}&servid={claim.Id}&esid={(String.IsNullOrEmpty(claim.CurEngeneerSid) ? claim.CurTechSid : claim.CurEngeneerSid)}&asid={(String.IsNullOrEmpty(claim.CurAdminSid) ? claim.CurTechSid : claim.CurAdminSid)}&csdnum={claim.ClientSdNum}&cmnt={Url.Encode(lastServSheet.Descr)}&cntr={lastServSheet.CounterMono}&cntrc={lastServSheet.CounterColor}&dvst={lastServSheet.DeviceEnabled}&zip={zipListStr}";
+                string zipOrderUrl =
+                   $"{ConfigurationManager.AppSettings["zipClaimHost"]}/Claims/Editor?snum={claim.Device.SerialNum}&ssid={lastServSheet.Id}&servid={claim.Id}&esid={(String.IsNullOrEmpty(claim.CurEngeneerSid) ? claim.CurTechSid : claim.CurEngeneerSid)}&asid={(String.IsNullOrEmpty(claim.CurAdminSid) ? claim.CurTechSid : claim.CurAdminSid)}&csdnum={claim.ClientSdNum}&cmnt={Url.Encode(lastServSheet.Descr)}&cntr={lastServSheet.CounterMono}&cntrc={lastServSheet.CounterColor}&dvst={lastServSheet.DeviceEnabled}&zip={zipListStr}";
                 return Redirect(zipOrderUrl);
             }
             catch (Exception ex)
@@ -577,8 +614,8 @@ namespace ServiceClaim.Controllers
 
         public async Task<JsonResult> GetClaimList(int? idDevice, string serialNum, string clientSdNum)
         {
-            var list = await new Claim().GetListAsync(idDevice: idDevice,serialNum: serialNum, clientSdNum: clientSdNum);
-            return Json(list); 
+            var list = await new Claim().GetListAsync(idDevice: idDevice, serialNum: serialNum, clientSdNum: clientSdNum);
+            return Json(list);
         }
 
         //[HttpGet]
@@ -596,7 +633,7 @@ namespace ServiceClaim.Controllers
             {
                 topRows = 3;
             }
-            
+
             var stateHistory = Claim.GetClaimStateHistory(idClaim.Value, topRows);
 
             ViewBag.ShowBtnGetAll = !topRows.HasValue || stateHistory.Count() < topRows.Value;
@@ -642,9 +679,9 @@ namespace ServiceClaim.Controllers
         {
             try
             {
-                    ResponseMessage responseMessage;
-                    bool complete = model.Go(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                ResponseMessage responseMessage;
+                bool complete = model.Go(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
                 return View("WindowClose");
                 //return RedirectToAction("Index", new { id = responseMessage.Id });
@@ -665,7 +702,7 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ServiceSheetZipItem.SetInstalled(id, idServiceSheet,  out responseMessage);
+                bool complete = ServiceSheetZipItem.SetInstalled(id, idServiceSheet, out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)

@@ -46,3 +46,17 @@ D:\GoogleDrive\Dev\GitHub\ServiceClaim\Code\ServiceClaim\bin\Newtonsoft.Json.xml
 D:\GoogleDrive\Dev\GitHub\ServiceClaim\Code\ServiceClaim\obj\Debug\ServiceClaim.csprojResolveAssemblyReference.cache
 D:\GoogleDrive\Dev\GitHub\ServiceClaim\Code\ServiceClaim\obj\Debug\ServiceClaim.dll
 D:\GoogleDrive\Dev\GitHub\ServiceClaim\Code\ServiceClaim\obj\Debug\ServiceClaim.pdb
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\csc.exe
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\System.Collections.Immutable.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\System.Reflection.Metadata.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\vbc.exe
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\VBCSCompiler.exe
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\VBCSCompiler.exe.config
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml

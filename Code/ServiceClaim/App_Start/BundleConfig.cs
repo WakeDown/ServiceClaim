@@ -43,7 +43,8 @@ namespace ServiceClaim
                       "~/Content/bootstrap-datepicker3.css",
                       "~/Content/bootstrap-timepicker.min.css",
                       "~/Content/bootstrap-multiselect.min.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/animation.css"));
 
             bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include(
                       "~/Content/bootstrap.css",

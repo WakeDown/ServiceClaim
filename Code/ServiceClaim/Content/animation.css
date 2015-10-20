@@ -1,0 +1,19 @@
+﻿tr.updated {
+    /*border: 1px solid red;*/
+    -webkit-animation-name: updated; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: updated;
+    animation-duration: 4s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes updated {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}
+
+/* Standard syntax */
+@keyframes updated {
+    0% {background-color: #ffecb3;}
+    100% {background-color: #fff;}
+}

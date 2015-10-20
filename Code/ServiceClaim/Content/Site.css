@@ -27,6 +27,11 @@ select {
   font-size:1em;
 }
 
+.monospace {
+    font-family:monospace,monospace;
+  font-size:1em;
+}
+
 .navbar {
     box-shadow: 0 0 25px #333;
     margin-bottom: 0px !important;
@@ -491,4 +496,8 @@ overflow-x: hidden;
 .period-container.selected {
     
     border: 2px solid #ffecb3;
+}
+
+.valign-middle {
+    vertical-align: middle !important;
 }
