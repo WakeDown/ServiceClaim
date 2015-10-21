@@ -15,6 +15,9 @@ namespace ServiceClaim.Models
         public int IdServiceIssueType { get; set; }
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
+        public int ClientId { get; set; }
+        public int CityId { get; set; }
+        public int ContractId { get; set; }
 
         public string IdValue => $"{PeriodStart:ddMMyyyy}-{PeriodEnd:ddMMyyyy}";
 

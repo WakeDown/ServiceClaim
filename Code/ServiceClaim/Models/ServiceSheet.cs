@@ -37,6 +37,7 @@ namespace ServiceClaim.Models
         public EmployeeSm Engeneer { get; set; }
         public string ClientSdNum { get; set; }
         public DateTime DateCreate { get; set; }
+        public string NotInstalledComment { get; set; }
 
         public ServiceSheet()
         {
@@ -75,9 +76,16 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        public IEnumerable<ServiceSheetZipItem> GetZipItemList()
+        public IEnumerable<ServiceSheetZipItem> GetIssuedZipItemList()
         {
-            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetList?serviceSheetId={Id}");
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetIssuedList?serviceSheetId={Id}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
+            return model;
+        }
+        public IEnumerable<ServiceSheetZipItem> GetOrderedZipItemList()
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetOrderedList?serviceSheetId={Id}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
             return model;
@@ -89,7 +97,21 @@ namespace ServiceClaim.Models
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
             return model;
         }
-        
+        public IEnumerable<ServiceSheetZipItem> GetNotInstalledZipItemList()
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetNotInstalledList?serviceSheetId={Id}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
+            return model;
+        }
+
+        public bool SaveNotInstalledComment(out ResponseMessage responseMessage)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceSheet/SaveNotInstalledComment", OdataServiceUri));
+            string json = JsonConvert.SerializeObject(this);
+            bool result = PostJson(uri, json, out responseMessage);
+            return result;
+        }
 
         //public bool Save(out ResponseMessage responseMessage)
         //{

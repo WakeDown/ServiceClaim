@@ -116,7 +116,8 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public JsonResult GetPlanServiceIssueList(DateTime startDate, DateTime endDate, string engeneerSid)
         {
-            return Json(ServiceIssuePeriodItem.GetServiceIssueList(startDate, endDate, engeneerSid));
+            var list = ServiceIssuePeriodItem.GetServiceIssueList(startDate, endDate, engeneerSid);
+            return Json(list);
         }
 
         //public JsonResult CheckServiceIssueIsExists(int idServiceIssue, int idServiceIssueType)

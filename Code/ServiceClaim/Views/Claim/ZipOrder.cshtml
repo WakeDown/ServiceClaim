@@ -4,6 +4,53 @@
 @using ServiceClaim.Objects
 @model ServiceClaim.Models.Claim
 
+@{
+    var serviceSheet = Model.GetLastServiceSheet();
+    var zipItemList = serviceSheet.GetOrderedZipItemList();
+}
+<div class="row">
+    <div class="col-lg-push-2 col-lg-7">
+        <div>
+            <h4>Редактирование ЗИП</h4>
+            <table class="table table-bordered">
+                <tr>
+                    <td><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required"/></td>
+                    <td><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required"/></td>
+                    <td>
+                        <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1"/>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-success" id="addZipItem" ssid="@serviceSheet.Id"><i class="fa fa-save"></i></button>
+                    </td>
+                </tr>
+                <tr id="zipIssueHeader" class="bg-primary" style="@(zipItemList != null && zipItemList.Any() ? String.Empty : "display: none")">
+                    <th>парт номер</th>
+                    <th>наименование</th>
+                    <th>количество</th>
+                    <th></th>
+                </tr>
+                <tbody id="zipItemsContainer">
+                @if (zipItemList != null && zipItemList.Any())
+                {
+                    foreach (var item in zipItemList)
+                    {
+                        <tr id="zip-item-@item.Id">
+                            <td>@item.PartNum</td>
+                            <td>@item.Name</td>
+                            <td>@item.Count</td>
+                            <td class="text-center">
+                                <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
 @using (Html.BeginForm("ZipOrder", "Claim", FormMethod.Post, new { @id = "ZipCheckForm", role = "form" }))
 {
     @Html.HiddenFor(m => m.Id)
@@ -13,11 +60,11 @@
             <button type="submit" class="btn btn-success">Оформить заказ ЗИП</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-push-2 col-lg-10">
-            <p class="text-danger">@TempData["error"]</p>
-        </div>
-    </div>
+            <div class="row">
+                <div class="col-lg-push-2 col-lg-10">
+                    <p class="text-danger">@TempData["error"]</p>
+                </div>
+            </div>
 }
 <script type="text/javascript">
     @*$(function () {
@@ -27,4 +74,63 @@
             $('#ZipCheckForm').submit();
         });
     });*@
+
+    $(function() {
+        $('#addZipItem').click(addZipItem);
+        $('[name="zip-item-del"]').click(zipItemDelete);
+    });
+
+    function zipItemDelete() {
+        if (!confirm('Вы уверены что хотите удалить ЗИП?')) return;
+        var ziid = $(this).attr('ziid');
+        $.ajax({
+            url: '@Url.Action("ServiceSheetOrderedZipItemDelete")',
+            method: 'POST',
+            data: { id: ziid },
+            success: function(data) {
+                $('#zip-item-' + ziid).remove();
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.responseText);
+            }
+        });
+    }
+
+    function addZipItem() {
+        var ssid = $(this).attr('ssid');
+        var zipIssueNewPartNum = $('#zipIssueNewPartNum').val();
+        var zipIssueNewName = $('#zipIssueNewName').val();
+        var zipIssueNewCount = $('#zipIssueNewCount').val();
+
+        if (zipIssueNewPartNum == '' || zipIssueNewName == '' || zipIssueNewCount == '') {
+            alert('Заполните все поля!');
+            return;
+        }
+        var curObj = $(this);
+        showSpinnerAppend(curObj);
+        $.ajax({
+            url: '@Url.Action("AddServiceSheetOrderedZipItem")',
+            method: 'POST',
+            contentType: 'application/json;charset=utf-8 ',
+            data: JSON.stringify({ PartNum: zipIssueNewPartNum, Name: zipIssueNewName, Count: zipIssueNewCount, ServiceSheetId: ssid }),
+            success: function(data) {
+                if (!data.error) {
+                    $('#zipIssueHeader').show();
+                    var item = '<tr id="zip-item-' + data.id + '"><td>' + zipIssueNewPartNum + '</td><td>' + zipIssueNewName + '</td><td>' + zipIssueNewCount + '</td><td class="text-center"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a></td></tr>';
+                    $('#zipItemsContainer').prepend(item);
+                    $('[name="zip-item-del"]').click(zipItemDelete);
+                    $('#zipIssueNewPartNum').val('');
+                    $('#zipIssueNewName').val('');
+                    $('#zipIssueNewCount').val('1');
+                } else {
+                    alert(data.error);
+                }
+                hideSpinner(curObj);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.responseText);
+                hideSpinner(curObj);
+            }
+        });
+    }
 </script>

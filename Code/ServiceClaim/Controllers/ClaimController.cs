@@ -502,7 +502,7 @@ namespace ServiceClaim.Controllers
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
                 var claim = Claim.Get(model.Id);
                 ServiceSheet lastServSheet = claim.GetLastServiceSheet();
-                var zipList = lastServSheet.GetZipItemList();
+                var zipList = lastServSheet.GetOrderedZipItemList();
                 string zipListStr = JsonConvert.SerializeObject(zipList);
 
                 //string zipListStr = "{\"zipList\":[";
@@ -640,12 +640,12 @@ namespace ServiceClaim.Controllers
             return PartialView("StateHistory", stateHistory);
         }
         [HttpPost]
-        public JsonResult AddServiceSheetZipItem(ServiceSheetZipItem model)
+        public JsonResult AddServiceSheetIssuedZipItem(ServiceSheetZipItem model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Save(out responseMessage);
+                bool complete = model.IssuedSave(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
                 return Json(new { id = responseMessage.Id });
             }
@@ -658,12 +658,12 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult ServiceSheetZipItemDelete(int id)
+        public JsonResult ServiceSheetIssuedZipItemDelete(int id)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ServiceSheetZipItem.Delete(id, out responseMessage);
+                bool complete = ServiceSheetZipItem.IssuedDelete(id, out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
@@ -673,6 +673,39 @@ namespace ServiceClaim.Controllers
             return null;
         }
 
+        [HttpPost]
+        public JsonResult AddServiceSheetOrderedZipItem(ServiceSheetZipItem model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.OrderedSave(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                return Json(new { id = responseMessage.Id });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+
+            return Json(new { });
+        }
+
+        [HttpPost]
+        public JsonResult ServiceSheetOrderedZipItemDelete(int id)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = ServiceSheetZipItem.OrderedDelete(id, out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+            return null;
+        }
 
         [HttpPost]
         public ActionResult ZipIssue(Claim model)
@@ -719,6 +752,22 @@ namespace ServiceClaim.Controllers
             {
                 ResponseMessage responseMessage;
                 bool complete = ServiceSheetZipItem.SetInstalled(id, idServiceSheet, out responseMessage, false);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+            return null;
+        }
+
+        [HttpPost]
+        public JsonResult ServiceSheetSaveNotInstalledComment(int id, string comment)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = (new ServiceSheet() {Id=id, NotInstalledComment = comment}).SaveNotInstalledComment(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)

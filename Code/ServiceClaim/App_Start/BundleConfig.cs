@@ -28,7 +28,8 @@ namespace ServiceClaim
                       "~/Scripts/bootstrap-datepicker.js",
                         "~/Scripts/bootstrap-datepicker.ru.js",
                         "~/Scripts/bootstrap-multiselect.js",
-                        //"~/Scripts/bootstrap-timepicker.js",
+                        "~/Scripts/bootstrap-dialog.js",
+                      //"~/Scripts/bootstrap-timepicker.js",
                       "~/Scripts/validator.js",
                       "~/Scripts/respond.js",
                       "~/Scripts/site.js"));
@@ -43,6 +44,7 @@ namespace ServiceClaim
                       "~/Content/bootstrap-datepicker3.css",
                       "~/Content/bootstrap-timepicker.min.css",
                       "~/Content/bootstrap-multiselect.min.css",
+                      "~/Content/bootstrap-dialog.css",
                       "~/Content/site.css",
                       "~/Content/animation.css"));
 
