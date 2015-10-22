@@ -170,7 +170,8 @@
                     }
                     hideSpinner($('#claimsContainer'));
                 },
-                error: function() {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
                     $('#claimsContainer').empty();
                     hideSpinner($('#claimsContainer'));
                 }
@@ -295,7 +296,8 @@
                     $('#devSpinner').removeClass('active');
 
                 },
-                error: function() {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
                     $('#devSpinner').removeClass('active');
                 }
             });
@@ -384,7 +386,8 @@
                     $('#contSpinner').removeClass('active');
                     setSdNumRequiredOrNot();
                 },
-                error: function() {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
                     $('#contSpinner').removeClass('active');
                 }
             });
@@ -442,7 +445,8 @@
                     }
                     $('#ctrSpinner').removeClass('active');
                 },
-                error: function() {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
                     $('#ctrSpinner').removeClass('active');
                 }
             });

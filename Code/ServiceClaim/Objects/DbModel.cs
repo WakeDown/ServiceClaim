@@ -41,7 +41,7 @@ namespace ServiceClaim.Objects
             return client;
         }
 
-        public static WebClient GetApiClient(string contentType = "application/json")
+        public static WebClient GetApiClient(string contentType = "application/json;charset=utf-8")
         {
             //X509Certificate2 cert = null;
             //X509Store store = null;
@@ -60,9 +60,12 @@ namespace ServiceClaim.Objects
             CredentialCache cc = new CredentialCache();
             cc.Add(baseUri, "NTLM", CredentialCache.DefaultNetworkCredentials);
             clientHandler.Credentials = cc;
+            
+            
             //if (cert != null) clientHandler.ClientCertificates.Add(cert);
             
             var client = new WebClient() { BaseAddress = baseUri.ToString(), Credentials = cc };
+            client.Headers.Add("Content-Type", contentType);
             return client;
         }
 

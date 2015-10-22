@@ -23,5 +23,24 @@ namespace ServiceClaim.Models
         {
             return ServiceIssuePlan.GetList(startDate, endDate, engeneerSid);
         }
+
+        public static IEnumerable<ServiceIssuePlaningItem> GetServiceIssueCitiesList(DateTime startDate, DateTime endDate, string engeneerSid = null)
+        {
+            return ServiceIssuePlan.GetCitiesList(startDate, endDate, engeneerSid);
+        }
+
+        public static IEnumerable<ServiceIssuePlaningItem> GetServiceIssueAddressList(DateTime startDate, DateTime endDate, int? idCity=null, string engeneerSid = null)
+        {
+            return ServiceIssuePlan.GetAddressList(startDate, endDate,idCity, engeneerSid);
+        }
+
+        public static IEnumerable<ServiceIssuePlaningItem> GetServiceIssueClientList(DateTime startDate, DateTime endDate, int? idCity = null, string address=null, string engeneerSid = null)
+        {
+            return ServiceIssuePlan.GetClientList(startDate, endDate, idCity, address, engeneerSid);
+        }
+        public static IEnumerable<ServiceIssuePlaningItem> GetServiceIssueDeviceIssueList(DateTime startDate, DateTime endDate, int? idCity = null, string address = null, int? idClient=null, string engeneerSid = null)
+        {
+            return ServiceIssuePlan.GetDeviceIssueList(startDate, endDate, idCity, address, idClient, engeneerSid);
+        }
     }
 }

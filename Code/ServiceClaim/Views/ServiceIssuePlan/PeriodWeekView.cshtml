@@ -73,14 +73,14 @@
         var startDate = $cont.attr('std');
         var endDate = $cont.attr('edt');
         $.ajax({
-            url: '@Url.Action("GetPlanServiceIssueList")',
+            url: '@Url.Action("GetPlanServiceIssueCitiesList")',
             method: 'POST',
             data: { startDate: startDate, endDate: endDate, engeneerSid: engSid },
             success:function(data) {
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
-                        var htmlItem = '<div name="issueItem" id="sid-'+item.IdServiceIssue+'-tid-' +item.IdServiceIssueType + '" class="issue-plan-item"><h5 class="margin-sm">№' +item.IdServiceIssue+'</h5>' +item.IdServiceIssueType +'</div>';
+                        var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><h5 class="margin-sm">' + item.ShortName + '</h5><span>' + item.IssuesCount + ' шт.</span></div>';
                         $cont.append(htmlItem);
                     }
                 }

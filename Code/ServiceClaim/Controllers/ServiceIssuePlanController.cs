@@ -120,6 +120,34 @@ namespace ServiceClaim.Controllers
             return Json(list);
         }
 
+        [HttpPost]
+        public JsonResult GetPlanServiceIssueCitiesList(DateTime startDate, DateTime endDate, string engeneerSid)
+        {
+            var list = ServiceIssuePeriodItem.GetServiceIssueCitiesList(startDate, endDate, engeneerSid);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetPlanServiceIssueAddresList(DateTime startDate, DateTime endDate, int? idCity = null, string engeneerSid=null)
+        {
+            var list = ServiceIssuePeriodItem.GetServiceIssueAddressList(startDate, endDate, idCity: idCity, engeneerSid:engeneerSid);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetPlanServiceIssueClientList(DateTime startDate, DateTime endDate, int? idCity = null, string address = null, string engeneerSid = null)
+        {
+            var list = ServiceIssuePeriodItem.GetServiceIssueClientList(startDate, endDate, idCity: idCity, address: address, engeneerSid: engeneerSid);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetPlanServiceIssueDeviceIssueList(DateTime startDate, DateTime endDate, int? idCity = null, string address = null, int? idClient=null, string engeneerSid = null)
+        {
+            var list = ServiceIssuePeriodItem.GetServiceIssueDeviceIssueList(startDate, endDate, idCity: idCity, address: address, idClient: idClient, engeneerSid: engeneerSid);
+            return Json(list);
+        }
+
         //public JsonResult CheckServiceIssueIsExists(int idServiceIssue, int idServiceIssueType)
         //{
         //    var model = ServiceIssuePlan.Get(idServiceIssue, idServiceIssueType);

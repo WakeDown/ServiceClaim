@@ -77,6 +77,45 @@ namespace ServiceClaim.Models
             return model;
         }
 
+        public static IEnumerable<ServiceIssuePlaningItem> GetCitiesList(DateTime periodStart, DateTime periodEnd, string engeneerSid = null)
+        {
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/ServiceIssuePlan/GetCitiesList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&engeneerSid={engeneerSid}");
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
+
+            return model;
+        }
+
+        public static IEnumerable<ServiceIssuePlaningItem> GetAddressList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string engeneerSid = null)
+        {
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/ServiceIssuePlan/GetAddressList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&engeneerSid={engeneerSid}");
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
+
+            return model;
+        }
+        public static IEnumerable<ServiceIssuePlaningItem> GetClientList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string address=null, string engeneerSid = null)
+        {
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/ServiceIssuePlan/GetClientList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&address={address}&engeneerSid={engeneerSid}");
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
+
+            return model;
+        }
+
+        public static IEnumerable<ServiceIssuePlaningItem> GetDeviceIssueList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string address = null, int? idClient = null, string engeneerSid = null)
+        {
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/ServiceIssuePlan/GetDeviceIssueList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&address={address}&idClient={idClient}&engeneerSid={engeneerSid}");
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
+
+            return model;
+        }
+
         public static IEnumerable<ServiceIssuePeriodItem> GetPeriodMonthList(int year, int month)
         {
             Uri uri = new Uri(String.Format("{0}/ServiceIssuePlan/GetPeriodMonthList?year={1}&month={2}", OdataServiceUri, year, month));
