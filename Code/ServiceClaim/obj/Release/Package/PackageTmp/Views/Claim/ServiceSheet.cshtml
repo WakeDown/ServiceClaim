@@ -2,8 +2,10 @@
 @model ServiceClaim.Models.ServiceSheet
 @{
     Layout = null;
-    var engeneerZipItemsList = Model.GetZipItemList();
+    var engeneerZipItemsList = Model.GetIssuedZipItemList();
+    var orderedipItemsList = Model.GetOrderedZipItemList();
     var installedZipItemsList = Model.GetInstalledZipItemList();
+    var notInstalledZipItemsList = Model.GetNotInstalledZipItemList();
 }
 
 <!DOCTYPE html>
@@ -102,7 +104,7 @@
                     @if (installedZipItemsList.Any())
                     {
                         <tr>
-                            <td style="vertical-align: top">Установлен ЗИП</td>
+                            <td style="vertical-align: top">ЗИП - установлено</td>
                             <td>
                                 <table class="zip">
                                     <tr>
@@ -122,10 +124,56 @@
                             </td>
                         </tr>
                     }
+                    @if (notInstalledZipItemsList.Any())
+                    {
+                        <tr>
+                            <td style="vertical-align: top">ЗИП - НЕ установлено</td>
+                            <td>
+                                <table class="zip">
+                                    <tr>
+                                        <th>Парт номер</th>
+                                        <th>Наименование</th>
+                                        <th>Количество</th>
+                                    </tr>
+                                    @foreach (var item in notInstalledZipItemsList)
+                                    {
+                                        <tr>
+                                            <td>@item.PartNum</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Count</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                    @if (orderedipItemsList.Any())
+                    {
+                        <tr>
+                            <td style="vertical-align: top">ЗИП - заказано</td>
+                            <td>
+                                <table class="zip">
+                                    <tr>
+                                        <th>Парт номер</th>
+                                        <th>Наименование</th>
+                                        <th>Количество</th>
+                                    </tr>
+                                    @foreach (var item in orderedipItemsList)
+                                    {
+                                        <tr>
+                                            <td>@item.PartNum</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Count</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    }
                     @if (engeneerZipItemsList.Any())
                     {
                         <tr>
-                            <td style="vertical-align: top">Заказ ЗИП</td>
+                            <td style="vertical-align: top">ЗИП - указано Инженером</td>
                             <td>
                                 <table class="zip">
                                     <tr>

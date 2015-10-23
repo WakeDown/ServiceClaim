@@ -257,7 +257,7 @@
     <Content Include="Views\Error\HandledError.cshtml" />
     <Content Include="Views\ClientAccess\New.cshtml" />
     <Content Include="Views\Claim\SetWorkType.cshtml" />
-    <Content Include="Views\Claim\SpecialistSelect.cshtml" />
+    <Content Include="Views\Claim\EngeneerSelect.cshtml" />
     <Content Include="Views\ClientAccess\Edit.cshtml" />
     <Content Include="Views\ClientAccess\ClientSheet.cshtml" />
     <Content Include="Views\Claim\ConfirmWork.cshtml" />
@@ -282,6 +282,7 @@
     <Content Include="Views\Claim\ZipIssue.cshtml" />
     <Content Include="Views\Claim\ListItem.cshtml" />
     <Content Include="Views\Claim\ZipCheck.cshtml" />
+    <Content Include="Views\Claim\AdminSelect.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

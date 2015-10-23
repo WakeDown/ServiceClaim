@@ -307,6 +307,39 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
+        public ActionResult TechConfirmWork(Claim model)
+        {
+            try
+            {
+                if (!String.IsNullOrEmpty(Request.Form["ClaimWorkConfirm"]))
+                {
+                    ResponseMessage responseMessage;
+                    bool complete = model.Go(out responseMessage);
+                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                    return RedirectToAction("Index", new { id = responseMessage.Id });
+                }
+                else if (!String.IsNullOrEmpty(Request.Form["ClaimWorkCancel"]))
+                {
+                    ResponseMessage responseMessage;
+                    //model.Descr = Request.Form["ClaimWorkCancelDescr"];
+                    bool complete = model.GoBack(out responseMessage);
+                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                    return RedirectToAction("Index", new { id = responseMessage.Id });
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+
+            return View("WindowClose");
+            //return RedirectToAction("List");
+        }
+
+        [HttpPost]
         public ActionResult ConfirmWork(Claim model)
         {
             try
