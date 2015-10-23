@@ -41,8 +41,13 @@
                         <div class="row"><label class="col-lg-3 text-right">№ SD клиента</label> <span class="col-lg-9">@Model.ClientSdNum</span></div>
                     }
                     <div class="row"><label class="col-lg-3 text-right">Клиент</label> <span class="col-lg-9">@Model.Contractor.FullName</span></div>
-                    <div class="row"><label class="col-lg-3 text-right">Договор</label> <span class="col-lg-9">@Model.Contract.Number</span></div>
-                    <div class="row"><label class="col-lg-3 text-right">Аппарат</label> <span class="col-lg-9">@Model.Device.ExtendedName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right">Договор</label> <span class="col-lg-9">@Model.Contract.Number</span>
+                    @if (Model.Contract != null && Model.Contract.ContractZipTypeSysName != null)
+                    {
+                        <hr class="line-sm no-marg-bot @(Model.Contract.ContractZipTypeSysName == "MOREZIP" ? "line-success" : Model.Contract.ContractZipTypeSysName == "LESSZIP" ? "line-danger" : String.Empty)"/>
+                    }
+                    </div>
+                    <div class="row"><label class="col-lg-3 text-right">Аппарат</label> <span class="col-lg-9">@Model.Device.ExtendedName@(Model.Device.HasGuarantee.HasValue && Model.Device.HasGuarantee.Value ? "<blockquote class='bold text-danger bg-danger nomargin'>Гарантия</blockquote>" : String.Empty)</span></div>
 
                     @if (Model.WorkType != null && !String.IsNullOrEmpty(Model.WorkType.Name))
                     {
@@ -62,10 +67,7 @@
                                 @foreach (var sheet in servSheetList)
                                 {
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <a href="@Url.Action("ServiceSheet", new {id = sheet.Id})" target="_blank">Сервисный лист №@sheet.Id</a>
-                                        </div>
-                                        <div class="col-lg-4">@sheet.DateCreate.ToString("g")</div>
+                                        <div class="col-lg-12"><span class="monospace">@sheet.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@Url.Action("ServiceSheet", new {id = sheet.Id})" target="_blank">Сервисный лист №@sheet.Id</a></div>
                                     </div>
                                 }
                             </p>
@@ -79,10 +81,9 @@
                                 @foreach (var zipClaim in zipClaimList)
                                 {
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@zipClaim.Id" target="_blank">Заявка на ЗИП №@zipClaim.Id</a>
+                                        <div class="col-lg-12">
+                                            <span class="monospace">@zipClaim.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@zipClaim.Id" target="_blank">Заявка на ЗИП №@zipClaim.Id</a>
                                         </div>
-                                        <div class="col-lg-4">@zipClaim.DateCreate.ToString("g")</div>
                                     </div>
                                 }
                             </p>
@@ -128,12 +129,15 @@
                 @Html.Partial("ZipIssue", Model)
             }
             @*Доступ только текущему СТП*@
-            @if ((Model.State.SysName.ToUpper().Equals("ZIPORDER") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
-                                   || (Model.State.SysName.ToUpper().Equals("ZIPCLINWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech) && Model.CurTechSid == ViewBag.CurUser.Sid))
+            @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech)))
             {
-                @Html.Partial("ZipOrder", Model)
+                @Html.Partial("ZipGetOnCheck", Model)
             }
-            @if (Model.State.SysName.ToUpper().Equals("ZIPCHECKED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
+            @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECKINWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech) && Model.CurTechSid == ViewBag.CurUser.Sid))
+            {
+                @Html.Partial("ZipCheck", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRM") && ViewBag.CurUser.HasAccess(AdGroup.ServiceZipClaimConfirm))
             {
                 @Html.Partial("ZipConfirm", Model)
             }

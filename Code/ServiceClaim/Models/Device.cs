@@ -21,7 +21,9 @@ namespace ServiceClaim.Models
 
         public string FullName { get; set; }
         public string ExtendedName { get; set; }
-       
+        public int? Age { get; set; }
+        public bool? HasGuarantee { get; set; }
+
 
         private void FillSelf(Device model)
         {

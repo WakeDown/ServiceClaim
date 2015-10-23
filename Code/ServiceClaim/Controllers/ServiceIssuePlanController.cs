@@ -16,7 +16,7 @@ namespace ServiceClaim.Controllers
         {
             if (!date.HasValue) return RedirectToAction("Planing", new { date = $"{DateTime.Now:yyyy-MM-dd}" });
 
-            ViewBag.IssueCityList = ServiceIssue.GetPlaningCityList(date.Value, serviceEngeneerSid);
+            //ViewBag.IssueCityList = ServiceIssue.GetPlaningCityList(date.Value, serviceEngeneerSid);
             TempData["serviceEngeneerSid"] = serviceEngeneerSid;
             return View();
         }
@@ -34,30 +34,41 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetAddressList(DateTime? date, int? idCity)
+        public JsonResult GetCityList(DateTime? date, string[] serviceEngeneerSid, bool? planed = null)
         {
-            if (!idCity.HasValue) return Json(new { });
             if (!date.HasValue) date = DateTime.Now;
-            var list = ServiceIssue.GetPlaningAddressList(date.Value, idCity.Value);
+            string serviceEngeneerSidIds = serviceEngeneerSid != null
+                ? String.Join(",", serviceEngeneerSid)
+                : String.Empty;
+            var list = ServiceIssue.GetPlaningCityList(date.Value, serviceEngeneerSidIds, planed: planed);
             return Json(list);
         }
 
         [HttpPost]
-        public JsonResult GetClientList(DateTime? date, int? idCity, string address)
+        public JsonResult GetAddressList(DateTime? date, int? idCity, bool? planed = null)
         {
             if (!idCity.HasValue) return Json(new { });
             if (!date.HasValue) date = DateTime.Now;
-            var list = ServiceIssue.GetPlaningClientList(date.Value, idCity.Value, address);
+            var list = ServiceIssue.GetPlaningAddressList(date.Value, idCity.Value, planed:planed);
             return Json(list);
         }
 
         [HttpPost]
-        public JsonResult GetDeviceIssueList(DateTime? date, int? idCity, string address, int? idClient)
+        public JsonResult GetClientList(DateTime? date, int? idCity, string address, bool? planed = null)
+        {
+            if (!idCity.HasValue) return Json(new { });
+            if (!date.HasValue) date = DateTime.Now;
+            var list = ServiceIssue.GetPlaningClientList(date.Value, idCity.Value, address, planed: planed);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetDeviceIssueList(DateTime? date, int? idCity, string address, int? idClient, bool? planed = null)
         {
             if (!idCity.HasValue) return Json(new { });
             if (!idClient.HasValue) return Json(new { });
             if (!date.HasValue) date = DateTime.Now;
-            var list = ServiceIssue.GetPlaningDeviceIssueList(date.Value, idCity.Value, address, idClient.Value);
+            var list = ServiceIssue.GetPlaningDeviceIssueList(date.Value, idCity.Value, address, idClient.Value, planed: planed);
             return Json(list);
         }
 

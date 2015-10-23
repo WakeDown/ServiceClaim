@@ -27,6 +27,11 @@ select {
   font-size:1em;
 }
 
+.monospace {
+    font-family:monospace,monospace;
+  font-size:1em;
+}
+
 .navbar {
     box-shadow: 0 0 25px #333;
     margin-bottom: 0px !important;
@@ -253,6 +258,10 @@ blockquote.bg-success {
     border-color: #3c763d;
 }
 
+blockquote.bg-info {
+    border-color: #afd9ee;
+}
+
 .spinner {
   display: inline-block;
   opacity: 0;
@@ -378,6 +387,8 @@ a.async-sel:visited {
     padding: 5px;
     margin: 3px;
     font-size: 0.8em;
+    display: table;
+    width: 100%;
 }
 
 .issue-plan-item:hover {
@@ -439,9 +450,6 @@ a.async-sel:visited {
     border-radius: 1em;
 }
 
-#issueContainer {
-    overflow-x: auto;
-}
 
 .filter-state-inem {
     float: left;
@@ -466,4 +474,48 @@ a.async-sel:visited {
     color: #fff !important;
   background-color: #286090 !important;
   border-color: #204d74 !important;
+}
+
+.bg-white {
+    background-color: #fff;
+}
+
+#engeneersSelect {
+max-height: 500px;
+overflow-y: auto;
+overflow-x: hidden;
+}
+
+.period-container {
+    border: 2px solid transparent;
+}
+
+.period-container .period-title {
+    padding: 5px;
+}
+
+.period-container.selected .period-title {
+    
+    background-color: #ffecb3;
+}
+
+.period-container.selected {
+    
+    border: 2px solid #ffecb3;
+}
+
+.valign-middle {
+    vertical-align: middle !important;
+}
+
+.line-sm {
+    border-width: 5px;
+}
+
+.line-success {
+    border-color: #3c763d;
+}
+
+.line-danger {
+    border-color: #d9534f;
 }

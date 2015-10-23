@@ -14,10 +14,10 @@
             <h4>Редактирование ЗИП</h4>
             <table class="table table-bordered">
                 <tr>
-                    <td><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required"/></td>
-                    <td><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required"/></td>
+                    <td><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required" /></td>
+                    <td><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required" /></td>
                     <td>
-                        <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1"/>
+                        <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1" />
                     </td>
                     <td>
                         <button type="submit" class="btn btn-success" id="addZipItem" ssid="@serviceSheet.Id"><i class="fa fa-save"></i></button>
@@ -30,20 +30,20 @@
                     <th></th>
                 </tr>
                 <tbody id="zipItemsContainer">
-                @if (zipItemList != null && zipItemList.Any())
-                {
-                    foreach (var item in zipItemList)
+                    @if (zipItemList != null && zipItemList.Any())
                     {
-                        <tr id="zip-item-@item.Id">
-                            <td>@item.PartNum</td>
-                            <td>@item.Name</td>
-                            <td>@item.Count</td>
-                            <td class="text-center">
-                                <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
+                        foreach (var item in zipItemList)
+                        {
+                            <tr id="zip-item-@item.Id">
+                                <td>@item.PartNum</td>
+                                <td>@item.Name</td>
+                                <td>@item.Count</td>
+                                <td class="text-center">
+                                    <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
                     }
-                }
                 </tbody>
 
             </table>
@@ -57,14 +57,14 @@
     <div class="row">
         <div class="col-lg-push-2 col-lg-10">
             @*<a id="zipClaim"  class="btn btn-primary">Заказать ЗИП</a>*@
-            <button type="submit" class="btn btn-success">Оформить заказ ЗИП</button>
+            <button type="submit" class="btn btn-success">Утвердить заказ ЗИП</button>
         </div>
     </div>
-            <div class="row">
-                <div class="col-lg-push-2 col-lg-10">
-                    <p class="text-danger">@TempData["error"]</p>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <p class="text-danger">@TempData["error"]</p>
+        </div>
+    </div>
 }
 <script type="text/javascript">
     @*$(function () {

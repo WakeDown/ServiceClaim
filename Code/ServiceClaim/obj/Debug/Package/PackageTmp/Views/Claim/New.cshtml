@@ -72,6 +72,7 @@
         </div>
         <div class="form-group">
             <div class="col-lg-push-2 col-lg-6">
+                <blockquote class="bg-info no-marg-bot" id="activeClaimsInfo">&nbsp;</blockquote>
                 <div id="claimsContainer" class="row">
 
                 </div>
@@ -134,9 +135,9 @@
             });
             $('#ctrList').change(setCtrContNdev);
             $('#contList').change(setContDev);
-            //$('#devList').change(function() {
-            //    setDevCtrNcont(false);
-            //});
+            $('#devList').change(function () {
+                showClaims();
+            });
             $('#ctrFind').focus();
         });
 
@@ -152,7 +153,15 @@
 //Список активных заявок
         function showClaims() {
             $('#claimsContainer').empty();
-            showSpinner($('#claimsContainer'));
+            var $info = $('#activeClaimsInfo');
+            
+            $info.removeClass('bg-info');
+            $info.removeClass('bg-danger');
+            $info.removeClass('bg-success');
+            $info.addClass('bg-info');
+            $info.text('Идет поиск активных заявок...');
+            $('#claimsContainer').hide();
+            showSpinnerAppend($info);
             var devId = $('#devList').val();
             var clientSdNum = $('#devClientSdFind').val();
             $.ajax({
@@ -161,16 +170,31 @@
                 success: function(data) {
                     $('#claimsContainer').empty();
                     if (data.List.length > 0) {
+                        $info.removeClass('bg-info');
+                        $info.removeClass('bg-danger');
+                        $info.removeClass('bg-success');
+                        $info.addClass('bg-success');
+                        $info.text('Найдено активных заявок - ' + data.List.length);
+                        $info.append('&nbsp;&nbsp;<a class="btn btn-default btn-xs" id="showActiveClaims">показать</a>');
                         for (var i = 0; i < data.List.length; i++) {
                             var item = data.List[i];
                             $('#claimsContainer').append('<div class="col-lg-3"><a class="issue-item-sm" style="border: 1px solid #' + item.State.BackgroundColor + '; background-color: #' + item.State.BackgroundColor + '; color: #' + item.State.ForegroundColor + '" target="_blank" href="@Url.Action("Index")/' + item.Id + '">№' + item.Id + ' (кл№' + item.ClientSdNum + ')<br /><small>Создано ' + item.DateCreateStr + '</small><br />' + item.State.Name + '<br /><small>' + item.DateStateChangeStr + '</small></a></div>');
                         }
+                        $('#showActiveClaims').click(function () {
+                            $(this).remove();
+                            $('#claimsContainer').show();
+                        });
                     } else {
-                        $('#claimsContainer').append('<blockquote class="alert-warning">не найдено активных заявок для выбранного аппарата</blockquote>');
+                        $info.removeClass('bg-info');
+                        $info.removeClass('bg-danger');
+                        $info.removeClass('bg-success');
+                        $info.addClass('bg-danger');
+                        $info.text('Активных заявок для выбранного аппарата не найдено');
                     }
-                    hideSpinner($('#claimsContainer'));
+                    hideSpinner($info);
                 },
-                error: function() {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
                     $('#claimsContainer').empty();
                     hideSpinner($('#claimsContainer'));
                 }
@@ -198,8 +222,6 @@
             $('#devList').find('option').remove();
             $('#devListCount').text(0);
             displayDevs(false);
-
-
         }
 
         function ctrFind(e) {
@@ -221,7 +243,6 @@
             $('#conListCount').text(0);
             displayConts();
             displayDevs(false);
-            
         }
 
         function setDevCtrNcont() {
@@ -295,7 +316,8 @@
                     $('#devSpinner').removeClass('active');
 
                 },
-                error: function() {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
                     $('#devSpinner').removeClass('active');
                 }
             });
@@ -323,7 +345,7 @@
                     cnt++;
                 }
             }
-            displayDevs(false);
+            //displayDevs(false);
             $('#devListCount').text(cnt);
         }
 
@@ -360,7 +382,8 @@
                 url: '@Url.Action("GetConts")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
-                success: function(data) {
+                success: function (data) {
+                    
                     if (data) {
                         if (data.length > 0) {
                             var contList = $('#contList');
@@ -384,7 +407,8 @@
                     $('#contSpinner').removeClass('active');
                     setSdNumRequiredOrNot();
                 },
-                error: function() {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
                     $('#contSpinner').removeClass('active');
                 }
             });
@@ -406,6 +430,7 @@
                 return;
             }
             $('#ctrSpinner').addClass('active');
+            $('#ctrListCount').text('');
             $('#ctrListCount').text('');
             $.ajax({
                 url: '@Url.Action("GetCtors")',
@@ -441,7 +466,8 @@
                     }
                     $('#ctrSpinner').removeClass('active');
                 },
-                error: function() {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
                     $('#ctrSpinner').removeClass('active');
                 }
             });

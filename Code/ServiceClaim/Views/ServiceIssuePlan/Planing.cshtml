@@ -32,8 +32,8 @@
     @*class="sub-menu-fixed-top-padding"*@
     <div class="row">
         <div class="col-lg-3">
-            @using (Html.BeginForm("Planing", "ServiceIssuePlan", FormMethod.Post))
-            {
+            @*@using (Html.BeginForm("Planing", "ServiceIssuePlan", FormMethod.Post))
+            {*@
                 <div id="calendar"></div>
                 <input id="date" name="date" type="hidden" value="@String.Format("{0:yyyy-MM-dd}", date)"/>
                 <p>
@@ -43,18 +43,23 @@
                             <option value="@eng.Key" @(TempData["serviceEngeneerSid"] != null && TempData["serviceEngeneerSid"].ToString().Contains(eng.Key) ? "selected=\"selected\"" : "")>@eng.Value</option>
                         }
                     </select>
-                    <button class="btn btn-info" id="search" type="submit"><i class="fa fa-search"></i></button>
+                    <a class="btn btn-info" id="search"><i class="fa fa-search"></i></a>
                 </p>
-            }
+            @*}*@
+            <span>
+                <input type="radio" name="issuePlaningState" value="all" />&nbsp;все
+                <input type="radio" name="issuePlaningState" value="planed" />&nbsp;запланир
+                <input type="radio" name="issuePlaningState" value="notplaned" checked="checked" />&nbsp;незапланир
+            </span>
             <div id="planingIssueList" class="planing-sel-list">
-                @foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
+                @*@foreach (ServiceIssuePlaningItem city in ViewBag.IssueCityList)
                 {
                     <a class="async-sel row nomargin nopadding" href="#!" name="city" cid="@city.Id" data-toggle="tooltip" title="@city.Name">
                         <div class="issues-count col-lg-2"><span class="pull-right">@city.IssuesCount</span></div>
                         <div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-@city.Id" issueids="@city.IssuesIdList"/>&nbsp;@city.ShortName</div>
                     </a>
                     <div name="addressContainer" cid="@city.Id" class="pad-1"></div>
-                }
+                }*@
             </div>
         </div>
         <div class="col-lg-9">
@@ -72,26 +77,21 @@
 {
     <script type="text/javascript">
         $(function() {
-            $('[name="all-city"]').click(setCheckedIssueIds);
-
+            $('[name="issuePlaningState"]').click(fillCityList);
             $('#calendar').datepicker({
-                //minViewMode: 'months',
                 language: "ru",
                 todayHighlight: true
             }).on('changeDate', function(e) {
                 $('#date').val(e.format('yyyy-mm-dd'));
             });
             $('#calendar').on('changeMonth', function(e) {
-                //var currMonth = new Date(e.date).getMonth() + 1;
                 var curDate = new Date(e.date);
                 var curDateStr = (curDate.getYear() + 1900).toString() + '-' + (curDate.getMonth() + 1).toString() + '-' + curDate.getDate().toString();
                 $('#calendar').datepicker('update', curDate);
-                //alert(e.date.getDate().toString());
                 $('#date').val(curDateStr);
             });
             var startDate = new Date(@year, @(month - 1), @day);
             $('#calendar').datepicker('update', startDate);
-            //$('#search').click(reloadWithParams);
             $('#engeneersSelect').multiselect({
                 includeSelectAllOption: true,
                 selectAllText: 'все',
@@ -99,22 +99,63 @@
                 enableFiltering: true,
                 nonSelectedText: 'выберите инженера(-ов)'
             });
-            //$('#month').datepicker({
-            //    minViewMode: 'months',
-            //    format: "MM yyyy",
-            //    autoclose: true,
-            //    language: "ru",
-            //    inline: true
-            //});
-            @*.on('changeDate', function (ev) {
-                $('#month').attr('mthdate', ev.format('yyyy-mm'));
-                reloadWithParams();
-                //window.location = '@Url.Action("Planing")?month=' + ev.format('yyyy-mm');
-            });*@
-            $('[name="city"]').click(fillAddressList);
-            $('#btnIssuePlanSave').click(function() {
+            $('#btnIssuePlanSave').click(addSelectedIssues2Plan);
+            fillCityList();
+            $('#search').click(fillCityList);
+        });
+
+        function getEngeneerSelectedValues() {
+            var list = $('#engeneersSelect :checked');
+            
+            var ids = [];
+            for (var i=0; i < list.length; i++) {
+                ids.push($(list[i]).val());
+            }
+            return ids;
+        }
+
+        function getPlanedState() {
+            var planingState = $('[name="issuePlaningState"]:checked').val();
+            var planed = planingState == 'planed' ? true : planingState == 'notplaned' ? false : null;
+            return planed;
+        }
+
+        function fillCityList() {
+            var $container = $('#planingIssueList');
+            $container.html('');
+            showSpinnerAfter($container, false);
+            var date = new Date($('#date').val());
+            var serviceEngeneerSid = getEngeneerSelectedValues();
+            var planed = getPlanedState();
+           
+            $.ajax({
+                url: '@Url.Action("GetCityList")',
+                method: 'POST',
+                data: { date: date.toDateString(), serviceEngeneerSid:serviceEngeneerSid, planed:planed },
+                success: function(data) {
+                    if (data.length) {
+                        $container.html('');
+                        for (var i = 0; i < data.length; i++) {
+                            var city = data[i];
+                            var cityItem = '<a class="async-sel row nomargin nopadding" href="#!" name="city" cid="'+city.Id+'" data-toggle="tooltip" title="'+city.Name+'"><div class="issues-count col-lg-2"><span class="pull-right">' +city.IssuesCount+'</span></div><div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-'+city.Id+'" issueids="'+city.IssuesIdList+'"/>&nbsp;'+city.ShortName+'</div></a><div name="addressContainer" cid="'+city.Id+'" class="pad-1"></div>';
+                            $container.append(cityItem);
+                        }
+
+                        $('[name="city"]', $container).click(fillAddressList);
+                        $('[name="all-city"]', $container).click(setCheckedIssueIds);
+                    }
+                    hideSpinner();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                    hideSpinner();
+                }
+            });
+        }
+
+        function addSelectedIssues2Plan() {
                 //var serviceIssueIdList = $('#selectedIssueName').attr('sid');
-                
+
                 if (issueIdsArr.length == 0) {
                     alert('Выберите заявку.');
                     return;
@@ -143,17 +184,15 @@
                         alert(xhr.responseText);
                     }
                 });
-            });
+            }
 
-            //fill();
-        });
 
         var issueIdsArr = [];
 
         function setCheckedIssueIds(e) {
             var issueids = $(this).attr('issueids');
             var arr = issueids.split(',');
-            
+
 
             if ($(this).is(':checked')) {
                 for (var i = 0; i < arr.length; i++) {
@@ -170,7 +209,7 @@
                         issueIdsArr.splice(index, 1);
                     }
                 }
-                
+
             }
             $('#selIssueIdsCount').text(issueIdsArr.length);
             e.stopPropagation();
@@ -230,10 +269,11 @@
             showSpinnerAfter(this, false);
             var cid = $(this).attr('cid');
             var date = new Date($('#date').val());
+            var planed = getPlanedState();
             $.ajax({
                 url: '@Url.Action("GetAddressList")',
                 method: 'POST',
-                data: { date: date.toDateString(), idCity: cid },
+                data: { date: date.toDateString(), idCity: cid, planed:planed },
                 success: function(data) {
 
                     if (data.length) {
@@ -262,10 +302,11 @@
             var cid = $(this).attr('cid');
             var aid = $(this).attr('aid');
             var date = new Date($('#date').val());
+            var planed = getPlanedState();
             $.ajax({
                 url: '@Url.Action("GetClientList")',
                 method: 'POST',
-                data: { date: date.toDateString(), idCity: cid, address: aid },
+                data: { date: date.toDateString(), idCity: cid, address: aid, planed:planed },
                 success: function(data) {
                     if (data.length) {
                         var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
@@ -294,10 +335,11 @@
             var aid = $(this).attr('aid');
             var clid = $(this).attr('clid');
             var date = new Date($('#date').val());
+            var planed = getPlanedState();
             $.ajax({
                 url: '@Url.Action("GetDeviceIssueList")',
                 method: 'POST',
-                data: { date: date.toDateString(), idCity: cid, address: aid, idClient: clid },
+                data: { date: date.toDateString(), idCity: cid, address: aid, idClient: clid, planed:planed },
                 success: function(data) {
                     if (data.length) {
                         var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');

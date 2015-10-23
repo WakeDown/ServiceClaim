@@ -493,6 +493,25 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
+        public ActionResult ZipGetOnCheck(Claim model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.Go(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+
+            return View("WindowClose");
+        }
+
+        [HttpPost]
         public ActionResult ZipOrder(Claim model)
         {
             try
@@ -500,10 +519,10 @@ namespace ServiceClaim.Controllers
                 ResponseMessage responseMessage;
                 bool complete = model.Go(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
-                var claim = Claim.Get(model.Id);
-                ServiceSheet lastServSheet = claim.GetLastServiceSheet();
-                var zipList = lastServSheet.GetOrderedZipItemList();
-                string zipListStr = JsonConvert.SerializeObject(zipList);
+                //var claim = Claim.Get(model.Id);
+                //ServiceSheet lastServSheet = claim.GetLastServiceSheet();
+                //var zipList = lastServSheet.GetOrderedZipItemList();
+                //string zipListStr = JsonConvert.SerializeObject(zipList);
 
                 //string zipListStr = "{\"zipList\":[";
                 //foreach (var item in zipList)
@@ -512,9 +531,9 @@ namespace ServiceClaim.Controllers
                 //}
                 //zipListStr += "]}";
 
-                string zipOrderUrl =
-                   $"{ConfigurationManager.AppSettings["zipClaimHost"]}/Claims/Editor?snum={claim.Device.SerialNum}&ssid={lastServSheet.Id}&servid={claim.Id}&esid={(String.IsNullOrEmpty(claim.CurEngeneerSid) ? claim.CurTechSid : claim.CurEngeneerSid)}&asid={(String.IsNullOrEmpty(claim.CurAdminSid) ? claim.CurTechSid : claim.CurAdminSid)}&csdnum={claim.ClientSdNum}&cmnt={Url.Encode(lastServSheet.Descr)}&cntr={lastServSheet.CounterMono}&cntrc={lastServSheet.CounterColor}&dvst={lastServSheet.DeviceEnabled}&zip={zipListStr}";
-                return Redirect(zipOrderUrl);
+                //string zipOrderUrl =
+                //   $"{ConfigurationManager.AppSettings["zipClaimHost"]}/Claims/Editor?snum={claim.Device.SerialNum}&ssid={lastServSheet.Id}&servid={claim.Id}&esid={(String.IsNullOrEmpty(claim.CurEngeneerSid) ? claim.CurTechSid : claim.CurEngeneerSid)}&asid={(String.IsNullOrEmpty(claim.CurAdminSid) ? claim.CurTechSid : claim.CurAdminSid)}&csdnum={claim.ClientSdNum}&cmnt={Url.Encode(lastServSheet.Descr)}&cntr={lastServSheet.CounterMono}&cntrc={lastServSheet.CounterColor}&dvst={lastServSheet.DeviceEnabled}&zip={zipListStr}";
+                //return Redirect(zipOrderUrl);
             }
             catch (Exception ex)
             {
@@ -531,9 +550,23 @@ namespace ServiceClaim.Controllers
         {
             try
             {
-                ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                if (!String.IsNullOrEmpty(Request.Form["Confirm"]))
+                {
+                    ResponseMessage responseMessage;
+                    bool complete = model.Go(out responseMessage);
+                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                    return RedirectToAction("Index", new { id = responseMessage.Id });
+                }
+                else if (!String.IsNullOrEmpty(Request.Form["Cancel"]))
+                {
+                    ResponseMessage responseMessage;
+                    //model.Descr = Request.Form["ClaimWorkCancelDescr"];
+                    bool complete = model.GoBack(out responseMessage);
+                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                    //return RedirectToAction("Index", new { id = responseMessage.Id });
+                }
             }
             catch (Exception ex)
             {

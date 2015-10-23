@@ -1,9 +1,4 @@
 ﻿
-@using ServiceClaim.Models
-@using ServiceClaim.Objects
-@model ServiceClaim.Models.Claim
-
-
 @using System.Configuration
 @using ServiceClaim.Models
 @using ServiceClaim.Objects
@@ -16,9 +11,9 @@
 <div class="row">
     <div class="col-lg-push-2 col-lg-7">
         <div>
-            <h4>Список ЗИП</h4>
+            <h4>Редактирование ЗИП</h4>
             <table class="table table-bordered">
-                @*<tr>
+                <tr>
                     <td><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required" /></td>
                     <td><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required" /></td>
                     <td>
@@ -27,12 +22,12 @@
                     <td>
                         <button type="submit" class="btn btn-success" id="addZipItem" ssid="@serviceSheet.Id"><i class="fa fa-save"></i></button>
                     </td>
-                </tr>*@
+                </tr>
                 <tr id="zipIssueHeader" class="bg-primary" style="@(zipItemList != null && zipItemList.Any() ? String.Empty : "display: none")">
                     <th>парт номер</th>
                     <th>наименование</th>
                     <th>количество</th>
-                    @*<th></th>*@
+                    <th></th>
                 </tr>
                 <tbody id="zipItemsContainer">
                     @if (zipItemList != null && zipItemList.Any())
@@ -43,9 +38,9 @@
                                 <td>@item.PartNum</td>
                                 <td>@item.Name</td>
                                 <td>@item.Count</td>
-                                @*<td class="text-center">
+                                <td class="text-center">
                                     <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a>
-                                </td>*@
+                                </td>
                             </tr>
                         }
                     }
@@ -56,33 +51,13 @@
     </div>
 </div>
 
-
-@using (Html.BeginForm("ZipConfirm", "Claim", FormMethod.Post, new {@id = "ConfirmWorkForm", @class = "form-horizontal", data_toggle = "validator", role = "form"}))
+@using (Html.BeginForm("ZipOrder", "Claim", FormMethod.Post, new { @id = "ZipCheckForm", role = "form" }))
 {
     @Html.HiddenFor(m => m.Id)
     <div class="row">
         <div class="col-lg-push-2 col-lg-10">
-            <button type="submit" class="btn btn-success"value="Confirm" name="Confirm">Утверждено</button>
-            <a class="btn btn-danger" data-toggle="modal" data-target="#modalConfirmCancel">Отклонено</a>
-            <div id="modalConfirmCancel" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Ваш комментарий</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>
-                                @*<textarea id="ClaimWorkCancelDescr" name="ClaimWorkCancelDescr" class="form-control required-mark" rows="3" placeholder="Введите комментарий" required="required"></textarea>*@
-                                @Html.TextAreaFor(m => m.Descr, new { @class = "form-control required-mark", rows = "3", placeholder = "Почему отклонено?" })
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-default" value="Cancel" name="Cancel">Сохранить</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @*<a id="zipClaim"  class="btn btn-primary">Заказать ЗИП</a>*@
+            <button type="submit" class="btn btn-success">Утвердить заказ ЗИП</button>
         </div>
     </div>
     <div class="row">
@@ -91,8 +66,6 @@
         </div>
     </div>
 }
-
-
 <script type="text/javascript">
     @*$(function () {
         $('#zipClaim').click(function () {
@@ -161,6 +134,3 @@
         });
     }
 </script>
-
-
-

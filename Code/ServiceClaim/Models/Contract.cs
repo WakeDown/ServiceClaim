@@ -13,6 +13,7 @@ namespace ServiceClaim.Models
         public string Number { get; set; }
         public Contractor Contractor { get; set; }
         public bool? ClientSdNumRequired { get; set; }
+        public string ContractZipTypeSysName { get; set; }
 
         public Contract()
         {
