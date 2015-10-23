@@ -132,16 +132,19 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetPlanServiceIssueCitiesList(DateTime startDate, DateTime endDate, string engeneerSid)
+        public JsonResult GetPlanServiceIssueCitiesList(DateTime startDate, DateTime endDate, string[] engeneerSid=null)
         {
-            var list = ServiceIssuePeriodItem.GetServiceIssueCitiesList(startDate, endDate, engeneerSid);
+            var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
+
+            var list = ServiceIssuePeriodItem.GetServiceIssueCitiesList(startDate, endDate, engeneerSidArr);
             return Json(list);
         }
 
         [HttpPost]
-        public JsonResult GetPlanServiceIssueAddresList(DateTime startDate, DateTime endDate, int? idCity = null, string engeneerSid=null)
+        public JsonResult GetPlanServiceIssueAddresList(DateTime startDate, DateTime endDate, int? idCity = null, string[] engeneerSid=null)
         {
-            var list = ServiceIssuePeriodItem.GetServiceIssueAddressList(startDate, endDate, idCity: idCity, engeneerSid:engeneerSid);
+            var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
+            var list = ServiceIssuePeriodItem.GetServiceIssueAddressList(startDate, endDate, idCity: idCity, engeneerSid: engeneerSidArr);
             return Json(list);
         }
 
@@ -149,6 +152,13 @@ namespace ServiceClaim.Controllers
         public JsonResult GetPlanServiceIssueClientList(DateTime startDate, DateTime endDate, int? idCity = null, string address = null, string engeneerSid = null)
         {
             var list = ServiceIssuePeriodItem.GetServiceIssueClientList(startDate, endDate, idCity: idCity, address: address, engeneerSid: engeneerSid);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetPlanServiceIssueEngeneerList(DateTime startDate, DateTime endDate, int? idCity = null, string address = null, string engeneerSid = null)
+        {
+            var list = ServiceIssuePeriodItem.GetServiceIssueEngeneerList(startDate, endDate, engeneerSid: engeneerSid);
             return Json(list);
         }
 

@@ -19,7 +19,7 @@
                 <span>
                     <input type="radio" name="issuesPlanType" value="city" checked="checked" />&nbsp;по городам
                     <input type="radio" name="issuesPlanType" value="client" />&nbsp;по клиентам
-                    @*<input type="radio" name="issuesPlanType" value="engeneer" />&nbsp;по инженерам*@
+                    <input type="radio" name="issuesPlanType" value="engeneer" />&nbsp;по инженерам
                 </span>
                 <div>
                     @{
@@ -64,7 +64,7 @@
 
         loadPlanIssues();
     });
-    var engSid = '@TempData["serviceEngeneerSid"]';
+    var engSid = getEngeneerSelectedValues();
     var selPeriodIdVal = '';
 
     function updateSelectedPeriod() {
@@ -108,6 +108,26 @@
         else if (issuesPlanType == 'client') {
             $.ajax({
                 url: '@Url.Action("GetPlanServiceIssueClientList")',
+                method: 'POST',
+                data: { startDate: startDate, endDate: endDate, engeneerSid: engSid },
+                success: function (data) {
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
+                            $cont.append(htmlItem);
+                        }
+                    }
+                }
+                //,
+                //error: function (xhr, ajaxOptions, thrownError) {
+                //    alert(xhr.responseText);
+                //}
+            });
+        }
+        else if (issuesPlanType == 'engeneer') {
+            $.ajax({
+                url: '@Url.Action("GetPlanServiceIssueEngeneerList")',
                 method: 'POST',
                 data: { startDate: startDate, endDate: endDate, engeneerSid: engSid },
                 success: function (data) {

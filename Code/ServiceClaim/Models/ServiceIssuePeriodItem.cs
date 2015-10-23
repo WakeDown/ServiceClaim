@@ -38,6 +38,10 @@ namespace ServiceClaim.Models
         {
             return ServiceIssuePlan.GetClientList(startDate, endDate, idCity, address, engeneerSid);
         }
+        public static IEnumerable<ServiceIssuePlaningItem> GetServiceIssueEngeneerList(DateTime startDate, DateTime endDate, string engeneerSid = null)
+        {
+            return ServiceIssuePlan.GetEngeneerList(startDate, endDate, engeneerSid);
+        }
         public static IEnumerable<ServiceIssuePlaningItem> GetServiceIssueDeviceIssueList(DateTime startDate, DateTime endDate, int? idCity = null, string address = null, int? idClient=null, string engeneerSid = null)
         {
             return ServiceIssuePlan.GetDeviceIssueList(startDate, endDate, idCity, address, idClient, engeneerSid);
