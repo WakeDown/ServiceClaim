@@ -85,6 +85,7 @@
         var startDate = $cont.attr('std');
         var endDate = $cont.attr('edt');
         $cont.html('');
+        showSpinnerAppend($cont);
         if (issuesPlanType == 'city') {
             $.ajax({
                 url: '@Url.Action("GetPlanServiceIssueCitiesList")',
@@ -97,12 +98,16 @@
                             var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.ShortName + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
                             $cont.append(htmlItem);
                         }
+                    } else {
+                        $cont.append('пусто');
                     }
+                    hideSpinner($cont);
                 }
-                //,
-                //error: function (xhr, ajaxOptions, thrownError) {
-                //    alert(xhr.responseText);
-                //}
+                ,
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //alert(xhr.responseText);
+                    hideSpinner($cont);
+                }
             });
         }
         else if (issuesPlanType == 'client') {
@@ -117,12 +122,16 @@
                             var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
                             $cont.append(htmlItem);
                         }
+                    } else {
+                        $cont.append('пусто');
                     }
+                    hideSpinner($cont);
                 }
-                //,
-                //error: function (xhr, ajaxOptions, thrownError) {
-                //    alert(xhr.responseText);
-                //}
+                ,
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //alert(xhr.responseText);
+                    hideSpinner($cont);
+                }
             });
         }
         else if (issuesPlanType == 'engeneer') {
@@ -137,12 +146,16 @@
                             var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
                             $cont.append(htmlItem);
                         }
+                    } else {
+                        $cont.append('пусто');
                     }
+                    hideSpinner($cont);
                 }
-                //,
-                //error: function (xhr, ajaxOptions, thrownError) {
-                //    alert(xhr.responseText);
-                //}
+                ,
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //alert(xhr.responseText);
+                    hideSpinner($cont);
+                }
             });
         }
     }

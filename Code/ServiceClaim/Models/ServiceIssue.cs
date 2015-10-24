@@ -47,7 +47,7 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningClientList(DateTime month, int idCity, string address, string serviceEngeneerSid = null, bool? planed = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningClientList(DateTime month, int? idCity = null, string address = null, string serviceEngeneerSid = null, bool? planed = null)
         {
             Uri uri = new Uri(
                 $"{OdataServiceUri}/ServiceIssue/GetPlaningClientList?month={month:yyyy-MM-dd}&idCity={idCity}&address={address}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}");
@@ -55,7 +55,15 @@ namespace ServiceClaim.Models
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
             return model;
         }
-
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningEngeneerList(DateTime month, string serviceEngeneerSid = null, bool? planed = null)
+        {
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/ServiceIssue/GetPlaningEngeneerList?month={month:yyyy-MM-dd}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
+            return model;
+        }
+        
         public static IEnumerable<ServiceIssuePlaningItem> GetPlaningDeviceIssueList(DateTime month, int idCity, string address, int idClient, string serviceEngeneerSid = null, bool? planed = null)
         {
             Uri uri = new Uri(
@@ -78,13 +86,16 @@ namespace ServiceClaim.Models
             return new SelectList(GetEngeneerList(), "Key", "Value");
         }
 
-        public static IEnumerable<KeyValuePair<string, string>> GetEngeneerList()
+        public static IEnumerable<KeyValuePair<string, string>> GetEngeneerList(string orgSid = null, bool appendAllItem = false)
         {
-            Uri uri = new Uri(String.Format("{0}/ServiceIssue/GetEngeneerList", OdataServiceUri));
+            if (orgSid == "all") orgSid=null;
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceIssue/GetEngeneerList?orgSid={orgSid}");
             string jsonString = GetJson(uri);
+            var list = new List<KeyValuePair<string, string>>();
             var model = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<string, string>>>(jsonString);
-
-            return model;
+            if (appendAllItem && model.Count() > 1) list.Add(new KeyValuePair<string, string>("all", "все инженеры"));
+            list.AddRange(model);
+            return list;
         }
     }
 }

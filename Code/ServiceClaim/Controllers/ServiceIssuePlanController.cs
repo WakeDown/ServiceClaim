@@ -54,11 +54,26 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetClientList(DateTime? date, int? idCity, string address, bool? planed = null)
+        public JsonResult GetClientList(DateTime? date, string[] serviceEngeneerSid, int? idCity = null, string address = null, bool? planed = null)
         {
-            if (!idCity.HasValue) return Json(new { });
+            //if (!idCity.HasValue) return Json(new { });
             if (!date.HasValue) date = DateTime.Now;
-            var list = ServiceIssue.GetPlaningClientList(date.Value, idCity.Value, address, planed: planed);
+            string serviceEngeneerSidIds = serviceEngeneerSid != null
+                ? String.Join(",", serviceEngeneerSid)
+                : String.Empty;
+            var list = ServiceIssue.GetPlaningClientList(date.Value, serviceEngeneerSid: serviceEngeneerSidIds, idCity: idCity, address: address, planed: planed);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetEngeneerList(DateTime? date, string[] serviceEngeneerSid, bool? planed = null)
+        {
+            //if (!idCity.HasValue) return Json(new { });
+            if (!date.HasValue) date = DateTime.Now;
+            string serviceEngeneerSidIds = serviceEngeneerSid != null
+                ? String.Join(",", serviceEngeneerSid)
+                : String.Empty;
+            var list = ServiceIssue.GetPlaningEngeneerList(date.Value, serviceEngeneerSid: serviceEngeneerSidIds, planed: planed);
             return Json(list);
         }
 
@@ -174,5 +189,19 @@ namespace ServiceClaim.Controllers
         //    var model = ServiceIssuePlan.Get(idServiceIssue, idServiceIssueType);
         //    return Json(model);
         //}
+
+        [HttpPost]
+        public JsonResult GetEngeneerOrgList()
+        {
+            var list = ContractorAccess.GetOrgList(true);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetEngeneerSelList(string orgSid)
+        {
+            var list = ServiceIssue.GetEngeneerList(orgSid, true);
+            return Json(list);
+        }
     }
 }

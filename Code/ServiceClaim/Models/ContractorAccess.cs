@@ -68,19 +68,22 @@ namespace ServiceClaim.Models
             return result;
         }
 
-        public static IEnumerable<KeyValuePair<string, string>> GetOrgList()
+        public static IEnumerable<KeyValuePair<string, string>> GetOrgList(bool appendAllItem = false)
         {
             Uri uri = new Uri(String.Format("{0}/ContractorAccess/GetOrgList", OdataServiceUri));
             string jsonString = GetJson(uri);
-            var model = JsonConvert.DeserializeObject<IDictionary<string, string>>(jsonString);
-
-            return model;
+            var list = new List<KeyValuePair<string, string>>();
+            var model = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<string, string>>>(jsonString);
+            if (appendAllItem && model.Count() > 1) list.Add(new KeyValuePair<string, string>("all", "все организации"));
+            list.AddRange(model);
+            return list;
         }
 
         public static SelectList GetOrgSelectionList(bool addNewItem = true)
         {
             var list = new List<KeyValuePair<string, string>>();
-            list.AddRange(GetOrgList().OrderBy(x=>x.Value));
+            //list.AddRange(GetOrgList().OrderBy(x=>x.Value));
+            list.AddRange(GetOrgList());
             if (addNewItem)list.Add(new KeyValuePair<string, string>("new", "Создать новую..."));
 
             return new SelectList(list, "Key", "Value");
