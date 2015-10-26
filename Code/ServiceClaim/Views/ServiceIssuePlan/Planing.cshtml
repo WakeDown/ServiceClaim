@@ -275,8 +275,8 @@
                                 $container.append(engeneerItem);
                             }
 
-                            //$('[name="engeneer"]', $container).click(fillDeviceList);
-                            //$('[name="all-eng"]', $container).click(setCheckedIssueIds);
+                            $('[name="engeneer"]', $container).click(filEngeneerCityList);
+                            $('[name="all-eng"]', $container).click(setCheckedIssueIds);
                         } else {
                             $container.append('пусто');
                         }
@@ -290,64 +290,67 @@
             }
         }
 
-        function filClientCityList() {
-            showSpinnerAfter(this, false);
-            var clid = $(this).attr('clid');
+        function filEngeneerCityList() {
+            var enid = $(this).attr('enid');
             var date = new Date($('#date').val());
-            var serviceEngeneerSid = getEngeneerSelectedValues();
+            var serviceEngeneerSid = enid;//getEngeneerSelectedValues();
             var planed = getPlanedState();
-            var $container = $('[name="cityContainer"][clid="' + clid + '"]');
-            $container.html('');
-            $.ajax({
-                url: '@Url.Action("GetCityList")',
-                method: 'POST',
-                data: { date: date.toDateString(), serviceEngeneerSid: serviceEngeneerSid, planed: planed, clientId:clid },
-                success: function(data) {
-                    if (data.length) {
-                        for (var i = 0; i < data.length; i++) {
-                           
-                            var city = data[i];
-                            var cityItem = '<a class="async-sel row nomargin nopadding" href="#!" name="city" cid="' + city.Id + '" data-toggle="tooltip" title="' + city.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + city.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-' + city.Id + '" issueids="' + city.IssuesIdList + '"/>&nbsp;' + city.ShortName + '</div></a><div name="addressContainer" cid="' + city.Id + '" class="pad-1"></div>';
-                            $container.append(cityItem);
-                        }
+            var $container = $('[name="cityContainer"][enid="' + enid + '"]');
+            if ($container.html() == '') {
+                showSpinnerAfter(this, false);
+                $container.html('');
+                $.ajax({
+                    url: '@Url.Action("GetCityList")',
+                    method: 'POST',
+                    data: { date: date.toDateString(), serviceEngeneerSid: serviceEngeneerSid, planed: planed, clientId: enid },
+                    success: function(data) {
+                        if (data.length) {
+                            for (var i = 0; i < data.length; i++) {
 
-                        $('[name="city"]', $container).click(fillCityAddressList);
-                        $('[name="all-city"]', $container).click(setCheckedIssueIds);
-                    } else {
-                        $container.append('пусто');
+                                var city = data[i];
+                                var cityItem = '<a class="async-sel row nomargin nopadding" href="#!" name="city" cid="' + city.Id + '" enid="' + enid + '" data-toggle="tooltip" title="' + city.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + city.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-' + city.Id + '" issueids="' + city.IssuesIdList + '"/>&nbsp;' + city.ShortName + '</div></a><div name="addressContainer" enid="' + enid + '" cid="' + city.Id + '" class="pad-1"></div>';
+                                $container.append(cityItem);
+                            }
+
+                            $('[name="city"]', $container).click(fillEngeneerCityAddressList);
+                            $('[name="all-city"]', $container).click(setCheckedIssueIds);
+                        } else {
+                            $container.append('пусто');
+                        }
+                        hideSpinner($container);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.responseText);
+                        hideSpinner($container);
                     }
-                    hideSpinner($container);
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
-                    hideSpinner($container);
-                }
-            });
+                });
+            } else { $container.html('');}
         }
 
-
-        function fillCityAddressList() {
-            showSpinnerAfter(this, false);
+        function fillEngeneerCityAddressList() {
+            var enid = $(this).attr('enid');
             var cid = $(this).attr('cid');
+            //var clid = $(this).attr('clid');
+            var serviceEngeneerSid = enid;//getEngeneerSelectedValues();
             var $container = $('[name="addressContainer"][cid="' + cid + '"]');
-            $container.html('');
             var date = new Date($('#date').val());
             var planed = getPlanedState();
-
+            if ($container.html() == '') {
+                showSpinnerAfter(this, false);
+                $container.html('');
                 $.ajax({
                     url: '@Url.Action("GetAddressList")',
                     method: 'POST',
-                    data: { date: date.toDateString(), idCity: cid, planed: planed },
+                    data: { date: date.toDateString(), serviceEngeneerSid: serviceEngeneerSid, idCity: cid, planed: planed },
                     success: function(data) {
-                        
                         if (data.length) {
                             for (var i = 0; i < data.length; i++) {
                                 var address = data[i];
-                                var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-addr" id="all-addr-' + address.Name.replace(' ', '') + '" issueids="' + address.IssuesIdList + '" />&nbsp;' + address.Name + '</div></a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
+                                var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" enid="' + enid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-addr" id="all-addr-' + address.Name.replace(' ', '') + '" issueids="' + address.IssuesIdList + '" />&nbsp;' + address.Name + '</div></a><div name="deviceContainer" enid="' + enid + '" cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
                                 $container.append(addresItem);
                             }
 
-                            $('[name="address"]', $container).click(fillAddressClientList);
+                            $('[name="address"]', $container).click(fillEngeneerAddressDeviceList);
                             $('[name="all-addr"]', $container).click(setCheckedIssueIds);
                         } else {
                             $container.append('пусто');
@@ -359,15 +362,209 @@
                         hideSpinner();
                     }
                 });
+            } else { $container.html('');}
+        }
+
+        function fillEngeneerAddressDeviceList() {
+            var enid = $(this).attr('enid');
+            var cid = $(this).attr('cid');
+            var aid = $(this).attr('aid');
+            //var clid = $(this).attr('clid');
+            var date = new Date($('#date').val());
+            var serviceEngeneerSid = enid;//getEngeneerSelectedValues();
+            var planed = getPlanedState();
+            var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][enid="' + enid + '"]');
+            if ($container.html() == '') {
+                showSpinnerAfter(this, false);
+                $container.html('');
+                $.ajax({
+                    url: '@Url.Action("GetDeviceIssueList")',
+                    method: 'POST',
+                    data: { date: date.toDateString(), serviceEngeneerSid: serviceEngeneerSid, idCity: cid, address: aid, planed: planed },
+                    success: function(data) {
+                        if (data.length) {
+                            for (var i = 0; i < data.length; i++) {
+                                var deviceIssue = data[i];
+                                var deviceItem = '<a href="#!" class="async-sel row nomargin nopadding" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" enid="' + enid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + deviceIssue.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-dev" id="all-dev-' + deviceIssue.Id + '" issueids="' + deviceIssue.Id + '" />&nbsp;' + deviceIssue.Name + '</div></a>';
+                                $container.append(deviceItem);
+                            }
+
+                            $('[name="deviceIssue"]', $container).click(setIssue);
+                            $('[name="all-dev"]', $container).click(setCheckedIssueIds);
+                        } else {
+                            $container.append('пусто');
+                        }
+                        hideSpinner();
+                    },
+                    error: function(data) {
+                        alert(data.error);
+                        hideSpinner();
+                    }
+                });
+            } else { $container.html('');}
+        }
+
+        function filClientCityList() {
+
+            var clid = $(this).attr('clid');
+            var date = new Date($('#date').val());
+            var serviceEngeneerSid = getEngeneerSelectedValues();
+            var planed = getPlanedState();
+            var $container = $('[name="cityContainer"][clid="' + clid + '"]');
+            if ($container.html() == '') {
+                showSpinnerAfter(this, false);
+            $container.html('');
+            $.ajax({
+                url: '@Url.Action("GetCityList")',
+                method: 'POST',
+                data: { date: date.toDateString(), serviceEngeneerSid: serviceEngeneerSid, planed: planed, clientId: clid },
+                success: function(data) {
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i++) {
+
+                            var city = data[i];
+                            var cityItem = '<a class="async-sel row nomargin nopadding" href="#!" name="city" cid="' + city.Id + '" clid="' + clid + '" data-toggle="tooltip" title="' + city.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + city.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-' + city.Id + '" issueids="' + city.IssuesIdList + '"/>&nbsp;' + city.ShortName + '</div></a><div name="addressContainer" clid="' + clid + '" cid="' + city.Id + '" class="pad-1"></div>';
+                            $container.append(cityItem);
+                        }
+
+                        $('[name="city"]', $container).click(fillClientCityAddressList);
+                        $('[name="all-city"]', $container).click(setCheckedIssueIds);
+                    } else {
+                        $container.append('пусто');
+                    }
+                    hideSpinner($container);
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                    hideSpinner($container);
+                }
+            });
+            } else { $container.html('');}
+        }
+
+        function fillClientCityAddressList() {
+
+            var cid = $(this).attr('cid');
+            var clid = $(this).attr('clid');
+            var $container = $('[name="addressContainer"][cid="' + cid + '"]');
+            var serviceEngeneerSid = getEngeneerSelectedValues();
+            var date = new Date($('#date').val());
+            var planed = getPlanedState();
+            if ($container.html() == '') {
+                showSpinnerAfter(this, false);
+            $container.html('');
+            $.ajax({
+                url: '@Url.Action("GetAddressList")',
+                method: 'POST',
+                data: { date: date.toDateString(), serviceEngeneerSid: serviceEngeneerSid, idCity: cid, planed: planed, clientId: clid },
+                success: function(data) {
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i++) {
+                            var address = data[i];
+                            var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" clid="' + clid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-addr" id="all-addr-' + address.Name.replace(' ', '') + '" issueids="' + address.IssuesIdList + '" />&nbsp;' + address.Name + '</div></a><div name="deviceContainer" clid="' + clid + '" cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
+                            $container.append(addresItem);
+                        }
+
+                        $('[name="address"]', $container).click(fillAddressDeviceList);
+                        $('[name="all-addr"]', $container).click(setCheckedIssueIds);
+                    } else {
+                        $container.append('пусто');
+                    }
+                    hideSpinner();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                    hideSpinner();
+                }
+            });
+            } else { $container.html('');}
+        }
+
+        function fillAddressDeviceList() {
+
+            var cid = $(this).attr('cid');
+            var aid = $(this).attr('aid');
+            var clid = $(this).attr('clid');
+            var date = new Date($('#date').val());
+            var planed = getPlanedState();
+            var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
+            if ($container.html() == '') {
+                showSpinnerAfter(this, false);
+                $container.html('');
+                $.ajax({
+                    url: '@Url.Action("GetDeviceIssueList")',
+                    method: 'POST',
+                    data: { date: date.toDateString(), idCity: cid, address: aid, idClient: clid, planed: planed },
+                    success: function(data) {
+                        if (data.length) {
+                            for (var i = 0; i < data.length; i++) {
+                                var deviceIssue = data[i];
+                                var deviceItem = '<a href="#!" class="async-sel row nomargin nopadding" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + deviceIssue.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-dev" id="all-dev-' + deviceIssue.Id + '" issueids="' + deviceIssue.Id + '" />&nbsp;' + deviceIssue.Name + '</div></a>';
+                                $container.append(deviceItem);
+                            }
+
+                            $('[name="deviceIssue"]', $container).click(setIssue);
+                            $('[name="all-dev"]', $container).click(setCheckedIssueIds);
+                        } else {
+                            $container.append('пусто');
+                        }
+                        hideSpinner();
+                    },
+                    error: function(data) {
+                        alert(data.error);
+                        hideSpinner();
+                    }
+                });
+            } else { $container.html('');}
+        }
+
+        function fillCityAddressList() {
+
+            var cid = $(this).attr('cid');
+            var $container = $('[name="addressContainer"][cid="' + cid + '"]');
+
+            var date = new Date($('#date').val());
+            var planed = getPlanedState();
+            if ($container.html() == '') {
+            $container.html('');
+            showSpinnerAfter(this, false);
+            $.ajax({
+                url: '@Url.Action("GetAddressList")',
+                method: 'POST',
+                data: { date: date.toDateString(), idCity: cid, planed: planed },
+                success: function(data) {
+
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i++) {
+                            var address = data[i];
+                            var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-addr" id="all-addr-' + address.Name.replace(' ', '') + '" issueids="' + address.IssuesIdList + '" />&nbsp;' + address.Name + '</div></a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
+                            $container.append(addresItem);
+                        }
+
+                        $('[name="address"]', $container).click(fillAddressClientList);
+                        $('[name="all-addr"]', $container).click(setCheckedIssueIds);
+                    } else {
+                        $container.append('пусто');
+                    }
+                    hideSpinner();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                    hideSpinner();
+                }
+            });
+            } else { $container.html('');}
         }
 
         function fillAddressClientList() {
-            showSpinnerAfter(this, false);
+
             var cid = $(this).attr('cid');
             var aid = $(this).attr('aid');
             var date = new Date($('#date').val());
             var planed = getPlanedState();
             var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
+            if ($container.html() == '') {
+            showSpinnerAfter(this, false);
             $container.html('');
             $.ajax({
                 url: '@Url.Action("GetClientList")',
@@ -393,23 +590,26 @@
                     hideSpinner();
                 }
             });
+            } else { $container.html('');}
         }
 
         function fillClientDeviceList() {
-            showSpinnerAfter(this, false);
+
             var cid = $(this).attr('cid');
             var aid = $(this).attr('aid');
             var clid = $(this).attr('clid');
             var date = new Date($('#date').val());
             var planed = getPlanedState();
             var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
+            if ($container.html() == '') {
+            showSpinnerAfter(this, false);
             $container.html('');
             $.ajax({
                 url: '@Url.Action("GetDeviceIssueList")',
                 method: 'POST',
                 data: { date: date.toDateString(), idCity: cid, address: aid, idClient: clid, planed: planed },
                 success: function(data) {
-                    
+
                     if (data.length) {
                         for (var i = 0; i < data.length; i++) {
                             var deviceIssue = data[i];
@@ -429,6 +629,7 @@
                     hideSpinner();
                 }
             });
+            } else { $container.html('');}
         }
 
         function addSelectedIssues2Plan() {
@@ -542,6 +743,7 @@
                 }
             });
         }
+
         function setIssue() {
             showSpinner(this, false);
             var $issueNameInput = $('#selectedIssueName');

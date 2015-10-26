@@ -7,6 +7,7 @@ namespace ServiceClaim.Models
 {
     public class ServiceIssuePlaningItem
     {
+        public string Sid { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public int IssuesCount { get; set; }
