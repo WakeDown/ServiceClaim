@@ -35,7 +35,7 @@
             }
             
             <div class="row pad-b-md">
-                <div class="col-lg-7">
+                <div class="col-lg-6">
                     @if (!String.IsNullOrEmpty(Model.ClientSdNum))
                     {
                         <div class="row"><label class="col-lg-3 text-right">№ SD клиента</label> <span class="col-lg-9">@Model.ClientSdNum</span></div>
@@ -58,7 +58,7 @@
                         <div class="row"><label class="col-lg-3 text-right">Специалист</label> <span class="col-lg-9">@Model.Specialist.DisplayName</span></div>
                     }
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-3">
                     @if (servSheetList.Any())
                     {
                         <div>
@@ -67,12 +67,14 @@
                                 @foreach (var sheet in servSheetList)
                                 {
                                     <div class="row">
-                                        <div class="col-lg-12"><span class="monospace">@sheet.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@Url.Action("ServiceSheet", new {id = sheet.Id})" target="_blank">Сервисный лист №@sheet.Id</a></div>
+                                        <div class="col-lg-12"><span class="monospace">@sheet.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@Url.Action("ServiceSheet", new {id = sheet.Id})" target="_blank">№@sheet.Id</a></div>
                                     </div>
                                 }
                             </p>
                         </div>
                     }
+                </div>
+                <div class="col-lg-3">
                     @if (zipClaimList.Any())
                     {
                         <div>
@@ -82,7 +84,7 @@
                                 {
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <span class="monospace">@zipClaim.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@zipClaim.Id" target="_blank">Заявка на ЗИП №@zipClaim.Id</a>
+                                            <span class="monospace">@zipClaim.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@zipClaim.Id" target="_blank">№@zipClaim.Id</a>
                                         </div>
                                     </div>
                                 }
@@ -145,11 +147,11 @@
             {
                 @Html.Partial("ZipConfirm", Model)
             }
-            @if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRMED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
+            @*@if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRMED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
             {
                 @Html.Partial("ZipOrdered", Model)
-            }
-            @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
+            }*@
+            @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceControler))
             {
                 @Html.Partial("ZipOrderConfirm", Model)
             }
@@ -232,14 +234,22 @@
                 data: { id: id, descr: descr },
                 success: function(data) {
                     if (data.errorMessage) {
-                        alert(data.errorMessage);
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Ошибка!',
+                            message: data.errorMessage
+                        });
                     } else {
                         window.location.reload(); // = '';
                         //alert('OK');
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                 }
             });
         }
@@ -253,13 +263,21 @@
                 data: { id: id, descr: descr },
                 success: function(data) {
                     if (data.errorMessage) {
-                        alert(data.errorMessage);
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Ошибка!',
+                            message: data.errorMessage
+                        });
                     } else {
                         window.location.reload();
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                 }
             });
         }
@@ -272,7 +290,11 @@
                     $('#stateHistoryContainer').html(html);
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                 }
             });
         }

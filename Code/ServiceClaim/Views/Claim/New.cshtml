@@ -194,7 +194,11 @@
                     hideSpinner($info);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                     $('#claimsContainer').empty();
                     hideSpinner($('#claimsContainer'));
                 }
@@ -317,7 +321,11 @@
 
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                     $('#devSpinner').removeClass('active');
                 }
             });
@@ -408,7 +416,11 @@
                     setSdNumRequiredOrNot();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                     $('#contSpinner').removeClass('active');
                 }
             });
@@ -467,7 +479,11 @@
                     $('#ctrSpinner').removeClass('active');
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                     $('#ctrSpinner').removeClass('active');
                 }
             });

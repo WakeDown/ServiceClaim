@@ -49,6 +49,7 @@
                         <td>
                             <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1"/>
                         </td>
+
                         <td>
                             <button type="submit" class="btn btn-success" id="addZipItem" ssid="@serviceSheet.Id"><i class="fa fa-save"></i></button>
                         </td>
@@ -131,6 +132,10 @@
         $('[name="btn-issued-zip-item-installed"]').click(zipItemInstall);
         $('[name="btn-issued-zip-item-installed-cancel"]').click(zipItemInstallCancel);
         $('#notInstalledCommentSave').click(function() {
+            var $curObj = $(this);
+            showSpinnerAppend($curObj);
+            $('button', $('#notInstalledModal')).prop('disabled', true);
+            //$(this).prop('disabled', true);
             var $comment = $('#notInstalledComment');
            
             if ($comment.val() != '') {
@@ -140,13 +145,19 @@
                     data: {id: @serviceSheet.Id, comment: $comment.val()},
                     success:function() {
                         $('#ZipIssueNotInstalledForm').submit();
-                    }
+                    },
+                    error:function() {
+                        hideSpinner($curObj);
+                        $('button', $('#notInstalledModal')).prop('disabled', false);
+                }
                 });
                 
             }
             return false;
         });
         $('#btnSendServiceSheet').click(function() {
+            showSpinnerAppend($(this));
+            $(this).prop('disabled', true);
             var notinstalledLength =  $('[notinstalled="notinstalled"]', $('#issuedZipIssueItemsContainer')).length;
             
             var zipNeed = @(serviceSheet.ZipClaim.HasValue && serviceSheet.ZipClaim.Value? "true":"false");
@@ -157,14 +168,16 @@
                     title: 'Внимание!',
                     message: 'Необходимо заказать ЗИП.'
                 });
-
+                hideSpinner($(this));
+                $(this).prop('disabled', false);
                 return false;
             }
 
             if (notinstalledLength > 0) {
                 $('#notInstalledModal').modal();
                 $('#notInstalledCommentTitle').text('Остался неустановленный ЗИП - ' + notinstalledLength + ' шт. Укажите причину');
-
+                hideSpinner($(this));
+                $(this).prop('disabled', false);
                 return false;
             }
 
@@ -175,6 +188,7 @@
     function zipItemInstallCancel() {
         var curObj = $(this);
         showSpinnerAppend(curObj);
+        curObj.prop('disabled', true);
         var ziid = $(this).attr('ziid');
         $.ajax({
             url: '@Url.Action("ServiceSheetZipItemSetInstalledCancel")',
@@ -188,10 +202,16 @@
                 $btnInst.removeClass('btn-success');
                 $btnInst.addClass('btn-primary');
                 hideSpinner(curObj);
+                curObj.prop('disabled', false);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.responseText);
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
                 hideSpinner(curObj);
+                curObj.prop('disabled', false);
             }
         });
     }
@@ -199,6 +219,7 @@
     function zipItemInstall() {
         var curObj = $(this);
         showSpinnerAppend(curObj);
+        curObj.prop('disabled', true);
         var ziid = $(this).attr('ziid');
         $.ajax({
             url: '@Url.Action("ServiceSheetZipItemSetInstalled")',
@@ -212,10 +233,16 @@
                 $btnInst.removeClass('btn-primary');
                 $btnInst.addClass('btn-success');
                 hideSpinner(curObj);
+                curObj.prop('disabled', false);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.responseText);
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
                 hideSpinner(curObj);
+                curObj.prop('disabled', false);
             }
         });
     }
@@ -231,23 +258,33 @@
                 $('#zip-item-' + ziid).remove();
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.responseText);
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
             }
         });
     }
 
     function addZipItem() {
+
         var ssid = $(this).attr('ssid');
         var zipIssueNewPartNum = $('#zipIssueNewPartNum').val();
         var zipIssueNewName = $('#zipIssueNewName').val();
         var zipIssueNewCount = $('#zipIssueNewCount').val();
 
         if (zipIssueNewPartNum == '' || zipIssueNewName == '' || zipIssueNewCount == '') {
-            alert('Заполните все поля!');
+            BootstrapDialog.show({
+                type: 'type-warning',
+                title: 'Внимание!',
+                message: 'Заполните все поля.'
+            });
             return;
         }
         var curObj = $(this);
         showSpinnerAppend(curObj);
+        curObj.prop('disabled', true);
         $.ajax({
             url: '@Url.Action("AddServiceSheetIssuedZipItem")',
             method: 'POST',
@@ -263,12 +300,22 @@
                     $('#zipIssueNewName').val('');
                     $('#zipIssueNewCount').val('1');
                 } else {
-                    alert(data.error);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: data.error
+                    });
                 }
+                curObj.prop('disabled', false);
                 hideSpinner(curObj);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.responseText);
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
+                curObj.prop('disabled', false);
                 hideSpinner(curObj);
             }
         });

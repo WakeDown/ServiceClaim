@@ -18,6 +18,7 @@ namespace ServiceClaim.Models
         public DateTime DateCreate { get; set; }
         public string CreatorSid { get; set; }
         public bool Installed { get; set; }
+        public bool ClientGiven { get; set; }
         public string InstalledSid { get; set; }
         public string InstalledCancelSid { get; set; }
         public int InstalledServiceSheetId { get; set; }

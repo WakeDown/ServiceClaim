@@ -83,9 +83,9 @@ namespace ServiceClaim.Models
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
             return model;
         }
-        public IEnumerable<ServiceSheetZipItem> GetOrderedZipItemList()
+        public IEnumerable<ServiceSheetZipItem> GetOrderedZipItemList(bool? realyOrdered = null)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetOrderedList?serviceSheetId={Id}");
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetOrderedList?serviceSheetId={Id}&realyOrdered={realyOrdered}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
             return model;
