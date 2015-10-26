@@ -225,16 +225,16 @@
                                 $container.append(cityItem);
                             }
 
-                            //$('[name="city"]', $container).click(fillAddressList);
-                            //$('[name="all-city"]', $container).click(setCheckedIssueIds);
+                            $('[name="city"]', $container).click(fillCityAddressList);
+                            $('[name="all-city"]', $container).click(setCheckedIssueIds);
                         } else {
                             $container.append('пусто');
                         }
-                        hideSpinner();
+                        hideSpinner($container);
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(xhr.responseText);
-                        hideSpinner();
+                        hideSpinner($container);
                     }
                 });
             } else if (issuePlaningType == 'client') {
@@ -246,20 +246,20 @@
                         if (data.length) {
                             for (var i = 0; i < data.length; i++) {
                                 var client = data[i];
-                                var clientItem = '<a href="#!" class="async-sel row nomargin nopadding" name="client" clid="' + client.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + client.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-cl" id="all-cl-' + client.Id + '" issueids="' + client.IssuesIdList + '" />&nbsp;' + client.Name + '</div></a><div name="deviceContainer" clid="' + client.Id + '" class="pad-3"></div>';
+                                var clientItem = '<a href="#!" class="async-sel row nomargin nopadding" name="client" clid="' + client.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + client.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-cl" id="all-cl-' + client.Id + '" issueids="' + client.IssuesIdList + '" />&nbsp;' + client.Name + '</div></a><div name="cityContainer" clid="' + client.Id + '" class="pad-3"></div>';
                                 $container.append(clientItem);
                             }
 
-                            //$('[name="client"]', $container).click(fillDeviceList);
-                            //$('[name="all-cl"]', $container).click(setCheckedIssueIds);
+                            $('[name="client"]', $container).click(filClientCityList);
+                            $('[name="all-cl"]', $container).click(setCheckedIssueIds);
                         } else {
                             $container.append('пусто');
                         }
-                        hideSpinner();
+                        hideSpinner($container);
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(xhr.responseText);
-                        hideSpinner();
+                        hideSpinner($container);
                     }
                 });
             } else if (issuePlaningType == 'engeneer') {
@@ -271,12 +271,84 @@
                         if (data.length) {
                             for (var i = 0; i < data.length; i++) {
                                 var engeneer = data[i];
-                                var engeneerItem = '<a href="#!" class="async-sel row nomargin nopadding" name="engeneer" clid="' + engeneer.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + engeneer.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-eng" id="all-eng-' + engeneer.Id + '" issueids="' + engeneer.IssuesIdList + '" />&nbsp;' + engeneer.Name + '</div></a><div name="deviceContainer" clid="' + engeneer.Sid + '" class="pad-3"></div>';
+                                var engeneerItem = '<a href="#!" class="async-sel row nomargin nopadding" name="engeneer" enid="' + engeneer.Sid + '"><div class="issues-count col-lg-2"><span class="pull-right">' + engeneer.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-eng" id="all-eng-' + engeneer.Sid + '" issueids="' + engeneer.IssuesIdList + '" />&nbsp;' + engeneer.Name + '</div></a><div name="cityContainer" enid="' + engeneer.Sid + '" class="pad-3"></div>';
                                 $container.append(engeneerItem);
                             }
 
                             //$('[name="engeneer"]', $container).click(fillDeviceList);
                             //$('[name="all-eng"]', $container).click(setCheckedIssueIds);
+                        } else {
+                            $container.append('пусто');
+                        }
+                        hideSpinner($container);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.responseText);
+                        hideSpinner($container);
+                    }
+                });
+            }
+        }
+
+        function filClientCityList() {
+            showSpinnerAfter(this, false);
+            var clid = $(this).attr('clid');
+            var date = new Date($('#date').val());
+            var serviceEngeneerSid = getEngeneerSelectedValues();
+            var planed = getPlanedState();
+            var $container = $('[name="cityContainer"][clid="' + clid + '"]');
+            $container.html('');
+            $.ajax({
+                url: '@Url.Action("GetCityList")',
+                method: 'POST',
+                data: { date: date.toDateString(), serviceEngeneerSid: serviceEngeneerSid, planed: planed, clientId:clid },
+                success: function(data) {
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i++) {
+                           
+                            var city = data[i];
+                            var cityItem = '<a class="async-sel row nomargin nopadding" href="#!" name="city" cid="' + city.Id + '" data-toggle="tooltip" title="' + city.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + city.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-city" id="all-cit-' + city.Id + '" issueids="' + city.IssuesIdList + '"/>&nbsp;' + city.ShortName + '</div></a><div name="addressContainer" cid="' + city.Id + '" class="pad-1"></div>';
+                            $container.append(cityItem);
+                        }
+
+                        $('[name="city"]', $container).click(fillCityAddressList);
+                        $('[name="all-city"]', $container).click(setCheckedIssueIds);
+                    } else {
+                        $container.append('пусто');
+                    }
+                    hideSpinner($container);
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                    hideSpinner($container);
+                }
+            });
+        }
+
+
+        function fillCityAddressList() {
+            showSpinnerAfter(this, false);
+            var cid = $(this).attr('cid');
+            var $container = $('[name="addressContainer"][cid="' + cid + '"]');
+            $container.html('');
+            var date = new Date($('#date').val());
+            var planed = getPlanedState();
+
+                $.ajax({
+                    url: '@Url.Action("GetAddressList")',
+                    method: 'POST',
+                    data: { date: date.toDateString(), idCity: cid, planed: planed },
+                    success: function(data) {
+                        
+                        if (data.length) {
+                            for (var i = 0; i < data.length; i++) {
+                                var address = data[i];
+                                var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-addr" id="all-addr-' + address.Name.replace(' ', '') + '" issueids="' + address.IssuesIdList + '" />&nbsp;' + address.Name + '</div></a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
+                                $container.append(addresItem);
+                            }
+
+                            $('[name="address"]', $container).click(fillAddressClientList);
+                            $('[name="all-addr"]', $container).click(setCheckedIssueIds);
                         } else {
                             $container.append('пусто');
                         }
@@ -287,7 +359,76 @@
                         hideSpinner();
                     }
                 });
-            }
+        }
+
+        function fillAddressClientList() {
+            showSpinnerAfter(this, false);
+            var cid = $(this).attr('cid');
+            var aid = $(this).attr('aid');
+            var date = new Date($('#date').val());
+            var planed = getPlanedState();
+            var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
+            $container.html('');
+            $.ajax({
+                url: '@Url.Action("GetClientList")',
+                method: 'POST',
+                data: { date: date.toDateString(), idCity: cid, address: aid, planed: planed },
+                success: function(data) {
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i++) {
+                            var client = data[i];
+                            var clientItem = '<a href="#!" class="async-sel row nomargin nopadding" name="client" cid="' + cid + '" aid="' + aid + '" clid="' + client.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + client.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-cl" id="all-cl-' + client.Id + '" issueids="' + client.IssuesIdList + '" />&nbsp;' + client.Name + '</div></a><div name="deviceContainer"  cid="' + cid + '" aid="' + aid + '"  clid="' + client.Id + '" class="pad-3"></div>';
+                            $container.append(clientItem);
+                        }
+
+                        $('[name="client"]', $container).click(fillClientDeviceList);
+                        $('[name="all-cl"]', $container).click(setCheckedIssueIds);
+                    } else {
+                        $container.append('пусто');
+                    }
+                    hideSpinner();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                    hideSpinner();
+                }
+            });
+        }
+
+        function fillClientDeviceList() {
+            showSpinnerAfter(this, false);
+            var cid = $(this).attr('cid');
+            var aid = $(this).attr('aid');
+            var clid = $(this).attr('clid');
+            var date = new Date($('#date').val());
+            var planed = getPlanedState();
+            var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
+            $container.html('');
+            $.ajax({
+                url: '@Url.Action("GetDeviceIssueList")',
+                method: 'POST',
+                data: { date: date.toDateString(), idCity: cid, address: aid, idClient: clid, planed: planed },
+                success: function(data) {
+                    
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i++) {
+                            var deviceIssue = data[i];
+                            var deviceItem = '<a href="#!" class="async-sel row nomargin nopadding" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + deviceIssue.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-dev" id="all-dev-' + deviceIssue.Id + '" issueids="' + deviceIssue.Id + '" />&nbsp;' + deviceIssue.Name + '</div></a>';
+                            $container.append(deviceItem);
+                        }
+
+                        $('[name="deviceIssue"]', $container).click(setIssue);
+                        $('[name="all-dev"]', $container).click(setCheckedIssueIds);
+                    } else {
+                        $container.append('пусто');
+                    }
+                    hideSpinner();
+                },
+                error: function(data) {
+                    alert(data.error);
+                    hideSpinner();
+                }
+            });
         }
 
         function addSelectedIssues2Plan() {
@@ -401,109 +542,6 @@
                 }
             });
         }
-
-        function fillAddressList() {
-            showSpinnerAfter(this, false);
-            var cid = $(this).attr('cid');
-            var date = new Date($('#date').val());
-            var planed = getPlanedState();
-            $.ajax({
-                url: '@Url.Action("GetAddressList")',
-                method: 'POST',
-                data: { date: date.toDateString(), idCity: cid, planed: planed },
-                success: function(data) {
-                    var $container = $('[name="addressContainer"][cid="' + cid + '"]');
-                    $container.html('');
-                    if (data.length) {
-                        for (var i = 0; i < data.length; i++) {
-                            var address = data[i];
-                            var addresItem = '<a href="#!" class="async-sel row nomargin nopadding" name="address" cid="' + cid + '" aid="' + address.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + address.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-addr" id="all-addr-' + address.Name.replace(' ', '') + '" issueids="' + address.IssuesIdList + '" />&nbsp;' + address.Name + '</div></a><div name="clientContainer"  cid="' + cid + '" aid="' + address.Name + '"  class="pad-2"></div>';
-                            $container.append(addresItem);
-                        }
-
-                        $('[name="address"]', $container).click(fillClientList);
-                        $('[name="all-addr"]', $container).click(setCheckedIssueIds);
-                    } else {
-                        $container.append('пусто');
-                    }
-                    hideSpinner();
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
-                    hideSpinner();
-                }
-            });
-        }
-
-        function fillClientList() {
-            showSpinnerAfter(this, false);
-            var cid = $(this).attr('cid');
-            var aid = $(this).attr('aid');
-            var date = new Date($('#date').val());
-            var planed = getPlanedState();
-            $.ajax({
-                url: '@Url.Action("GetClientList")',
-                method: 'POST',
-                data: { date: date.toDateString(), idCity: cid, address: aid, planed: planed },
-                success: function(data) {
-                    var $container = $('[name="clientContainer"][cid="' + cid + '"][aid="' + aid + '"]');
-                    $container.html('');
-                    if (data.length) {
-                        for (var i = 0; i < data.length; i++) {
-                            var client = data[i];
-                            var clientItem = '<a href="#!" class="async-sel row nomargin nopadding" name="client" cid="' + cid + '" aid="' + aid + '" clid="' + client.Id + '"><div class="issues-count col-lg-2"><span class="pull-right">' + client.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-cl" id="all-cl-' + client.Id + '" issueids="' + client.IssuesIdList + '" />&nbsp;' + client.Name + '</div></a><div name="deviceContainer"  cid="' + cid + '" aid="' + aid + '"  clid="' + client.Id + '" class="pad-3"></div>';
-                            $container.append(clientItem);
-                        }
-
-                        $('[name="client"]', $container).click(fillDeviceList);
-                        $('[name="all-cl"]', $container).click(setCheckedIssueIds);
-                    } else {
-                        $container.append('пусто');
-                    }
-                    hideSpinner();
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
-                    hideSpinner();
-                }
-            });
-        }
-
-        function fillDeviceList() {
-            showSpinnerAfter(this, false);
-            var cid = $(this).attr('cid');
-            var aid = $(this).attr('aid');
-            var clid = $(this).attr('clid');
-            var date = new Date($('#date').val());
-            var planed = getPlanedState();
-            $.ajax({
-                url: '@Url.Action("GetDeviceIssueList")',
-                method: 'POST',
-                data: { date: date.toDateString(), idCity: cid, address: aid, idClient: clid, planed: planed },
-                success: function(data) {
-                    var $container = $('[name="deviceContainer"][cid="' + cid + '"][aid="' + aid + '"][clid="' + clid + '"]');
-                    $container.html('');
-                    if (data.length) {
-                        for (var i = 0; i < data.length; i++) {
-                            var deviceIssue = data[i];
-                            var deviceItem = '<a href="#!" class="async-sel row nomargin nopadding" name="deviceIssue" cid="' + cid + '" aid="' + aid + '" clid="' + clid + '" sid="' + deviceIssue.Id + '" dname="' + deviceIssue.Name + '"><div class="issues-count col-lg-2"><span class="pull-right">' + deviceIssue.IssuesCount + '</span></div><div class="col-lg-10"><input type="checkbox" name="all-dev" id="all-dev-' + deviceIssue.Id + '" issueids="' + deviceIssue.Id + '" />&nbsp;' + deviceIssue.Name + '</div></a>';
-                            $container.append(deviceItem);
-                        }
-
-                        $('[name="deviceIssue"]', $container).click(setIssue);
-                        $('[name="all-dev"]', $container).click(setCheckedIssueIds);
-                    } else {
-                        $container.append('пусто');
-                    }
-                    hideSpinner();
-                },
-                error: function(data) {
-                    alert(data.error);
-                    hideSpinner();
-                }
-            });
-        }
-
         function setIssue() {
             showSpinner(this, false);
             var $issueNameInput = $('#selectedIssueName');

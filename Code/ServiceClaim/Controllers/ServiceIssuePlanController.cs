@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using ServiceClaim.Models;
 using ServiceClaim.Objects;
 
@@ -34,13 +35,13 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetCityList(DateTime? date, string[] serviceEngeneerSid, bool? planed = null)
+        public JsonResult GetCityList(DateTime? date, string[] serviceEngeneerSid, bool? planed = null, int? clientId = null)
         {
             if (!date.HasValue) date = DateTime.Now;
             string serviceEngeneerSidIds = serviceEngeneerSid != null
                 ? String.Join(",", serviceEngeneerSid)
                 : String.Empty;
-            var list = ServiceIssue.GetPlaningCityList(date.Value, serviceEngeneerSidIds, planed: planed);
+            var list = ServiceIssue.GetPlaningCityList(date.Value, serviceEngeneerSidIds, planed: planed, clientId: clientId);
             return Json(list);
         }
 

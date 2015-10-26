@@ -30,9 +30,9 @@ namespace ServiceClaim.Models
             DatePlan = model.DatePlan;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningCityList(DateTime month, string serviceEngeneerSid = null, bool? planed = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningCityList(DateTime month, string serviceEngeneerSid = null, bool? planed = null, int? clientId = null)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/ServiceIssue/GetPlaningCityList?month={month:yyyy-MM-dd}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}");
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceIssue/GetPlaningCityList?month={month:yyyy-MM-dd}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&idClient={clientId}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
             return model;
