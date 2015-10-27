@@ -519,3 +519,22 @@ overflow-x: hidden;
 .line-danger {
     border-color: #d9534f;
 }
+
+.service-sheet-item {
+    border: 2px solid #ffecb3;
+    margin: 7px;
+    padding: 5px;
+}
+
+.service-sheet-item:hover {
+    border: 2px solid transparent;
+    background-color: #ffecb3;
+}
+
+.ss-pay-btn {
+    width: 100% !important;
+    min-height: 55px;
+    line-height: 2 !important;
+    margin-top: 5px;
+    vertical-align: middle;
+}

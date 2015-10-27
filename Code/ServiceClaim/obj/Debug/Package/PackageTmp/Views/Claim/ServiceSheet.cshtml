@@ -3,7 +3,7 @@
 @{
     Layout = null;
     var engeneerZipItemsList = Model.GetIssuedZipItemList();
-    var orderedipItemsList = Model.GetOrderedZipItemList();
+    var orderedipItemsList = Model.GetOrderedZipItemList(true);
     var installedZipItemsList = Model.GetInstalledZipItemList();
     var notInstalledZipItemsList = Model.GetNotInstalledZipItemList();
 }
@@ -146,6 +146,17 @@
                                 </table>
                             </td>
                         </tr>
+                        if (!String.IsNullOrEmpty(Model.NotInstalledComment))
+                         {
+                             <tr>
+                                 <td style="vertical-align: top">
+                                     Комментарий
+                                 </td>
+                                 <td>
+                                     @Model.NotInstalledComment
+                                 </td>
+                             </tr>
+                         }
                     }
                     @if (orderedipItemsList.Any())
                     {

@@ -122,7 +122,11 @@
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.responseText);
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                 }
             });
         }
@@ -151,7 +155,11 @@
                         updateListItem(clid);
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
-                        alert(xhr.responseText);
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Ошибка!',
+                            message: xhr.responseText
+                        });
                     }
                 });
                 e.stopPropagation();
@@ -168,7 +176,11 @@
                         updateListItem(clid);
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
-                        alert(xhr.responseText);
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Ошибка!',
+                            message: xhr.responseText
+                        });
                     }
                 });
                 e.stopPropagation();

@@ -73,7 +73,11 @@
                 hideSpinner();
             },
             error: function (data) {
-                alert(data.error);
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: data.error
+                });
                 hideSpinner();
             }
         });

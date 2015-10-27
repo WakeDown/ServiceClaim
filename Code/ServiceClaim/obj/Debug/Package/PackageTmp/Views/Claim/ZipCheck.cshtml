@@ -57,7 +57,7 @@
     <div class="row">
         <div class="col-lg-push-2 col-lg-10">
             @*<a id="zipClaim"  class="btn btn-primary">Заказать ЗИП</a>*@
-            <button type="submit" class="btn btn-success">Утвердить заказ ЗИП</button>
+            <button type="submit" class="btn btn-success">Заказать ЗИП</button>
         </div>
     </div>
     <div class="row">
@@ -91,7 +91,11 @@
                 $('#zip-item-' + ziid).remove();
             },
             error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.responseText);
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
             }
         });
     }
@@ -103,7 +107,11 @@
         var zipIssueNewCount = $('#zipIssueNewCount').val();
 
         if (zipIssueNewPartNum == '' || zipIssueNewName == '' || zipIssueNewCount == '') {
-            alert('Заполните все поля!');
+            BootstrapDialog.show({
+                type: 'type-warning',
+                title: 'Внимание!',
+                message: 'Заполните все поля!'
+        });
             return;
         }
         var curObj = $(this);
@@ -123,12 +131,20 @@
                     $('#zipIssueNewName').val('');
                     $('#zipIssueNewCount').val('1');
                 } else {
-                    alert(data.error);
+                    BootstrapDialog.show({
+                        type: 'type-warning',
+                        title: 'Внимание!',
+                        message: data.error
+                    });
                 }
                 hideSpinner(curObj);
             },
             error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.responseText);
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
                 hideSpinner(curObj);
             }
         });
