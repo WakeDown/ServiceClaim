@@ -661,6 +661,7 @@
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     alert(xhr.responseText);
+                    hideSpinner($(this));
                 }
             });
         }

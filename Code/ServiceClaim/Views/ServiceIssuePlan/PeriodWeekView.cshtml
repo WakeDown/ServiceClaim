@@ -64,7 +64,7 @@
 
         loadPlanIssues();
     });
-    var engSid = getEngeneerSelectedValues();
+    
     var selPeriodIdVal = '';
 
     function updateSelectedPeriod() {
@@ -86,6 +86,7 @@
         var endDate = $cont.attr('edt');
         $cont.html('');
         showSpinnerAppend($cont);
+        var engSid = getEngeneerSelectedValues();
         if (issuesPlanType == 'city') {
             $.ajax({
                 url: '@Url.Action("GetPlanServiceIssueCitiesList")',
@@ -95,9 +96,10 @@
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.ShortName + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
+                            var htmlItem = '<div name="issueItemCity" sdt="' + startDate + '" edt="' + endDate + '" cit="' + item.Id + '" class="issue-plan-item city"><div class="h5 margin-sm pull-left">' + item.ShortName + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div><div name="issueItemCityAddress"></div></div>';
                             $cont.append(htmlItem);
                         }
+                        $('[name="issueItemCity"]', $cont).click(loadCityAddressList);
                     } else {
                         $cont.append('пусто');
                     }
@@ -158,5 +160,82 @@
                 }
             });
         }
+    }
+
+    function loadCityAddressList(e) {
+        if ($(e.target).attr('name') != 'issueItemCity') {
+            e.preventDefault();
+            return;
+        }
+
+        var $obj = $(this);
+        var cid = $obj.attr('cid');
+        var startDate = $obj.attr('sdt');
+        var endDate = $obj.attr('edt');
+        var engSid = getEngeneerSelectedValues();
+        var $cont = $('[name="issueItemCityAddress"]', $obj);
+        $cont.html('');
+        showSpinnerPrepend($cont);
+
+        $.ajax({
+            url: '@Url.Action("GetPlanServiceIssueAddressList")',
+            method: 'POST',
+            data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, idCity:cid },
+            success: function (data) {
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var htmlItem = '<div name="issueItemAddress" sdt="' + startDate + '" edt="' + endDate + '" cid="' + cid + '" aid="' + item.Name + '" class="issue-plan-item address"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div><div name="issueItemAddressDevice"></div></div>';
+                        $cont.append(htmlItem);
+                    }
+                    $('[name="issueItemAddress"]', $cont).click(loadAddressDeviceList);
+                } else {
+                    $cont.append('пусто');
+                }
+                hideSpinner($cont);
+            }
+                ,
+            error: function (xhr, ajaxOptions, thrownError) {
+                //alert(xhr.responseText);
+                hideSpinner($cont);
+            }
+        });
+        e.preventDefault();
+    }
+    
+
+    function loadAddressDeviceList(e) {
+        var $obj = $(this);
+        var cid = $obj.attr('cid');
+        var aid = $obj.attr('aid');
+        var startDate = $obj.attr('sdt');
+        var endDate = $obj.attr('edt');
+        var engSid = getEngeneerSelectedValues();
+        var $cont = $('[name="issueItemAddressDevice"]', $obj);
+        $cont.html('');
+        showSpinnerPrepend($cont);
+
+        $.ajax({
+            url: '@Url.Action("GetPlanServiceIssueDeviceIssueList")',
+            method: 'POST',
+            data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, idCity: cid, address: aid },
+            success: function (data) {
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var htmlItem = '<div name="issueItemDevice" sdt="' + startDate + '" edt="' + endDate + '" cid="' + cid + '" aid="' + item.Id + '" class="issue-plan-item device"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
+                        $cont.append(htmlItem);
+                    }
+                } else {
+                    $cont.append('пусто');
+                }
+                hideSpinner($cont);
+            }
+                ,
+            error: function (xhr, ajaxOptions, thrownError) {
+                //alert(xhr.responseText);
+                hideSpinner($cont);
+            }
+        });
     }
 </script>
