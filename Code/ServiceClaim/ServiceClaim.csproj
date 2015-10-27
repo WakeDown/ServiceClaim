@@ -283,6 +283,7 @@
     <Content Include="Views\Claim\ListItem.cshtml" />
     <Content Include="Views\Claim\ZipCheck.cshtml" />
     <Content Include="Views\Claim\AdminSelect.cshtml" />
+    <Content Include="Views\Claim\ZipIssueOld.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

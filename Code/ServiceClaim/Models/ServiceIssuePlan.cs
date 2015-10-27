@@ -23,6 +23,7 @@ namespace ServiceClaim.Models
 
         public ServiceIssuePlan()
         {
+
         }
 
        public ServiceIssuePlan(int idServiceIssue, int idServiceIssueType, DateTime periodStart, DateTime periodEnd)

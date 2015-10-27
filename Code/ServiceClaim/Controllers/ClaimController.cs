@@ -724,6 +724,24 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
+        public JsonResult AddServiceSheetClientGivenInstalledZipItem(ServiceSheetZipItem model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.ClientGivenInstalledSave(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                return Json(new { id = responseMessage.Id });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+
+            return Json(new { });
+        }
+
+        [HttpPost]
         public JsonResult ServiceSheetIssuedZipItemDelete(int id)
         {
             try
@@ -828,12 +846,58 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
+        public JsonResult ServiceSheetZipItemClientGivenInstalledDelete(int id)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = ServiceSheetZipItem.ClientGivenInstalledDelete(id, out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+            return null;
+        }
+
+        [HttpPost]
         public JsonResult ServiceSheetSaveNotInstalledComment(int id, string comment)
         {
             try
             {
                 ResponseMessage responseMessage;
                 bool complete = (new ServiceSheet() {Id=id, NotInstalledComment = comment}).SaveNotInstalledComment(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+            return null;
+        }
+        [HttpPost]
+        public JsonResult SaveServiceSheetIsPayed(int serviceSheetId)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = (new ServiceSheet() { Id = serviceSheetId, IsPayed = true }).SavePayed(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+            return null;
+        }
+        [HttpPost]
+        public JsonResult SaveServiceSheetIsNotPayed(int serviceSheetId, string comment)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = (new ServiceSheet() {Id=serviceSheetId, IsPayed = false,NotPayedComment = comment}).SavePayed(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)

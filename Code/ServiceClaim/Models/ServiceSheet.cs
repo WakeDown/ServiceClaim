@@ -38,6 +38,16 @@ namespace ServiceClaim.Models
         public string ClientSdNum { get; set; }
         public DateTime DateCreate { get; set; }
         public string NotInstalledComment { get; set; }
+        /// <summary>
+        /// установлен ЗИП предоставленый клиентом
+        /// </summary>
+        public bool ZipClientGivenInstall { get; set; }
+        /// <summary>
+        /// Оплачен или нет
+        /// </summary>
+        public bool? IsPayed { get; set; }
+        public string NotPayedComment { get; set; }
+        public string IsPayedCreatorSid { get; set; }
 
         public ServiceSheet()
         {
@@ -83,6 +93,15 @@ namespace ServiceClaim.Models
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
             return model;
         }
+
+        public IEnumerable<ServiceSheetZipItem> GetClientGivenInstalledZipItemList()
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetClientGivenInstalledZipItemList?serviceSheetId={Id}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheetZipItem>>(jsonString);
+            return model;
+        }
+
         public IEnumerable<ServiceSheetZipItem> GetOrderedZipItemList(bool? realyOrdered = null)
         {
             Uri uri = new Uri($"{OdataServiceUri}/ServiceSheetZipItem/GetOrderedList?serviceSheetId={Id}&realyOrdered={realyOrdered}");
@@ -108,6 +127,14 @@ namespace ServiceClaim.Models
         public bool SaveNotInstalledComment(out ResponseMessage responseMessage)
         {
             Uri uri = new Uri(String.Format("{0}/ServiceSheet/SaveNotInstalledComment", OdataServiceUri));
+            string json = JsonConvert.SerializeObject(this);
+            bool result = PostJson(uri, json, out responseMessage);
+            return result;
+        }
+
+        public bool SavePayed(out ResponseMessage responseMessage)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceSheet/SavePayed", OdataServiceUri));
             string json = JsonConvert.SerializeObject(this);
             bool result = PostJson(uri, json, out responseMessage);
             return result;

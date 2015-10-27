@@ -18,11 +18,14 @@ namespace ServiceClaim.Models
         public DateTime DateCreate { get; set; }
         public string CreatorSid { get; set; }
         public bool Installed { get; set; }
-        public bool ClientGiven { get; set; }
         public string InstalledSid { get; set; }
         public string InstalledCancelSid { get; set; }
         public int InstalledServiceSheetId { get; set; }
         DateTime DateInstalled { get; set; }
+        /// <summary>
+        /// Предоставлено клиентом
+        /// </summary>
+        public bool ClientGiven { get; set; }
 
         public static ServiceSheetZipItem Get(int id)
         {
@@ -51,11 +54,27 @@ namespace ServiceClaim.Models
             bool result = PostJson(uri, json, out responseMessage);
             return result;
         }
-
+        
         public static bool IssuedDelete(int id, out ResponseMessage responseMessage)
         {
             Uri uri = new Uri(String.Format("{0}/ServiceSheetZipItem/IssuedClose?id={1}", OdataServiceUri, id));
             string json = String.Empty;
+            bool result = PostJson(uri, json, out responseMessage);
+            return result;
+        }
+
+        public static bool ClientGivenInstalledDelete(int id, out ResponseMessage responseMessage)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceSheetZipItem/ClientGivenInstalledClose?id={1}", OdataServiceUri, id));
+            string json = String.Empty;
+            bool result = PostJson(uri, json, out responseMessage);
+            return result;
+        }
+
+        public bool ClientGivenInstalledSave(out ResponseMessage responseMessage)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceSheetZipItem/ClientGivenInstalledSave", OdataServiceUri));
+            string json = JsonConvert.SerializeObject(this);
             bool result = PostJson(uri, json, out responseMessage);
             return result;
         }

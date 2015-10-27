@@ -269,9 +269,9 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        public IEnumerable<ServiceSheet> GetClaimServiceSheetList()
+        public IEnumerable<ServiceSheet> GetClaimServiceSheetList(bool? payedWrap = null)
         {
-            Uri uri = new Uri(String.Format("{0}/Claim/GetClaimServiceSheetList?idClaim={1}", OdataServiceUri, Id));
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetClaimServiceSheetList?idClaim={Id}&payedWrap={payedWrap}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheet>>(jsonString);
             return model;
