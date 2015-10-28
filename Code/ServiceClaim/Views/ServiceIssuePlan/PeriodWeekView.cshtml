@@ -96,7 +96,7 @@
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            var htmlItem = '<div name="issueItemCity" sdt="' + startDate + '" edt="' + endDate + '" cit="' + item.Id + '" class="issue-plan-item city"><div class="h5 margin-sm pull-left">' + item.ShortName + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div><div name="issueItemCityAddress"></div></div>';
+                            var htmlItem = '<div name="issueItemCity" sdt="' + startDate + '" edt="' + endDate + '" cid="' + item.Id + '" class="issue-plan-item city"><div class="h5 margin-sm pull-left">' + item.ShortName + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div><div name="issueItemCityAddress"></div></div>';
                             $cont.append(htmlItem);
                         }
                         $('[name="issueItemCity"]', $cont).click(loadCityAddressList);
@@ -121,7 +121,7 @@
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
+                            var htmlItem = '<div name="issueItem" cid="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
                             $cont.append(htmlItem);
                         }
                     } else {
@@ -176,12 +176,13 @@
         var $cont = $('[name="issueItemCityAddress"]', $obj);
         $cont.html('');
         showSpinnerPrepend($cont);
-
+        
         $.ajax({
             url: '@Url.Action("GetPlanServiceIssueAddressList")',
             method: 'POST',
             data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, idCity:cid },
             success: function (data) {
+                
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];

@@ -150,14 +150,29 @@ namespace ServiceClaim.Controllers
         //}
         public async Task<ActionResult> List(int? state, int? client, int? topRows)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
-                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
-                return HttpNotFound();
+            //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
+            //        AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
+            //    return HttpNotFound();
 
-            ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
+            //ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
 
-            ListResult<Claim> result = await new Claim().GetListAsync(topRows: topRows, idClaimState: state, clientId: client);
-            return View(result);
+            //ListResult<Claim> result = await new Claim().GetListAsync(topRows: topRows, idClaimState: state, clientId: client);
+            //return View(result);
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetClaimList(int? idClient = null)
+        {
+            //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
+            //        AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
+            //    return null;
+
+            //ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
+
+            //var result = Claim.GetList();
+            ListResult<Claim> result = await new Claim().GetListAsync(clientId: idClient);
+            return Json(result);
         }
 
         [HttpPost]
@@ -678,11 +693,11 @@ namespace ServiceClaim.Controllers
             return View(model);
         }
 
-        public async Task<JsonResult> GetClaimList(int? idDevice, string serialNum, string clientSdNum)
-        {
-            var list = await new Claim().GetListAsync(idDevice: idDevice, serialNum: serialNum, clientSdNum: clientSdNum);
-            return Json(list);
-        }
+        //public async Task<JsonResult> GetClaimList(int? idDevice, string serialNum, string clientSdNum)
+        //{
+        //    var list = await new Claim().GetListAsync(idDevice: idDevice, serialNum: serialNum, clientSdNum: clientSdNum);
+        //    return Json(list);
+        //}
 
         //[HttpGet]
         //public ActionResult FullClaimHistory(int? idClaim)
@@ -879,32 +894,39 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public JsonResult SaveServiceSheetIsPayed(int serviceSheetId)
         {
-            try
-            {
+            //try
+            //{
                 ResponseMessage responseMessage;
                 bool complete = (new ServiceSheet() { Id = serviceSheetId, IsPayed = true }).SavePayed(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
-            }
-            catch (Exception ex)
-            {
-                return Json(ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return Json(ex.Message);
+            //}
             return null;
         }
         [HttpPost]
         public JsonResult SaveServiceSheetIsNotPayed(int serviceSheetId, string comment)
         {
-            try
-            {
+            //try
+            //{
                 ResponseMessage responseMessage;
                 bool complete = (new ServiceSheet() {Id=serviceSheetId, IsPayed = false,NotPayedComment = comment}).SavePayed(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
-            }
-            catch (Exception ex)
-            {
-                return Json(ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return Json(ex.Message);
+            //}
             return null;
+        }
+
+        [HttpPost]
+        public PartialViewResult ClaimServiceSheetList(int idClaim)
+        {
+            var list = new Claim() {Id = idClaim}.GetClaimServiceSheetList();
+            return PartialView("ClaimServiceSheetList", list);
         }
     }
 }

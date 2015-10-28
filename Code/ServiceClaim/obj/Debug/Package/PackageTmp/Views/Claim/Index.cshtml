@@ -118,7 +118,7 @@
             {
                 @Html.Partial("ServiceSheetTechForm", Model)
             }
-            @if (Model.State.SysName.ToUpper().Equals("SERVENGOUTWAIT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            @if (Model.State.SysName.ToUpper().Equals("SRVENGGET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
             {
                 @Html.Partial("StateEngOutWait", Model)
             }

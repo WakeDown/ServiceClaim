@@ -165,18 +165,18 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public JsonResult GetPlanServiceIssueAddressList(DateTime startDate, DateTime endDate, string[] engeneerSid = null, int? idCity = null)
         {
-            string engeneerSidArr = null;
-            //var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
+            //string engeneerSidArr = null;
+            var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
 
-            var list = ServiceIssuePeriodItem.GetServiceIssueAddressList(startDate, endDate, engeneerSid:engeneerSidArr, idCity:idCity);
+            var list = ServiceIssuePeriodItem.GetServiceIssueAddressList(startDate, endDate, engeneerSid: engeneerSidArr, idCity:idCity);
             return Json(list);
         }
 
         [HttpPost]
         public JsonResult GetPlanServiceIssueAddresList(DateTime startDate, DateTime endDate, int? idCity = null, string[] engeneerSid=null)
         {
-            string engeneerSidArr = null;
-            //var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
+            //string engeneerSidArr = null;
+            var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
             var list = ServiceIssuePeriodItem.GetServiceIssueAddressList(startDate, endDate, idCity: idCity, engeneerSid: engeneerSidArr);
             return Json(list);
         }
@@ -184,8 +184,8 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public JsonResult GetPlanServiceIssueClientList(DateTime startDate, DateTime endDate, int? idCity = null, string address = null, string[] engeneerSid = null)
         {
-            string engeneerSidArr = null;
-            //var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
+            //string engeneerSidArr = null;
+            var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
             var list = ServiceIssuePeriodItem.GetServiceIssueClientList(startDate, endDate, idCity: idCity, address: address, engeneerSid: engeneerSidArr);
             return Json(list);
         }
@@ -193,8 +193,8 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public JsonResult GetPlanServiceIssueEngeneerList(DateTime startDate, DateTime endDate, int? idCity = null, string address = null, string[] engeneerSid = null)
         {
-            string engeneerSidArr = null;
-            //var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
+            //string engeneerSidArr = null;
+            var engeneerSidArr = engeneerSid != null ? String.Join(",", engeneerSid) : String.Empty;
             var list = ServiceIssuePeriodItem.GetServiceIssueEngeneerList(startDate, endDate, engeneerSid: engeneerSidArr);
             return Json(list);
         }

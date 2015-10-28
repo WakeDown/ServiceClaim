@@ -37,7 +37,6 @@
     </td>
     <td style="background-color: #@Model.State.BackgroundColor; color: #@Model.State.ForegroundColor" class="valign-middle">@Model.State.Name<div class="small">@Model.DateStateChangeStr - @(Model.Changer != null ? Model.Changer.DisplayName : String.Empty)</div></td>
     
-    @*<td>@Model.CreateDateDiffStr</td>*@
     <td class="valign-middle">@String.Format("{0:dd.MM.yy hh:mm}", Model.DateCreate)</td>
 </tr>
 

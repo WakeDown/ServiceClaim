@@ -111,6 +111,7 @@
                                         <th>Парт номер</th>
                                         <th>Наименование</th>
                                         <th>Количество</th>
+                                        <th></th>
                                     </tr>
                                     @foreach (var item in installedZipItemsList)
                                     {
@@ -118,6 +119,9 @@
                                             <td>@item.PartNum</td>
                                             <td>@item.Name</td>
                                             <td>@item.Count</td>
+                                            <td>
+                                                @(item.ClientGiven ? "предоставлено клиентом" : String.Empty)
+                                            </td>
                                         </tr>
                                     }
                                 </table>

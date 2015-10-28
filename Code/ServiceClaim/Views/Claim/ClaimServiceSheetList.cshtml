@@ -1,0 +1,23 @@
+﻿@using ServiceClaim.Models
+@using ServiceClaim.Objects
+@model IEnumerable<ServiceSheet>
+@if (Model.Any())
+{
+    <div>
+        <h5 class="bold">Сервисные листы</h5>
+        <p>
+            @foreach (var sheet in Model)
+            {
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="serviceSheetClaimView-@sheet.Id" class="@(sheet.IsPayed.HasValue ? sheet.IsPayed.Value ? "alert-success" : "alert-danger" : String.Empty)" @(sheet.IsPayed.HasValue ? sheet.IsPayed.Value ? String.Empty : "data-toggle=popover  data-trigger=hover" : String.Empty) title="@(sheet.IsPayed.HasValue ? sheet.IsPayed.Value ? String.Empty : "Причина" : String.Empty)" data-content="@sheet.NotPayedComment">
+                            <span class="monospace">@sheet.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@Url.Action("ServiceSheet", new {id = sheet.Id})" target="_blank">№@sheet.Id</a>
+                            @(sheet.IsPayed.HasValue ? sheet.IsPayed.Value ? "ПРИНЯТ" : "НЕ ПРИНЯТ" : String.Empty)
+                        </div>
+                    </div>
+                </div>
+            }
+        </p>
+        
+    </div>
+}
