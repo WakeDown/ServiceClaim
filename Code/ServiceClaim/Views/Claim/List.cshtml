@@ -5,14 +5,14 @@
 @{
     ViewBag.Title = "Список заявок";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var filterStates = ClaimState.GetFilterList();
+    //var filterStates = ClaimState.GetFilterList();
 
 
 }
 
 <div class="row">
     <div class="col-lg-4">
-        @Html.DropDownList("clientFilter", new SelectList(Contractor.GetServiceClaimFilterList(), "Id", "ListName", Request.QueryString["client"]), "--все клиенты--", new { @class = "form-control" })
+        @*@Html.DropDownList("clientFilter", new SelectList(Contractor.GetServiceClaimFilterList(), "Id", "ListName", Request.QueryString["client"]), "--все клиенты--", new { @class = "form-control" })*@
     </div>
     @*@if (filterStates != null && filterStates.Any())
         {
@@ -22,18 +22,50 @@
                 <a class="btn" style="color: #@st.ForegroundColor; background-color: #@st.BackgroundColor" href="@Url.Action("List")?state=@st.Id&client=@Request.QueryString["client"]">@st.Name (@st.ClaimCount)</a>
             }
         }*@
+    
 </div>
 
 <p>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="pull-left">
+                <nav>
+                    <ul class="pagination">
+                        @*<li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>*@
+                        @*<li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>*@
+                        @*<li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>*@
+                    </ul>
+                </nav>
+            </div>
+            <div class="pull-right pull-down">Последнее обновление<div id="lastUpdateTime" class="text-danger text-center"></div></div>
+        </div>
+    </div>
+
     <table id="claimList" class="table table-bordered sel-list">
         <tr class="bg-primary">
 
-            <th class="min-width">№</th>
-            <th class="min-width">№ SD клиента</th>
+            <th class="min-width">
+                <input id="numFilter" type="text" placeholder="№" class="form-control input-xs" style="min-width: 70px;"/>
+            </th>
+            <th class="min-width"><input id="clientSdNumFilter" type="text" placeholder="№ SD клиента" class="form-control input-xs" style="min-width: 85px;"/></th>
             <th></th>
-            <th>Контрагент</th>
-            <th>Аппарат</th>
-            <th>S/N</th>
+            <th>
+                <select id="clientFilter" class="form-control input-xs"></select>
+            </th>
+            <th><input id="deviceFilter" type="text" placeholder="Аппарат" class="form-control input-xs"/></th>
+            <th><input id="serialNumFilter" type="text" placeholder="S/N" class="form-control input-xs"/></th>
             @*<th>Последнее изменение</th>*@
             <th></th>
             <th>Статус</th>
@@ -41,39 +73,89 @@
 
             <th>Дата создания</th>
         </tr>
-        <tbody id="claimContainer">
-        
-        </tbody>
+        <tbody id="claimContainer"></tbody>
     </table>
 </p>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="pull-left">
+            <nav>
+                <ul class="pagination">
+                    @*<li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>*@
+                    @*<li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>*@
+                    @*<li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>*@
+                </ul>
+            </nav>
+        </div>
+        <div class="pull-right">
+            <ul class=" text-sm list-inline">
+                <li class="text-middle valign-middle">записей на странице</li>
+                <li><a id="30rows" name="pageSize" value="30" href="#!" class="btn btn-default btn-sm selected">30</a></li>
+                <li><a id="100rows" name="pageSize" value="100" href="#!" class="btn btn-default btn-sm">100</a></li>
+                <li><a id="300rows" name="pageSize" value="300" href="#!" class="btn btn-default btn-sm">300</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-    
-        @*<div class="row">
-            <blockquote class="alert-danger pull-right">
-                @if (Model.TotalCount > 100)
-                {
-                    <button name="displayRows" value="100" class="btn btn-link">показать 100</button>
-                }
-                @if (Model.TotalCount > 300)
-                {
-                    <button name="displayRows" value="300" class="btn btn-link">показать 300</button>
-                }
-                @if (Model.TotalCount > 1000)
-                {
-                    <button name="displayRows" value="1000" class="btn btn-link">показать 1000</button>
-                }
-                <button name="displayRows" value="@Model.TotalCount" class="btn btn-link">показать все</button>
-                показаны @Model.List.Count() из @Model.TotalCount
-            </blockquote>
-        </div>*@
+@*<div class="row">
+        <blockquote class="alert-danger pull-right">
+            @if (Model.TotalCount > 100)
+            {
+                <button name="displayRows" value="100" class="btn btn-link">показать 100</button>
+            }
+            @if (Model.TotalCount > 300)
+            {
+                <button name="displayRows" value="300" class="btn btn-link">показать 300</button>
+            }
+            @if (Model.TotalCount > 1000)
+            {
+                <button name="displayRows" value="1000" class="btn btn-link">показать 1000</button>
+            }
+            <button name="displayRows" value="@Model.TotalCount" class="btn btn-link">показать все</button>
+            показаны @Model.List.Count() из @Model.TotalCount
+        </blockquote>
+    </div>*@
 
 <script type="text/javascript">
+
+    function loadClientFilter() {
+        var $elem = $('#clientFilter');
+        $.ajax({
+            url: '@Url.Action("GetClientFilterList")',
+            method: 'POST',
+            success: function (data) {
+                $elem.find('option').remove();
+                if (data.length > 0) {
+                    var option = '<option value="">--все клиенты--</option>';
+                    $elem.append(option);
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        option = '<option value="' + item.Id + '">' + item.Name + '</option>';
+                        $elem.append(option);
+                    }
+                }
+            }
+        });
+    }
+
     function fillClaimList(data) {
+        removeRowsAndShowSpinnerOnTable();
         var $cont = $('#claimContainer');
-        $cont.find('tr').remove();
-        
         if (data.List.length > 0) {
-            for (var i=0; i < data.List.length; i++) {
+            for (var i = 0; i < data.List.length; i++) {
                 var item = data.List[i];
                 var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="valign-middle">' + item.Id + '</th><th class="valign-middle">' + item.ClientSdNum + '</th><td class="valign-middle"></td><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.FullName : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.SerialNum : '') + '</td><td><div><span class="small"><span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div></td><td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #' + (item.State != null ? item.State.ForegroundColor : '') + '" class="valign-middle">' + (item.State != null ? item.State.Name : '') + '<div class="small">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle">' + item.DateCreateStr + '</td></tr>';
 
@@ -137,11 +219,11 @@
                 url: '@Url.Action("StateEngOutWaitAsync", "Claim")',
                 method: 'POST',
                 data: { claimId: clid },
-                success: function(data) {
+                success: function (data) {
                     showSpinnerAppend($btn);
                     updateListItem(clid);
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
                         type: 'type-danger',
                         title: 'Ошибка!',
@@ -151,18 +233,18 @@
             });
             e.stopPropagation();
         });
-        $('#SetServEngOnWork', $container).click(function(e) {
+        $('#SetServEngOnWork', $container).click(function (e) {
             var $btn = $(this);
             var clid = $btn.attr('clid');
             $.ajax({
                 url: '@Url.Action("SetServEngOnWorkAsync", "Claim")',
                 method: 'POST',
                 data: { claimId: clid },
-                success: function(data) {
+                success: function (data) {
                     showSpinnerAppend($btn);
                     updateListItem(clid);
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
                         type: 'type-danger',
                         title: 'Ошибка!',
@@ -174,31 +256,120 @@
         });
 
         if ($container == null) {
-            $('tr[claimid]', $container).click(function() {
+            $('tr[claimid]', $container).click(function () {
                 window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
             });
         }
     }
 
     function loadClaimList() {
-        showSpinnerAppend($('#claimContainer'));
+        var num = $('#numFilter').val();
         var idClient = $('#clientFilter').val();
+        var clSdNum = $('#clientSdNumFilter').val();
+        var devName = $('#deviceFilter').val();
+        var serial = $('#serialNumFilter').val();
+        var topRows = $('[name="pageSize"].selected').attr('value');
+        var selPage = 1;
+        
+        if ($('[name="page"].active a').length > 0) {
+            selPage = $('[name="page"].active a').attr('value');
+        }
+        
         $.ajax({
             url: '@Url.Action("GetClaimList")',
             method: 'POST',
-            data: { idClient: idClient },
-            success: fillClaimList
+            data: { idClient: idClient, claimId: num, clientSdNum: clSdNum, deviceName: devName, serialNum: serial, topRows: topRows, pageNum: selPage },
+            success: function (data) {
+                fillClaimList(data);
+                writeLastupdateTime();
+                //$('#lastUpdateTime').attr('t', 0);
+                fillPager(topRows, data.TotalCount, selPage);
+            }
         });
     }
 
+    function fillPager(topRows, totalCount, selPage) {
+        var pages = Math.floor(totalCount / topRows);
+        if ((totalCount % topRows) > 0) pages++;
+        $('.pagination li').remove();
+        for (var i = 0; i < pages; i++) {
+            
+            var btn = '<li name="page" value="' + (i + 1) + '" class="' + (selPage == i + 1 ? 'active' : '') + '"><a value="' + (i + 1) + '" href="#!">' + (i + 1) + '</a></li>';
+            $('.pagination').append(btn);
+        }
+        $('[name="page"] a').click(function () {
+            $('[name="page"].active').removeClass('active');
+            $('[name="page"][value="' + $(this).attr('value') + '"]').addClass('active');
+            removeRowsAndShowSpinnerOnTable();
+            loadClaimList();
+        });
+    }
+
+    function writeLastupdateTime() {
+        $('#lastUpdateTime').attr('dt', Date.now());
+        //alert(new Date(Date.now()).toLocaleTimeString());
+        var lastTime = new Date(Date.now()).toLocaleTimeString();
+        $('#lastUpdateTime').html(lastTime);
+    }
+
+    //function lastUpdateTimer() {
+    //    var last = $('#lastUpdateTime').attr('t');
+    //    last = parseInt(last) + 1;
+    //    $('#lastUpdateTime').attr('t', last);
+    //        $('#lastUpdateTime').html(last + ' сек. назад');
+    //}
+
+    function removeRowsAndShowSpinnerOnTable() {
+        var $cont = $('#claimContainer');
+        $cont.find('tr').remove();
+        showSpinnerAppend($cont);
+    }
+
+    $(function () {
+        loadClientFilter();
+    });
+    
     $(document).ready(function () {
+        var $cont = $('#claimContainer');
+        $cont.find('tr').remove();
+        showSpinnerAppend($('#claimContainer'));
         loadClaimList();
-
         //window.location.hash = 'claimList';
-        $('#clientFilter').change(loadClaimList);
-        
-
+        $('#clientFilter').change(function () {
+            removeRowsAndShowSpinnerOnTable();
+            loadClaimList();
+        });
+        $('#numFilter').keypress(function (e) {
+            if (e.keyCode == 13){
+            removeRowsAndShowSpinnerOnTable();
+            loadClaimList();}
+        });
+        $('#clientSdNumFilter').keypress(function (e) {
+            if (e.keyCode == 13) {
+                removeRowsAndShowSpinnerOnTable();
+                loadClaimList();
+            }
+        });
+        $('#deviceFilter').keypress(function (e) {
+            if (e.keyCode == 13) {
+                removeRowsAndShowSpinnerOnTable();
+                loadClaimList();
+            }
+        });
+        $('#serialNumFilter').keypress(function (e) {
+            if (e.keyCode == 13) {
+                removeRowsAndShowSpinnerOnTable();
+                loadClaimList();
+            }
+        });
+        $('[name="pageSize"]').click(function () {
+            $('[name="pageSize"]').removeClass('selected');
+            $(this).addClass('selected');
+            removeRowsAndShowSpinnerOnTable();
+            loadClaimList();
+        });
         setTimeout(function () { loadClaimList(); }, 60000);
+        //setInterval(lastUpdateTimer, 1000);
     });
 </script>
 

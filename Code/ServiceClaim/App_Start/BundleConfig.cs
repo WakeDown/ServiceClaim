@@ -12,7 +12,8 @@ namespace ServiceClaim
                        "~/Scripts/jquery-{version}.js",
                        "~/Scripts/jquery-ui.js",
                        "~/Scripts/jquery.unobtrusive-ajax.js",
-                       "~/Scripts/jquery.mask.min.js"
+                       "~/Scripts/jquery.mask.min.js",
+                       "~/Scripts/jquery-dateformat.js"
                        ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

@@ -381,6 +381,8 @@ a.async-sel:visited {
     100% {background-color: #fff;}
 }
 
+
+
 .issue-plan-item {
     border: 1px solid #3c763d;
     border-radius: 5px;
@@ -393,11 +395,11 @@ a.async-sel:visited {
 
 .issue-plan-item:hover {
     cursor: pointer;
-    background-color: #3c763d;
+    /*background-color: #c1e2b3;*/
 }
 
 .issue-item {
-   border: 1px solid #3c763d;
+   border: 1px solid #000;
     border-radius: 5px;
     padding: 5px;
     margin: 3px;
@@ -420,6 +422,30 @@ a.async-sel:visited {
     /*background-color: #3c763d;
     color: #fff;*/
     text-decoration: none;
+}
+
+.issue-plan-item.city {
+    border-color: #c1e2b3;
+    background-color: #dff0d8;
+}
+.issue-plan-item.city:hover {
+    background-color: #c1e2b3;
+}
+
+.issue-plan-item.address {
+    border-color: #afd9ee;
+    background-color: #d9edf7;
+}
+.issue-plan-item.address:hover {
+    background-color: #afd9ee;
+}
+
+.issue-plan-item.device {
+    border-color: #e4b9b9;
+    background-color: #f2dede;
+}
+.issue-plan-item.device:hover {
+    background-color: #e4b9b9;
 }
 
 .updated-input {

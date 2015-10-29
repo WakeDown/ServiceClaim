@@ -1,20 +1,17 @@
 ﻿
 @using ServiceClaim.Models
 @using ServiceClaim.Objects
-@model ServiceClaim.Models.Claim
+@model IEnumerable<ServiceSheet>
 
-@{
-    var servSheetList = Model.GetClaimServiceSheetList(false);
-}
 
-@using (Html.BeginForm("StateDone", "Claim", FormMethod.Post, new {id="doneForm"}))
+@*@using (Html.BeginForm("StateDone", "Claim", FormMethod.Post, new { id = "doneForm" }))
 {
     Html.HiddenFor(m => m.Id);
-}
+}*@
 
 <div class="row">
-    <div class="col-lg-push-2 col-lg-10">
-        <a id="selectServiceList" class="btn btn-success" data-toggle="modal" data-target="#modalselectServiceList">Получен бумажный сервисный лист</a>
+    <div class="col-lg-12">
+        <a id="selectServiceList" class="btn btn-success" data-toggle="modal" data-target="#modalselectServiceList">Получен бумажный СЛ</a>
     </div>
 </div>
 <div class="row">
@@ -30,9 +27,9 @@
                 <h4 class="modal-title">Выберите сервисный лист</h4>
             </div>
             <div class="modal-body">
-                @foreach (var sheet in servSheetList)
+                @foreach (var sheet in Model)
                 {
-                    <div class="row service-sheet-item" id="servSheet-@sheet.Id" name="service-sheet-item">
+                    <div class="row service-sheet-item" id="servSheet-@sheet.Id" name="service-sheet-item-payed-wrap">
                         <div class="col-lg-8">
                             <h3>№@sheet.Id</h3>
                             <div>
@@ -62,8 +59,8 @@
             </div>
 
             @*<div class="modal-footer">
-                <button type="submit" class="btn btn-default" value="ClaimWorkCancel" name="ClaimWorkCancel">Сохранить</button>
-            </div>*@
+                    <button type="submit" class="btn btn-default" value="ClaimWorkCancel" name="ClaimWorkCancel">Сохранить</button>
+                </div>*@
         </div>
     </div>
 </div>
@@ -107,11 +104,17 @@
                 data: { serviceSheetId: ssid },
                 success: function () {
                     $('#servSheet-' + ssid).remove();
-                    if (('[name="service-sheet-item"]').length <= 0) {
-                        $('#doneForm').submit();
+                    if ($('[name="service-sheet-item-payed-wrap"]').length <= 0) {
+                        $('#modalselectServiceList').modal('hide');
+                        $('#selectServiceList').hide();
+                        //$('#doneForm').submit();
                     }
                     $obj.prop('disabled', false);
                     hideSpinner($obj);
+
+                    var $ssItem = $('#serviceSheetClaimView-' + ssid);
+                    $ssItem.addClass('alert-success');
+                    $ssItem.append('ПРИНЯТ');
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
@@ -138,12 +141,23 @@
                 success: function () {
                     $('#modalNotPayedComment').modal('hide');
                     $('#servSheet-' + ssid).remove();
-                    if (('[name="service-sheet-item"]').length <= 0) {
-                        $('#doneForm').submit();
+                    if ($('[name="service-sheet-item-payed-wrap"]').length <= 0) {
+                        $('#modalselectServiceList').modal('hide');
+                        $('#selectServiceList').hide();
+                        //$('#doneForm').submit();
                     }
                     $obj.prop('disabled', false);
                     hideSpinner($obj);
                     $obj.attr('ssid', '');
+
+                    var $ssItem = $('#serviceSheetClaimView-' + ssid);
+                    $ssItem.addClass('alert-danger');
+                    $ssItem.attr('data-toggle', 'popover');
+                    $ssItem.attr('data-trigger', 'hover');
+                    $ssItem.attr('title', 'Причина');
+                    $ssItem.attr('data-content', comment);
+                    $ssItem.append('НЕ ПРИНЯТ');
+                    $ssItem.popover();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({

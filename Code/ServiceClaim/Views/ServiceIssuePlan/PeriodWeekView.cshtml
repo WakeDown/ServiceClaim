@@ -96,7 +96,7 @@
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            var htmlItem = '<div name="issueItemCity" sdt="' + startDate + '" edt="' + endDate + '" cid="' + item.Id + '" class="issue-plan-item city"><div class="h5 margin-sm pull-left">' + item.ShortName + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div><div name="issueItemCityAddress"></div></div>';
+                            var htmlItem = '<div name="issueItemCity" sdt="' + startDate + '" edt="' + endDate + '" cid="' + item.Id + '" class="issue-plan-item city"><button type="button" class="close" >&times;</button><div class="h5 margin-sm">' + item.ShortName + '</div><div class="label label-primary label-as-badge">' + item.IssuesCount + '</div><div name="issueItemCityAddress"></div></div>';
                             $cont.append(htmlItem);
                         }
                         $('[name="issueItemCity"]', $cont).click(loadCityAddressList);
@@ -121,7 +121,7 @@
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            var htmlItem = '<div name="issueItem" cid="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
+                            var htmlItem = '<div name="issueItem" cid="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm">' + item.Name + '</div><div class="label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
                             $cont.append(htmlItem);
                         }
                     } else {
@@ -145,7 +145,7 @@
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
+                            var htmlItem = '<div name="issueItem" cit="' + item.Id + '" class="issue-plan-item"><div class="h5 margin-sm">' + item.Name + '</div><div class="label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
                             $cont.append(htmlItem);
                         }
                     } else {
@@ -186,7 +186,7 @@
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
-                        var htmlItem = '<div name="issueItemAddress" sdt="' + startDate + '" edt="' + endDate + '" cid="' + cid + '" aid="' + item.Name + '" class="issue-plan-item address"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div><div name="issueItemAddressDevice"></div></div>';
+                        var htmlItem = '<div name="issueItemAddress" sdt="' + startDate + '" edt="' + endDate + '" cid="' + cid + '" aid="' + item.Name + '" class="issue-plan-item address"><div class="h5 margin-sm">' + item.Name + '</div><div class="label label-primary label-as-badge">' + item.IssuesCount + '</div><div name="issueItemAddressDevice"></div></div>';
                         $cont.append(htmlItem);
                     }
                     $('[name="issueItemAddress"]', $cont).click(loadAddressDeviceList);
@@ -224,7 +224,7 @@
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
-                        var htmlItem = '<div name="issueItemDevice" sdt="' + startDate + '" edt="' + endDate + '" cid="' + cid + '" aid="' + item.Id + '" class="issue-plan-item device"><div class="h5 margin-sm pull-left">' + item.Name + '</div><div class="pull-right label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
+                        var htmlItem = '<div name="issueItemDevice" sdt="' + startDate + '" edt="' + endDate + '" cid="' + cid + '" aid="' + item.Id + '" class="issue-plan-item device"><div class="h5 margin-sm">' + item.Name + '</div><div class="label label-primary label-as-badge">' + item.IssuesCount + '</div></div>';
                         $cont.append(htmlItem);
                     }
                 } else {
