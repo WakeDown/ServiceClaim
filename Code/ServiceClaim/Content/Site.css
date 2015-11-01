@@ -572,3 +572,8 @@ overflow-x: hidden;
   line-height: 1.5;
   border-radius: 3px;   
 }
+
+.state-group-filter-item.selected {
+    position: relative;
+    top: 10px;
+}

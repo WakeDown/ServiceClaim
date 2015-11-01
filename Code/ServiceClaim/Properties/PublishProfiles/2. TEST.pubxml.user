@@ -70,10 +70,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:28</publishTime>
     </File>
     <File Include="bin/ServiceClaim.dll">
-      <publishTime>10/28/2015 08:38:19</publishTime>
+      <publishTime>10/29/2015 19:11:45</publishTime>
     </File>
     <File Include="bin/ServiceClaim.pdb">
-      <publishTime>10/28/2015 08:38:19</publishTime>
+      <publishTime>10/29/2015 19:11:45</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>09/17/2015 13:34:31</publishTime>
@@ -109,7 +109,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/21/2015 17:23:22</publishTime>
     </File>
     <File Include="Content/bootstrap-multiselect.min.css">
-      <publishTime>02/10/2015 16:00:17</publishTime>
+      <publishTime>10/02/2015 16:00:17</publishTime>
     </File>
     <File Include="Content/bootstrap-theme.css">
       <publishTime>09/17/2015 13:34:31</publishTime>
@@ -145,7 +145,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:31</publishTime>
     </File>
     <File Include="Content/Site.css">
-      <publishTime>10/27/2015 19:23:16</publishTime>
+      <publishTime>10/29/2015 18:26:57</publishTime>
     </File>
     <File Include="favicon.ico">
       <publishTime>09/17/2015 13:34:31</publishTime>
@@ -169,7 +169,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/21/2015 17:22:44</publishTime>
     </File>
     <File Include="Scripts/bootstrap-multiselect.js">
-      <publishTime>02/10/2015 16:00:17</publishTime>
+      <publishTime>10/02/2015 16:00:17</publishTime>
     </File>
     <File Include="Scripts/bootstrap-timepicker.js">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -191,6 +191,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Scripts/jquery-2.1.4.min.map">
       <publishTime>09/17/2015 13:34:36</publishTime>
+    </File>
+    <File Include="Scripts/jquery-dateformat.js">
+      <publishTime>10/28/2015 18:27:27</publishTime>
     </File>
     <File Include="Scripts/jquery-ui.js">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -223,16 +226,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Scripts/site.js">
-      <publishTime>10/19/2015 14:00:11</publishTime>
+      <publishTime>10/29/2015 16:09:29</publishTime>
     </File>
     <File Include="Scripts/validator.js">
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Scripts/_references.js">
-      <publishTime>10/21/2015 17:22:23</publishTime>
+      <publishTime>10/28/2015 18:27:17</publishTime>
     </File>
     <File Include="Views/Claim/AdminSelect.cshtml">
       <publishTime>10/23/2015 15:47:45</publishTime>
+    </File>
+    <File Include="Views/Claim/ClaimServiceSheetList.cshtml">
+      <publishTime>10/28/2015 15:53:30</publishTime>
     </File>
     <File Include="Views/Claim/ConfirmWork.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -241,25 +247,31 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/19/2015 14:00:11</publishTime>
     </File>
     <File Include="Views/Claim/Index.cshtml">
-      <publishTime>10/27/2015 16:56:53</publishTime>
+      <publishTime>10/28/2015 15:51:28</publishTime>
     </File>
     <File Include="Views/Claim/Index2.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Views/Claim/List.cshtml">
-      <publishTime>10/26/2015 15:20:06</publishTime>
+      <publishTime>10/29/2015 18:54:23</publishTime>
     </File>
     <File Include="Views/Claim/ListItem.cshtml">
-      <publishTime>10/20/2015 16:16:44</publishTime>
+      <publishTime>10/28/2015 16:43:34</publishTime>
+    </File>
+    <File Include="Views/Claim/ListOld.cshtml">
+      <publishTime>10/28/2015 16:57:37</publishTime>
     </File>
     <File Include="Views/Claim/New.cshtml">
       <publishTime>10/26/2015 15:15:22</publishTime>
     </File>
     <File Include="Views/Claim/ServiceSheet.cshtml">
-      <publishTime>10/27/2015 16:31:21</publishTime>
+      <publishTime>10/28/2015 16:09:56</publishTime>
     </File>
     <File Include="Views/Claim/ServiceSheetForm.cshtml">
       <publishTime>10/27/2015 12:35:26</publishTime>
+    </File>
+    <File Include="Views/Claim/ServiceSheetPaperGet.cshtml">
+      <publishTime>10/28/2015 16:05:09</publishTime>
     </File>
     <File Include="Views/Claim/ServiceSheetTech.cshtml">
       <publishTime>09/07/2015 11:49:59</publishTime>
@@ -277,7 +289,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/19/2015 14:00:11</publishTime>
     </File>
     <File Include="Views/Claim/StateDone.cshtml">
-      <publishTime>10/27/2015 18:28:22</publishTime>
+      <publishTime>10/28/2015 15:17:10</publishTime>
     </File>
     <File Include="Views/Claim/StateEngOutWait.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -322,7 +334,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Views/Claim/ZipOrdered.cshtml">
-      <publishTime>10/02/2015 16:55:54</publishTime>
+      <publishTime>02/10/2015 16:55:54</publishTime>
     </File>
     <File Include="Views/Classifier/Attributes.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -352,7 +364,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Views/ContractorAccess/New.cshtml">
-      <publishTime>02/10/2015 16:00:17</publishTime>
+      <publishTime>10/02/2015 16:00:17</publishTime>
     </File>
     <File Include="Views/Error/AccessDenied.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -370,19 +382,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/03/2015 18:18:01</publishTime>
     </File>
     <File Include="Views/ServiceIssuePlan/PeriodWeekView.cshtml">
-      <publishTime>10/28/2015 08:38:15</publishTime>
+      <publishTime>10/29/2015 08:21:47</publishTime>
     </File>
     <File Include="Views/ServiceIssuePlan/Planing.cshtml">
       <publishTime>10/27/2015 18:47:08</publishTime>
     </File>
     <File Include="Views/ServiceIssuePlan/ServiceIssuePlanItem.cshtml">
-      <publishTime>02/10/2015 16:00:17</publishTime>
+      <publishTime>10/02/2015 16:00:17</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Views/Shared/WindowClose.cshtml">
-      <publishTime>07/10/2015 17:33:33</publishTime>
+      <publishTime>10/07/2015 17:33:33</publishTime>
     </File>
     <File Include="Views/Shared/_Editor.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -397,7 +409,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/28/2015 08:53:30</publishTime>
+      <publishTime>10/29/2015 19:11:45</publishTime>
     </File>
   </ItemGroup>
 </Project>

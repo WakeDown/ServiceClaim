@@ -22,34 +22,50 @@
                 <a class="btn" style="color: #@st.ForegroundColor; background-color: #@st.BackgroundColor" href="@Url.Action("List")?state=@st.Id&client=@Request.QueryString["client"]">@st.Name (@st.ClaimCount)</a>
             }
         }*@
-    
+
 </div>
 
 <p>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-3">
             <div class="pull-left">
                 <nav>
-                    <ul class="pagination">
+                    <ul class="pagination nomargin pages">
                         @*<li>
-                        <a href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>*@
+                                <a href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>*@
                         @*<li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>*@
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>*@
                         @*<li>
-                        <a href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>*@
+                                <a href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>*@
                     </ul>
                 </nav>
             </div>
-            <div class="pull-right pull-down">Последнее обновление<div id="lastUpdateTime" class="text-danger text-center"></div></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="stateGroupFilter"></div>
+        </div>
+        <div class="col-lg-3">
+            @*<div class="pull-right pull-down">Последнее обновление<div id="lastUpdateTime" class="text-danger text-center"></div></div>*@
+            <div class="pull-right">
+                <nav>
+                    <ul class="pagination pagesize nomargin">
+                        @*<li>записей на странице</li>*@
+                        <li><a name="pageSize" value="30" href="#!" class="btn btn-default btn-sm selected">30</a></li>
+                        <li><a name="pageSize" value="100" href="#!" class="btn btn-default btn-sm">100</a></li>
+                        <li><a name="pageSize" value="300" href="#!" class="btn btn-default btn-sm">300</a></li>
+                    </ul>
+                </nav>
+            </div>
+
         </div>
     </div>
 
@@ -57,15 +73,15 @@
         <tr class="bg-primary">
 
             <th class="min-width">
-                <input id="numFilter" type="text" placeholder="№" class="form-control input-xs" style="min-width: 70px;"/>
+                <input id="numFilter" type="text" placeholder="№" class="form-control input-xs" style="min-width: 70px;" />
             </th>
-            <th class="min-width"><input id="clientSdNumFilter" type="text" placeholder="№ SD клиента" class="form-control input-xs" style="min-width: 85px;"/></th>
+            <th class="min-width"><input id="clientSdNumFilter" type="text" placeholder="№ SD клиента" class="form-control input-xs" style="min-width: 85px;" /></th>
             <th></th>
             <th>
                 <select id="clientFilter" class="form-control input-xs"></select>
             </th>
-            <th><input id="deviceFilter" type="text" placeholder="Аппарат" class="form-control input-xs"/></th>
-            <th><input id="serialNumFilter" type="text" placeholder="S/N" class="form-control input-xs"/></th>
+            <th><input id="deviceFilter" type="text" placeholder="Аппарат" class="form-control input-xs" /></th>
+            <th><input id="serialNumFilter" type="text" placeholder="S/N" class="form-control input-xs" /></th>
             @*<th>Последнее изменение</th>*@
             <th></th>
             <th>Статус</th>
@@ -80,32 +96,34 @@
     <div class="col-lg-12">
         <div class="pull-left">
             <nav>
-                <ul class="pagination">
+                <ul class="pagination nomargin pages">
                     @*<li>
-                        <a href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>*@
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>*@
                     @*<li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>*@
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>*@
                     @*<li>
-                        <a href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>*@
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>*@
                 </ul>
             </nav>
         </div>
         <div class="pull-right">
-            <ul class=" text-sm list-inline">
-                <li class="text-middle valign-middle">записей на странице</li>
-                <li><a id="30rows" name="pageSize" value="30" href="#!" class="btn btn-default btn-sm selected">30</a></li>
-                <li><a id="100rows" name="pageSize" value="100" href="#!" class="btn btn-default btn-sm">100</a></li>
-                <li><a id="300rows" name="pageSize" value="300" href="#!" class="btn btn-default btn-sm">300</a></li>
-            </ul>
+            <nav>
+                <ul class="pagination pagesize nomargin">
+                    @*<li>записей на странице</li>*@
+                    <li><a name="pageSize" value="30" href="#!" class="btn btn-default btn-sm selected">30</a></li>
+                    <li><a name="pageSize" value="100" href="#!" class="btn btn-default btn-sm">100</a></li>
+                    <li><a name="pageSize" value="300" href="#!" class="btn btn-default btn-sm">300</a></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -162,6 +180,8 @@
                 $cont.append($trItem);
             }
             initListButtons();
+        } else {
+            $cont.append('<tr><td>пусто</td></tr>');
         }
         hideSpinner($cont);
     }
@@ -270,15 +290,23 @@
         var serial = $('#serialNumFilter').val();
         var topRows = $('[name="pageSize"].selected').attr('value');
         var selPage = 1;
-        
+
         if ($('[name="page"].active a').length > 0) {
             selPage = $('[name="page"].active a').attr('value');
         }
-        
+
+        var $grpStateElem = $('[name="stateGroupFilterItem"].selected');
+        var grpState = [];
+        if ($grpStateElem.length > 0) {
+            for (var i = 0; i < $grpStateElem.length; i++) {
+                var val = $($grpStateElem[i]).attr('value');
+                grpState.push(val);
+            }
+        }
         $.ajax({
             url: '@Url.Action("GetClaimList")',
             method: 'POST',
-            data: { idClient: idClient, claimId: num, clientSdNum: clSdNum, deviceName: devName, serialNum: serial, topRows: topRows, pageNum: selPage },
+            data: { idClient: idClient, claimId: num, clientSdNum: clSdNum, deviceName: devName, serialNum: serial, topRows: topRows, pageNum: selPage, groupStateList: grpState },
             success: function (data) {
                 fillClaimList(data);
                 writeLastupdateTime();
@@ -291,11 +319,11 @@
     function fillPager(topRows, totalCount, selPage) {
         var pages = Math.floor(totalCount / topRows);
         if ((totalCount % topRows) > 0) pages++;
-        $('.pagination li').remove();
+        $('.pagination.pages li').remove();
         for (var i = 0; i < pages; i++) {
-            
+
             var btn = '<li name="page" value="' + (i + 1) + '" class="' + (selPage == i + 1 ? 'active' : '') + '"><a value="' + (i + 1) + '" href="#!">' + (i + 1) + '</a></li>';
-            $('.pagination').append(btn);
+            $('.pagination.pages').append(btn);
         }
         $('[name="page"] a').click(function () {
             $('[name="page"].active').removeClass('active');
@@ -325,10 +353,36 @@
         showSpinnerAppend($cont);
     }
 
+    function loadStateGroupFilter() {
+        $.ajax({
+            url: '@Url.Action("GetStateGroupFilterList")',
+            method: 'POST',
+            success: function(data) {
+                var $cont = $('#stateGroupFilter');
+                $cont.find('ul').remove();
+                var $ul = $('<ul class="list-inline"></ul>');
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var li = '<li><a name="stateGroupFilterItem" value="' + item.Id + '" class="btn state-group-filter-item" style="background-color: #' + item.BackgroundColor + '; color: #' + item.ForegroundColor + '">' + item.Name + '&nbsp;<span class="badge">' + item.ClaimCount + '</span></a></li>';
+                        $ul.append(li);
+                    }
+                    $cont.append($ul);
+                    $('[name="stateGroupFilterItem"]').click(function () {
+                        $(this).toggleClass('selected');
+                        removeRowsAndShowSpinnerOnTable();
+                        loadClaimList();
+                    });
+                }
+            }
+        });
+    }
+
     $(function () {
         loadClientFilter();
+        loadStateGroupFilter();
     });
-    
+
     $(document).ready(function () {
         var $cont = $('#claimContainer');
         $cont.find('tr').remove();
@@ -340,9 +394,10 @@
             loadClaimList();
         });
         $('#numFilter').keypress(function (e) {
-            if (e.keyCode == 13){
-            removeRowsAndShowSpinnerOnTable();
-            loadClaimList();}
+            if (e.keyCode == 13) {
+                removeRowsAndShowSpinnerOnTable();
+                loadClaimList();
+            }
         });
         $('#clientSdNumFilter').keypress(function (e) {
             if (e.keyCode == 13) {
@@ -363,8 +418,8 @@
             }
         });
         $('[name="pageSize"]').click(function () {
-            $('[name="pageSize"]').removeClass('selected');
-            $(this).addClass('selected');
+            $('[name="pageSize"].selected').removeClass('selected');
+            $('[name="pageSize"][value="' + $(this).attr('value') + '"]').addClass('selected');
             removeRowsAndShowSpinnerOnTable();
             loadClaimList();
         });

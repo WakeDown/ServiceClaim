@@ -141,6 +141,7 @@
     <Compile Include="Models\Claim.cs" />
     <Compile Include="Models\Claim2ClaimState.cs" />
     <Compile Include="Models\ClaimState.cs" />
+    <Compile Include="Models\ClaimStateGroup.cs" />
     <Compile Include="Models\Classifier.cs" />
     <Compile Include="Models\ClassifierAttributes.cs" />
     <Compile Include="Models\ClassifierCaterory.cs" />

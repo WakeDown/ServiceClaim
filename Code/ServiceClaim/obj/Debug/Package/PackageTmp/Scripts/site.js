@@ -91,5 +91,11 @@ function hideSpinner(obj) {
         $(obj).parent().find(".spinner.active").remove();
     } else {
         $(".spinner").remove();
-    }
+    };
 }
+
+$(function() {
+        $('.pull-down').each(function() {
+            $(this).css('margin-top', $(this).parent().height() - $(this).height())
+        });
+    });

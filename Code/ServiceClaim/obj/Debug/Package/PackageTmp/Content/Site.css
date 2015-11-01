@@ -564,3 +564,16 @@ overflow-x: hidden;
     margin-top: 5px;
     vertical-align: middle;
 }
+
+.input-xs {
+ height: 25px;
+  padding: 2px 5px;
+  font-size: 10px;
+  line-height: 1.5;
+  border-radius: 3px;   
+}
+
+.state-group-filter-item.selected {
+    position: relative;
+    top: 10px;
+}

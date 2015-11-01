@@ -32,7 +32,7 @@
             <div class="modal-body">
                 @foreach (var sheet in servSheetList)
                 {
-                    <div class="row service-sheet-item">
+                    <div class="row service-sheet-item" id="servSheet-@sheet.Id" name="service-sheet-item">
                         <div class="col-lg-8">
                             <h3>№@sheet.Id</h3>
                             <div>
@@ -51,28 +51,13 @@
                                     <a type="button" name="pay" class="btn btn-success btn-lg ss-pay-btn" ssid="@sheet.Id">Оплачивать</a>
                                 </div>
                                 <div class="col-lg-12">
-                                    <a type="button" class="btn btn-danger btn-lg ss-pay-btn" data-toggle="modal" data-target="#modalNotPayedComment-@sheet.Id">Не оплачивать</a>
+                                    <a name="notPayedModal" type="button" class="btn btn-danger btn-lg ss-pay-btn" ssid="@sheet.Id">Не оплачивать</a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div id="modalNotPayedComment-@sheet.Id" class="modal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Комментарий</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <textarea id="notPayedComment-@sheet.Id" rows="3" class="form-control" placeholder="Почему не оплачено?"></textarea>
-                                </div>
-                                <div class="modal-footer">
-                                    <a type="button" name="notpay" class="btn btn-primary" ssid="@sheet.Id">Сохранить</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 }
             </div>
 
@@ -82,13 +67,34 @@
         </div>
     </div>
 </div>
-@*@using (Html.BeginForm("StateDone", "Claim", FormMethod.Post, new { @id = "ConfirmWorkForm", @class = "form-horizontal", data_toggle = "validator", role = "form" }))
-    {
-        @Html.HiddenFor(m => m.Id)
-    }*@
+
+<div id="modalNotPayedComment" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Комментарий</h4>
+            </div>
+            <div class="modal-body">
+                <textarea id="notPayedComment" rows="3" class="form-control required-mark" placeholder="Почему не оплачено?"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                <a type="button" id="notpay" class="btn btn-primary">Сохранить</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $(function () {
+        $('[name="notPayedModal"]').click(function () {
+            $('#modalNotPayedComment').modal();
+            $('#notPayedComment').val('');
+            var ssid = $(this).attr('ssid');
+            $('#notpay').attr('ssid', ssid);
+        });
+
         $('[name="pay"]').click(function () {
             var $obj = $(this);
             $obj.prop('disabled', true);
@@ -100,40 +106,51 @@
                 method: 'POST',
                 data: { serviceSheetId: ssid },
                 success: function () {
-                    
-                    $('modalselectServiceList').modal({ show: false });
+                    $('#servSheet-' + ssid).remove();
+                    if (('[name="service-sheet-item"]').length <= 0) {
+                        $('#doneForm').submit();
+                    }
                     $obj.prop('disabled', false);
-                    //$('#modalselectServiceList .btn').prop('disabled', false);
                     hideSpinner($obj);
                 },
-                error: function () {
+                error: function (xhr, ajaxOptions, thrownError) {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                     $obj.prop('disabled', false);
-                    //$('#modalselectServiceList .btn').prop('disabled', false);
                     hideSpinner($obj);
                 }
             });
         });
 
-        $('[name="notpay"]').click(function () {
+        $('#notpay').click(function () {
             var $obj = $(this);
             showSpinnerAppend($obj);
             $obj.prop('disabled', true);
-            //$('#modalselectServiceList .btn').prop('disabled', true);
-            var ssid = $(this).attr('ssid');
-            var comment = $('#notPayedComment-' + ssid);
-            $('modalselectServiceList').modal({ show: false });
+            var ssid = $obj.attr('ssid');
+            var comment = $('#notPayedComment').val();
             $.ajax({
                 url: '@Url.Action("SaveServiceSheetIsNotPayed")',
                 method: 'POST',
                 data: { serviceSheetId: ssid, comment: comment },
                 success: function () {
-                    $('modalselectServiceList').modal({ show: false });
-                    //$('#modalselectServiceList .btn').prop('disabled', false);
+                    $('#modalNotPayedComment').modal('hide');
+                    $('#servSheet-' + ssid).remove();
+                    if (('[name="service-sheet-item"]').length <= 0) {
+                        $('#doneForm').submit();
+                    }
                     $obj.prop('disabled', false);
                     hideSpinner($obj);
+                    $obj.attr('ssid', '');
                 },
-                error: function () {
-                    //$('#modalselectServiceList .btn').prop('disabled', false);
+                error: function (xhr, ajaxOptions, thrownError) {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
                     $obj.prop('disabled', false);
                     hideSpinner($obj);
                 }
