@@ -163,6 +163,7 @@
     <Compile Include="Models\ServiceIssuePlan.cs" />
     <Compile Include="Models\ServiceIssuePlaningItem.cs" />
     <Compile Include="Models\ServiceIssuePlaningResult.cs" />
+    <Compile Include="Models\ServiceIssueTotal.cs" />
     <Compile Include="Models\ServiceSheet.cs" />
     <Compile Include="Models\ServiceSheetZipItem.cs" />
     <Compile Include="Models\UserList.cs" />

@@ -30,44 +30,57 @@ namespace ServiceClaim.Models
             DatePlan = model.DatePlan;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningCityList(DateTime month, string serviceEngeneerSid = null, bool? planed = null, int? clientId = null)
+        public static ServiceIssueTotal GetTotal(DateTime month, string serviceEngeneerSid = null, bool? planed = null, bool? seted = null)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/ServiceIssue/GetPlaningCityList?month={month:yyyy-MM-dd}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&clientId={clientId}");
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceIssue/GetTotal?month={month:yyyy-MM-dd}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&seted={seted}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<ServiceIssueTotal>(jsonString);
+            return model;
+        }
+
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningCityList(DateTime month, string serviceEngeneerSid = null, bool? planed = null, int? clientId = null, bool? seted = null)
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/ServiceIssue/GetPlaningCityList?month={month:yyyy-MM-dd}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&clientId={clientId}&seted={seted}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
             return model;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningAddressList(DateTime month, int idCity, string serviceEngeneerSid = null, bool? planed = null, int? clientId = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningAddressList(DateTime month, int idCity, string serviceEngeneerSid = null, bool? planed = null, int? clientId = null, bool? seted = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssue/GetPlaningAddressList?month={month:yyyy-MM-dd}&idCity={idCity}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&clientId={clientId}");
-            string jsonString = GetJson(uri);
+                $"{OdataServiceUri}/ServiceIssue/GetPlaningAddressList?month={month:yyyy-MM-dd}&idCity={idCity}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&clientId={clientId}&seted={seted}");
+
+            string jsonString = GetApiClient().DownloadString(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
             return model;
+
+            //string jsonString = GetJson(uri);
+            //var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
+            //return model;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningClientList(DateTime month, int? idCity = null, string address = null, string serviceEngeneerSid = null, bool? planed = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningClientList(DateTime month, int? idCity = null, string address = null, string serviceEngeneerSid = null, bool? planed = null, bool? seted = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssue/GetPlaningClientList?month={month:yyyy-MM-dd}&idCity={idCity}&address={address}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}");
+                $"{OdataServiceUri}/ServiceIssue/GetPlaningClientList?month={month:yyyy-MM-dd}&idCity={idCity}&address={address}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&seted={seted}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
             return model;
         }
-        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningEngeneerList(DateTime month, string serviceEngeneerSid = null, bool? planed = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningEngeneerList(DateTime month, string serviceEngeneerSid = null, bool? planed = null, bool? seted = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssue/GetPlaningEngeneerList?month={month:yyyy-MM-dd}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}");
+                $"{OdataServiceUri}/ServiceIssue/GetPlaningEngeneerList?month={month:yyyy-MM-dd}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&seted={seted}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
             return model;
         }
         
-        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningDeviceIssueList(DateTime month, int idCity, string address, int? idClient=null, string serviceEngeneerSid = null, bool? planed = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetPlaningDeviceIssueList(DateTime month, int idCity, string address, int? idClient=null, string serviceEngeneerSid = null, bool? planed = null, bool? seted = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssue/GetPlaningDeviceIssueList?month={month:yyyy-MM-dd}&idCity={idCity}&address={address}&idClient={idClient}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}");
+                $"{OdataServiceUri}/ServiceIssue/GetPlaningDeviceIssueList?month={month:yyyy-MM-dd}&idCity={idCity}&address={address}&idClient={idClient}&serviceEngeneerSid={serviceEngeneerSid}&planed={planed}&seted={seted}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
             return model;

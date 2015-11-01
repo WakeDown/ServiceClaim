@@ -13,6 +13,10 @@ namespace ServiceClaim.Models
         public int IssuesCount { get; set; }
         public string ShortName { get; set; }
         public string IssuesIdList { get; set; }
+        public string PlanIdList { get; set; }
+        public int? CamesCount { get; set; }
+        public int? NoCamesCount { get; set; }
+
 
         public ServiceIssuePlaningItem(int id, string name, int issuesCount, string shortName)
         {

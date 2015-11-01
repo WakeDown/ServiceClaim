@@ -386,8 +386,8 @@ a.async-sel:visited {
 .issue-plan-item {
     border: 1px solid #3c763d;
     border-radius: 5px;
-    padding: 5px;
-    margin: 3px;
+    padding: 2px;
+    margin: 1px;
     font-size: 0.8em;
     display: table;
     width: 100%;
@@ -397,6 +397,7 @@ a.async-sel:visited {
     cursor: pointer;
     /*background-color: #c1e2b3;*/
 }
+
 
 .issue-item {
    border: 1px solid #000;
@@ -424,9 +425,23 @@ a.async-sel:visited {
     text-decoration: none;
 }
 
+.label-default-size {
+    font-size: 1em !important;
+}
+
+.issue-plan-item.client {
+    border-color: #286090;
+    background-color: #337ab7;
+    color: #fff;
+}
+.issue-plan-item.client:hover {
+    background-color: #286090;
+}
+
 .issue-plan-item.city {
     border-color: #c1e2b3;
     background-color: #dff0d8;
+    color: #000;
 }
 .issue-plan-item.city:hover {
     background-color: #c1e2b3;
@@ -435,6 +450,7 @@ a.async-sel:visited {
 .issue-plan-item.address {
     border-color: #afd9ee;
     background-color: #d9edf7;
+    color: #000;
 }
 .issue-plan-item.address:hover {
     background-color: #afd9ee;
@@ -443,9 +459,19 @@ a.async-sel:visited {
 .issue-plan-item.device {
     border-color: #e4b9b9;
     background-color: #f2dede;
+    color: #000;
 }
 .issue-plan-item.device:hover {
     background-color: #e4b9b9;
+}
+
+.issue-plan-item.engeneer {
+    border-color: #f7ecb5;
+    background-color: #fcf8e3;
+    color: #000;
+}
+.issue-plan-item.engeneer:hover {
+    background-color: #f7ecb5;
 }
 
 .updated-input {

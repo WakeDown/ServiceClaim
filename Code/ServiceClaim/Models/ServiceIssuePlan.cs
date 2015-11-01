@@ -78,49 +78,59 @@ namespace ServiceClaim.Models
             return model;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetCitiesList(DateTime periodStart, DateTime periodEnd, string engeneerSid = null)
+        public static ServiceIssueTotal GetTotal(DateTime periodStart, DateTime periodEnd, string engeneerSid = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssuePlan/GetCitiesList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&engeneerSid={engeneerSid}");
+                $"{OdataServiceUri}/ServiceIssuePlan/GetTotal?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&engeneerSid={engeneerSid}");
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<ServiceIssueTotal>(jsonString);
+
+            return model;
+        }
+
+        public static IEnumerable<ServiceIssuePlaningItem> GetCitiesList(DateTime periodStart, DateTime periodEnd, string engeneerSid = null, int? clientId = null, bool? done = null)
+        {
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/ServiceIssuePlan/GetCitiesList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&engeneerSid={engeneerSid}&clientId={clientId}&done={done}");
             string jsonString = GetApiClient().DownloadString(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
 
             return model;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetAddressList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string engeneerSid = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetAddressList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string engeneerSid = null, bool? done = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssuePlan/GetAddressList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&engeneerSid={engeneerSid}");
+                $"{OdataServiceUri}/ServiceIssuePlan/GetAddressList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&engeneerSid={engeneerSid}&done={done}");
             string jsonString = GetApiClient().DownloadString(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
 
             return model;
         }
-        public static IEnumerable<ServiceIssuePlaningItem> GetClientList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string address=null, string engeneerSid = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetClientList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string address=null, string engeneerSid = null, bool? done = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssuePlan/GetClientList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&address={address}&engeneerSid={engeneerSid}");
-            string jsonString = GetApiClient().DownloadString(uri);
-            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
-
-            return model;
-        }
-
-        public static IEnumerable<ServiceIssuePlaningItem> GetEngeneerList(DateTime periodStart, DateTime periodEnd, string engeneerSid = null)
-        {
-            Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssuePlan/GetEngeneerList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&engeneerSid={engeneerSid}");
+                $"{OdataServiceUri}/ServiceIssuePlan/GetClientList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&address={address}&engeneerSid={engeneerSid}&done={done}");
             string jsonString = GetApiClient().DownloadString(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
 
             return model;
         }
 
-        public static IEnumerable<ServiceIssuePlaningItem> GetDeviceIssueList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string address = null, int? idClient = null, string engeneerSid = null)
+        public static IEnumerable<ServiceIssuePlaningItem> GetEngeneerList(DateTime periodStart, DateTime periodEnd, string engeneerSid = null, bool? done = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/ServiceIssuePlan/GetDeviceIssueList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&address={address}&idClient={idClient}&engeneerSid={engeneerSid}");
+                $"{OdataServiceUri}/ServiceIssuePlan/GetEngeneerList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&engeneerSid={engeneerSid}&done={done}");
+            string jsonString = GetApiClient().DownloadString(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
+
+            return model;
+        }
+
+        public static IEnumerable<ServiceIssuePlaningItem> GetDeviceIssueList(DateTime periodStart, DateTime periodEnd, int? idCity = null, string address = null, int? idClient = null, string engeneerSid = null, bool? done = null)
+        {
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/ServiceIssuePlan/GetDeviceIssueList?periodStart={periodStart:yyyy-MM-dd}&periodEnd={periodEnd:yyyy-MM-dd}&idCity={idCity}&address={address}&idClient={idClient}&engeneerSid={engeneerSid}&done={done}");
             string jsonString = GetApiClient().DownloadString(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceIssuePlaningItem>>(jsonString);
 
@@ -186,5 +196,14 @@ namespace ServiceClaim.Models
 
             return monthes;
         }
+
+        public static bool  DeleteIssueItem(int[] idList, out ResponseMessage responseMessage)
+        {
+            Uri uri = new Uri(String.Format("{0}/ServiceIssuePlan/DeleteIssueItem", OdataServiceUri));
+            string json = JsonConvert.SerializeObject(idList);
+            bool result = PostJson(uri, json, out responseMessage);
+            return result;
+        }
+        
     }
 }
