@@ -5,7 +5,7 @@
 @model ServiceClaim.Models.Claim
 
 @{
-    ViewBag.Title = "Карточка заяки";
+    ViewBag.Title = "Карточка заяки" + (Model.Id > 0 ? " №" + Model.Id.ToString() : "");
     Layout = "~/Views/Shared/_Editor.cshtml";
     //var stateHistory = Model.GetStateHistory();
     var servSheetList = Model.GetClaimServiceSheetList();
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            @if (Model.State.SysName.ToUpper().Equals("NEW") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
+            @if (Model.State.SysName.ToUpper().Equals("NEW") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager, AdGroup.AddNewClaim))
             {
                 @Html.Partial("SetWorkType", Model)
             }

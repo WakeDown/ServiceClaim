@@ -11,7 +11,7 @@
         }
         @if (Model.State.SysName.ToUpper().Equals("SRVENGWENT") && ViewBag.userIsEngeneer)
         {
-            <button id="SetServEngOnWork" class="btn btn-success" clid="@Model.Id">В работе</button>
+            <button id="SetServEngOnWork" class="btn btn-success" clid="@Model.Id">Начал работы на оборудовании</button>
         }
     </td>
     <td class="valign-middle">@Model.Contractor.FullName</td>

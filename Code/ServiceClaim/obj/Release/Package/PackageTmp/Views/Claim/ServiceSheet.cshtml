@@ -36,7 +36,8 @@
 </head>
 <body>
     <p>
-        <div class="row">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
             <div class="center-block sheet">
                 <table class="tbl">
                     @if (Model.IsPayed.HasValue)
@@ -55,12 +56,12 @@
                             <tr>
                                 <td></td>
                                 <td>
-                                    <blockquote class="alert-danger">НЕ ПРИНЯТ<br/>@Model.NotPayedComment</blockquote>
+                                    <blockquote class="alert-danger">НЕ ПРИНЯТ<br />@Model.NotPayedComment</blockquote>
                                 </td>
                             </tr>
                         }
                     }
-                   
+
                     <tr>
                         <td>№ сервисного листа</td>
                         <td>@Model.Id</td>
@@ -245,6 +246,7 @@
                 </div>*@
             </div>
         </div>
+    </div>
     </p>
 </body>
 </html>

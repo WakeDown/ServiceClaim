@@ -20,6 +20,7 @@ namespace ServiceClaim.Objects
         ServiceTech,
         ServiceClaimContractorAccess,
         ServiceZipClaimConfirm,
+        AddNewClaim,
         //---доступы
         ServiceClaimClassifier,
         ServiceClaimClientAccess

@@ -50,10 +50,10 @@
                 </nav>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-7">
             <div id="stateGroupFilter"></div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-2">
             @*<div class="pull-right pull-down">Последнее обновление<div id="lastUpdateTime" class="text-danger text-center"></div></div>*@
             <div class="pull-right">
                 <nav>
@@ -180,6 +180,8 @@
                 $cont.append($trItem);
             }
             initListButtons();
+        } else {
+            $cont.append('<tr><td>пусто</td></tr>');
         }
         hideSpinner($cont);
     }
