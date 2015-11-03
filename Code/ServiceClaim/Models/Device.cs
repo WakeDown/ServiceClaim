@@ -24,6 +24,10 @@ namespace ServiceClaim.Models
         public int? Age { get; set; }
         public bool? HasGuarantee { get; set; }
 
+        public int ClassifierCategoryId { get; set; }
+        public int? IdCity { get; set; }
+        public string CityName { get; set; }
+
 
         private void FillSelf(Device model)
         {

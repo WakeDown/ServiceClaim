@@ -136,12 +136,12 @@ namespace ServiceClaim.Models
         //    CurManagerSid = model.CurManagerSid;
         //}
 
-        public async Task<ListResult<Claim>> GetListAsync(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool activeClaimsOnly = false, int? idClaimState = null, int? clientId = null, string clientSdNum = null, int? claimId = null, string deviceName = null, int? pageNum = null, int[] groupStateList = null)
+        public async Task<ListResult<Claim>> GetListAsync(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool activeClaimsOnly = false, int? idClaimState = null, int? clientId = null, string clientSdNum = null, int? claimId = null, string deviceName = null, int? pageNum = null, int[] groupStateList = null, string address = null)
         {
             string groupStates = null;
             if (groupStateList != null && groupStateList.Any()) groupStates=String.Join(",", groupStateList);
 
-            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetListAsync?servAdminSid={servAdminSid}&servEngeneerSid={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}&managerSid={managerSid}&techSid={techSid}&serialNum={serialNum}&idDevice={idDevice}&activeClaimsOnly={activeClaimsOnly}&idClaimState={idClaimState}&clientId={clientId}&clientSdNum={clientSdNum}&claimId={claimId}&deviceName={deviceName}&pageNum={pageNum}&groupStates={groupStates}");
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetListAsync?servAdminSid={servAdminSid}&servEngeneerSid={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}&managerSid={managerSid}&techSid={techSid}&serialNum={serialNum}&idDevice={idDevice}&activeClaimsOnly={activeClaimsOnly}&idClaimState={idClaimState}&clientId={clientId}&clientSdNum={clientSdNum}&claimId={claimId}&deviceName={deviceName}&pageNum={pageNum}&groupStates={groupStates}&address={address}");
             string jsonString = await GetApiClientAsync().GetStringAsync(uri);
             var model = JsonConvert.DeserializeObject<ListResult<Claim>>(jsonString);
             return model;
@@ -272,11 +272,27 @@ namespace ServiceClaim.Models
             return model;
         }
 
+        public static IEnumerable<ServiceSheet> GetClaimServiceSheetList(int idClaim, bool? payedWrap = null)
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/Claim/GetClaimServiceSheetList?idClaim={idClaim}&payedWrap={payedWrap}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheet>>(jsonString);
+            return model;
+        }
+
         public IEnumerable<ServiceSheet> GetClaimServiceSheetList(bool? payedWrap = null)
         {
             Uri uri = new Uri($"{OdataServiceUri}/Claim/GetClaimServiceSheetList?idClaim={Id}&payedWrap={payedWrap}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ServiceSheet>>(jsonString);
+            return model;
+        }
+
+        public static IEnumerable<ZipClaim> GetClaimZipClaimList(int idClaim)
+        {
+            Uri uri = new Uri(String.Format("{0}/Claim/GetClaimZipClaimList?idClaim={1}", OdataServiceUri, idClaim));
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<ZipClaim>>(jsonString);
             return model;
         }
 

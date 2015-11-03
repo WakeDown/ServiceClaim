@@ -80,6 +80,7 @@
             <th>
                 <select id="clientFilter" class="form-control input-xs"></select>
             </th>
+            <th><input id="addressFilter" type="text" placeholder="Адрес" class="form-control input-xs" /></th>
             <th><input id="deviceFilter" type="text" placeholder="Аппарат" class="form-control input-xs" /></th>
             <th><input id="serialNumFilter" type="text" placeholder="S/N" class="form-control input-xs" /></th>
             @*<th>Последнее изменение</th>*@
@@ -175,7 +176,7 @@
         if (data.List.length > 0) {
             for (var i = 0; i < data.List.length; i++) {
                 var item = data.List[i];
-                var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="valign-middle">' + item.Id + '</th><th class="valign-middle">' + item.ClientSdNum + '</th><td class="valign-middle"></td><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.FullName : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.SerialNum : '') + '</td><td><div><span class="small"><span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div></td><td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #' + (item.State != null ? item.State.ForegroundColor : '') + '" class="valign-middle">' + (item.State != null ? item.State.Name : '') + '<div class="small">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle">' + item.DateCreateStr + '</td></tr>';
+                var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="valign-middle">' + item.Id + '</th><th class="valign-middle">' + item.ClientSdNum + '</th><td class="valign-middle"></td><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td>' + (item.Device != null ? (item.Device.CityName != null ? item.Device.CityName : '') + (item.Device.Address != null ? '<br />' + item.Device.Address : '') + (item.Device.ObjectName != null ? '<br />' + item.Device.ObjectName : '') : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.FullName : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.SerialNum : '') + '</td><td><div><span class="small"><span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div></td><td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #' + (item.State != null ? item.State.ForegroundColor : '') + '" class="valign-middle">' + (item.State != null ? item.State.Name : '') + '<div class="small">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle">' + item.DateCreateStr + '</td></tr>';
 
                 $cont.append($trItem);
             }
@@ -303,10 +304,11 @@
                 grpState.push(val);
             }
         }
+        var address = $('#addressFilter').val();
         $.ajax({
             url: '@Url.Action("GetClaimList")',
             method: 'POST',
-            data: { idClient: idClient, claimId: num, clientSdNum: clSdNum, deviceName: devName, serialNum: serial, topRows: topRows, pageNum: selPage, groupStateList: grpState },
+            data: { idClient: idClient, claimId: num, clientSdNum: clSdNum, deviceName: devName, serialNum: serial, topRows: topRows, pageNum: selPage, groupStateList: grpState, address: address },
             success: function (data) {
                 fillClaimList(data);
                 writeLastupdateTime();
@@ -417,13 +419,19 @@
                 loadClaimList();
             }
         });
+        $('#addressFilter').keypress(function (e) {
+            if (e.keyCode == 13) {
+                removeRowsAndShowSpinnerOnTable();
+                loadClaimList();
+            }
+        }); 
         $('[name="pageSize"]').click(function () {
             $('[name="pageSize"].selected').removeClass('selected');
             $('[name="pageSize"][value="' + $(this).attr('value') + '"]').addClass('selected');
             removeRowsAndShowSpinnerOnTable();
             loadClaimList();
         });
-        setTimeout(function () { loadClaimList(); }, 60000);
+        setInterval(function () { loadClaimList(); }, 30000);
         //setInterval(lastUpdateTimer, 1000);
     });
 </script>

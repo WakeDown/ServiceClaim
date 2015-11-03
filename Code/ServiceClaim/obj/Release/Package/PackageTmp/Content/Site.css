@@ -599,7 +599,46 @@ overflow-x: hidden;
   border-radius: 3px;   
 }
 
-.state-group-filter-item.selected {
+.state-group-filter-item .sel-mark  {
+    /*position: relative;
+    top: 10px;*/
+    display: none;
+}
+
+.state-group-filter-item.selected .sel-mark  {
+    display: block;
+}
+
+.sel-mark {
     position: relative;
-    top: 10px;
+    /*color: #e38d13;*/
+    overflow: hidden;
+    /*font-size: 3em;*/
+    /*bottom: 25px;
+    left: 7px;*/
+    float: left;
+}
+
+.text-center-xs {
+        text-align: center;
+    }
+
+@media (min-width: 768px) {
+    .text-center-sm {
+        text-align: center;
+    }
+}
+
+@media (min-width: 1200px) {
+    .text-right-lg {
+        text-align: right;
+    }
+    .text-left-lg {
+        text-align: left;
+    }
+}
+
+th.row-mark, td.row-mark {
+    width: 5px !important;
+    padding: 0 !important;
 }

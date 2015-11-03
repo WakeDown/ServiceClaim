@@ -162,7 +162,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetClaimList(int? idClient = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null)
+        public async Task<JsonResult> GetClaimList(int? idClient = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null)
         {
             //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
             //        AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
@@ -171,7 +171,7 @@ namespace ServiceClaim.Controllers
             //ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
 
             //var result = Claim.GetList();
-            ListResult<Claim> result = await new Claim().GetListAsync(clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList);
+            ListResult<Claim> result = await new Claim().GetListAsync(clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address);
             return Json(result);
         }
 
@@ -567,6 +567,7 @@ namespace ServiceClaim.Controllers
                 ResponseMessage responseMessage;
                 bool complete = model.Go(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
                 //var claim = Claim.Get(model.Id);
                 //ServiceSheet lastServSheet = claim.GetLastServiceSheet();
                 //var zipList = lastServSheet.GetOrderedZipItemList();
@@ -939,6 +940,28 @@ namespace ServiceClaim.Controllers
         public JsonResult GetStateGroupFilterList()
         {
             return Json(ClaimStateGroup.GetFilterList());
+        }
+
+        [HttpPost]
+        public PartialViewResult GetClaimServiceSheetList(int? idClaim)
+        {
+            if (!idClaim.HasValue) return null;
+            var list = Claim.GetClaimServiceSheetList(idClaim.Value);
+            return PartialView("ClaimServiceSheetList", list);
+        }
+        [HttpPost]
+        public PartialViewResult GetClaimZipClaimList(int? idClaim)
+        {
+            if (!idClaim.HasValue) return null;
+            var list = Claim.GetClaimZipClaimList(idClaim.Value);
+            return PartialView("ClaimZipList", list);
+        }
+        [HttpPost]
+        public PartialViewResult GetServiceSheetPaperGet(int? idClaim)
+        {
+            if (!idClaim.HasValue) return null;
+           var  list = Claim.GetClaimServiceSheetList(idClaim.Value, false);
+            return PartialView("ServiceSheetPaperGet", list);
         }
     }
 }

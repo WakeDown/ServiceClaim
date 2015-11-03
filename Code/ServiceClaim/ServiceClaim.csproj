@@ -290,6 +290,7 @@
     <Content Include="Views\Claim\ServiceSheetPaperGet.cshtml" />
     <Content Include="Views\Claim\ClaimServiceSheetList.cshtml" />
     <Content Include="Views\Claim\List.cshtml" />
+    <Content Include="Views\Claim\ClaimZipList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

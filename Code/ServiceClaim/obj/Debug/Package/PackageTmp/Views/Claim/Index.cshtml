@@ -39,24 +39,27 @@
                 <div class="col-lg-6">
                     @if (!String.IsNullOrEmpty(Model.ClientSdNum))
                     {
-                        <div class="row"><label class="col-lg-3 text-right">№ SD клиента</label> <span class="col-lg-9">@Model.ClientSdNum</span></div>
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">№ SD клиента</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.ClientSdNum</span></div>
                     }
-                    <div class="row"><label class="col-lg-3 text-right">Клиент</label> <span class="col-lg-9">@Model.Contractor.FullName</span></div>
-                    <div class="row"><label class="col-lg-3 text-right">Договор</label> <span class="col-lg-9">@Model.Contract.Number</span>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Клиент</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contractor.FullName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Адрес</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.CityName @Model.Device.Address @Model.Device.ObjectName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактное лицо</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.ContactName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий к объекту</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.Descr</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Договор</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contract.Number</span>
                     @if (Model.Contract != null && Model.Contract.ContractZipTypeSysName != null)
                     {
                         <hr class="line-sm no-marg-bot @(Model.Contract.ContractZipTypeSysName == "MOREZIP" ? "line-success" : Model.Contract.ContractZipTypeSysName == "LESSZIP" ? "line-danger" : String.Empty)"/>
                     }
                     </div>
-                    <div class="row"><label class="col-lg-3 text-right">Аппарат</label> <span class="col-lg-9">@Model.Device.ExtendedName@(Model.Device.HasGuarantee.HasValue && Model.Device.HasGuarantee.Value ? "<blockquote class='bold text-danger bg-danger nomargin'>Гарантия</blockquote>" : String.Empty)</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Аппарат</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.ExtendedName@(Model.Device.HasGuarantee.HasValue && Model.Device.HasGuarantee.Value ? "<blockquote class='bold text-danger bg-danger nomargin'>Гарантия</blockquote>" : String.Empty)</span></div>
 
                     @if (Model.WorkType != null && !String.IsNullOrEmpty(Model.WorkType.Name))
                     {
-                        <div class="row"><label class="col-lg-3 text-right">Тип работ</label> <span class="col-lg-9">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Тип работ</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
                     }
                     @if (Model.Specialist != null && !String.IsNullOrEmpty(Model.Specialist.DisplayName))
                     {
-                        <div class="row"><label class="col-lg-3 text-right">Специалист</label> <span class="col-lg-9">@Model.Specialist.DisplayName</span></div>
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Специалист</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
                     }
                 </div>
                 <div class="col-lg-3">
@@ -203,7 +206,12 @@
             //$('#clEnd').click(claimEnd);
 
             $('[data-toggle="popover"]').popover();
+            loadHistory();
         });
+
+        function loadHistory() {
+            
+        }
 
         @*function showFullClaimHistory() {
 
