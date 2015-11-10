@@ -95,13 +95,20 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetTotal(DateTime? date, string[] serviceEngeneerSid, bool? planed = null, bool? seted = null)
+        public JsonResult GetTotal(DateTime? date, string[] serviceEngeneerSid=null, bool? planed = null, bool? seted = null)
         {
             if (!date.HasValue) date = DateTime.Now;
-            string serviceEngeneerSidIds = serviceEngeneerSid != null
-                ? String.Join(",", serviceEngeneerSid)
-                : String.Empty;
-            var model = ServiceIssue.GetTotal(date.Value, planed: planed, serviceEngeneerSid: serviceEngeneerSidIds, seted: seted);
+            string serviceEngeneerSidIds = null;
+            if (serviceEngeneerSid == null || (serviceEngeneerSid.Count() == 1 && String.IsNullOrEmpty(serviceEngeneerSid[0])))
+            {
+
+            }
+            else
+            {
+                serviceEngeneerSidIds = String.Join(",", serviceEngeneerSid);
+            }
+            
+            var model = ServiceIssue.GetTotal(date.Value, serviceEngeneerSid: serviceEngeneerSidIds);
             return Json(model);
         }
 
@@ -158,7 +165,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetPlanServiceIssueTotal(int year, int month, string[] engeneerSid)
+        public JsonResult GetPlanServiceIssueTotal(int year, int month, string[] engeneerSid = null)
         {
             DateTime startDate = new DateTime(year, month, 1);
             DateTime endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
@@ -266,6 +273,13 @@ namespace ServiceClaim.Controllers
             }
             
             return Json(new {});
+        }
+
+        [HttpPost]
+        public JsonResult GetPeriodMonthList(int year, int month)
+        {
+            var list = ServiceIssuePlan.GetPeriodMonthList(year, month);
+            return Json(list);
         }
     }
 }

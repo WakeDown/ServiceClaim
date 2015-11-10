@@ -10,85 +10,67 @@
 
 }
 
-<div class="row">
-    <div class="col-lg-4">
-        @*@Html.DropDownList("clientFilter", new SelectList(Contractor.GetServiceClaimFilterList(), "Id", "ListName", Request.QueryString["client"]), "--все клиенты--", new { @class = "form-control" })*@
-    </div>
-    @*@if (filterStates != null && filterStates.Any())
-        {
-            <a class="btn btn-primary" href="@Url.Action("List")">все</a>
-            foreach (ClaimState st in filterStates)
-            {
-                <a class="btn" style="color: #@st.ForegroundColor; background-color: #@st.BackgroundColor" href="@Url.Action("List")?state=@st.Id&client=@Request.QueryString["client"]">@st.Name (@st.ClaimCount)</a>
-            }
-        }*@
-
-</div>
-
 <p>
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-3 col-sm-12 col-xs-12 hidden-sm hidden-xs">
             <div class="pull-left">
                 <nav>
                     <ul class="pagination nomargin pages">
-                        @*<li>
-                                <a href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>*@
-                        @*<li><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>*@
-                        @*<li>
-                                <a href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>*@
                     </ul>
                 </nav>
             </div>
         </div>
-        <div class="col-lg-7">
+        <div class="col-lg-7 col-sm-12 col-xs-12">
             <div id="stateGroupFilter"></div>
         </div>
-        <div class="col-lg-2">
-            @*<div class="pull-right pull-down">Последнее обновление<div id="lastUpdateTime" class="text-danger text-center"></div></div>*@
-            <div class="pull-right">
+        <div class="col-sm-6 col-xs-6 hidden-md hidden-lg">
+            <div class="pull-left">
                 <nav>
-                    <ul class="pagination pagesize nomargin">
-                        @*<li>записей на странице</li>*@
-                        <li><a name="pageSize" value="30" href="#!" class="btn btn-default btn-sm selected">30</a></li>
-                        <li><a name="pageSize" value="100" href="#!" class="btn btn-default btn-sm">100</a></li>
-                        <li><a name="pageSize" value="300" href="#!" class="btn btn-default btn-sm">300</a></li>
-                    </ul>
+                    <ul class="pagination nomargin pages"></ul>
                 </nav>
             </div>
-
+        </div>
+        <div class="col-lg-2 col-sm-6 col-xs-6">
+            <div>
+                <div class="text-right">
+                    <nav>
+                        <ul class="pagination pagesize nomargin">
+                            @*<li>записей на странице</li>*@
+                            <li><a name="pageSize" value="30" href="#!" class="btn btn-default btn-sm selected">30</a></li>
+                            <li><a name="pageSize" value="100" href="#!" class="btn btn-default btn-sm">100</a></li>
+                            <li><a name="pageSize" value="300" href="#!" class="btn btn-default btn-sm">300</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="text-right">
+                <small>
+                    обновлено в
+                    <span id="lastUpdateTime" class="text-danger text-center"></span>
+                </small>
+            </div>
         </div>
     </div>
 
     <table id="claimList" class="table table-bordered sel-list">
         <tr class="bg-primary">
-
+            <th class="row-mark"></th>
             <th class="min-width">
                 <input id="numFilter" type="text" placeholder="№" class="form-control input-xs" style="min-width: 70px;" />
             </th>
-            <th class="min-width"><input id="clientSdNumFilter" type="text" placeholder="№ SD клиента" class="form-control input-xs" style="min-width: 85px;" /></th>
-            <th></th>
+            <th class="min-width hidden-sm hidden-xs"><input id="clientSdNumFilter" type="text" placeholder="№ SD клиента" class="form-control input-xs" style="min-width: 85px;" /></th>
             <th>
                 <select id="clientFilter" class="form-control input-xs"></select>
             </th>
-            <th><input id="addressFilter" type="text" placeholder="Адрес" class="form-control input-xs" /></th>
+            <th class="hidden-sm hidden-xs"><input id="addressFilter" type="text" placeholder="Адрес" class="form-control input-xs" /></th>
             <th><input id="deviceFilter" type="text" placeholder="Аппарат" class="form-control input-xs" /></th>
             <th><input id="serialNumFilter" type="text" placeholder="S/N" class="form-control input-xs" /></th>
             @*<th>Последнее изменение</th>*@
-            <th></th>
-            <th>Статус</th>
+            <th class="hidden-sm hidden-xs"></th>
+            <th class="hidden-sm hidden-xs">Статус</th>
             @*<th>Время с момента создания</th>*@
 
-            <th>Дата создания</th>
+            <th class="hidden-sm hidden-xs">Дата создания</th>
         </tr>
         <tbody id="claimContainer"></tbody>
     </table>
@@ -176,7 +158,7 @@
         if (data.List.length > 0) {
             for (var i = 0; i < data.List.length; i++) {
                 var item = data.List[i];
-                var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="valign-middle">' + item.Id + '</th><th class="valign-middle">' + item.ClientSdNum + '</th><td class="valign-middle"></td><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td>' + (item.Device != null ? (item.Device.CityName != null ? item.Device.CityName : '') + (item.Device.Address != null ? '<br />' + item.Device.Address : '') + (item.Device.ObjectName != null ? '<br />' + item.Device.ObjectName : '') : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.FullName : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.SerialNum : '') + '</td><td><div><span class="small"><span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div></td><td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #' + (item.State != null ? item.State.ForegroundColor : '') + '" class="valign-middle">' + (item.State != null ? item.State.Name : '') + '<div class="small">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle">' + item.DateCreateStr + '</td></tr>';
+                var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="row-mark" style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '"></th><th class="valign-middle"></div>' + item.Id + '</th><th class="valign-middle hidden-sm hidden-xs">' + item.ClientSdNum + '</th><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="hidden-sm hidden-xs">' + (item.Device != null ? (item.Device.CityName != null ? item.Device.CityName : '') + (item.Device.Address != null ? '<br />' + item.Device.Address : '') + (item.Device.ObjectName != null ? '<br />' + item.Device.ObjectName : '') : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.FullName : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.SerialNum : '') + '</td><td class="hidden-sm hidden-xs"><div><span class="small"><span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div></td><td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #' + (item.State != null ? item.State.ForegroundColor : '') + '" class="valign-middle hidden-sm hidden-xs">' + (item.State != null ? item.State.Name : '') + '<div class="small">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle hidden-sm hidden-xs">' + item.DateCreateStr + '</td></tr>';
 
                 $cont.append($trItem);
             }
@@ -362,11 +344,11 @@
             success: function(data) {
                 var $cont = $('#stateGroupFilter');
                 $cont.find('ul').remove();
-                var $ul = $('<ul class="list-inline"></ul>');
+                var $ul = $('<div class="row"></div>');
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
-                        var li = '<li><a name="stateGroupFilterItem" value="' + item.Id + '" class="btn state-group-filter-item" style="background-color: #' + item.BackgroundColor + '; color: #' + item.ForegroundColor + '">' + item.Name + '&nbsp;<span class="badge">' + item.ClaimCount + '</span></a></li>';
+                        var li = '<div class="col-sm-6 col-xs-6 col-lg-2"><a name="stateGroupFilterItem" value="' + item.Id + '" class="btn btn-block state-group-filter-item text-sm" style="background-color: #' + item.BackgroundColor + '; color: #' + item.ForegroundColor + '"><span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge">' + item.ClaimCount + '</span>&nbsp;' + item.Name + '&nbsp;</a></div>';
                         $ul.append(li);
                     }
                     $cont.append($ul);

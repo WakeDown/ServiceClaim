@@ -6,7 +6,6 @@
 @if (Model.Any())
 {
     <div>
-        <h5 class="bold">Заявки на ЗИП</h5>
         <p>
             @foreach (var zipClaim in Model)
             {
@@ -18,4 +17,8 @@
             }
         </p>
     </div>
+}
+else
+{
+    @:нет
 }

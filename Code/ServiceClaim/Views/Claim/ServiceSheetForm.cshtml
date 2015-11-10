@@ -6,11 +6,31 @@
     @Html.HiddenFor(m => m.Id)
     <div class="row">
         <div class="col-lg-push-4 col-lg-8">
-            <blockquote class="alert-warning">Сохраните чтобы  заказать или отметить установку ЗИП.</blockquote>
+            <blockquote class="alert-warning">Сохраните чтобы заказать или отметить установку ЗИП.</blockquote>
         </div>
     </div>
+    if (Model.Device.FakeSerialNum.HasValue && Model.Device.FakeSerialNum.Value)
+     {
+         <div class="row">
+             <div class="col-lg-push-4 col-lg-8">
+                 <blockquote class="alert-danger">
+                     <div class="row">
+                         <div class="col-lg-12">
+                             Укажите серийный номер оборудования
+                         </div>
+                         <div class="col-lg-4">
+                             @Html.TextBoxFor(m => m.ServiceSheet4Save.RealSerialNum, new {id = "realSerialNum", @class = "form-control ", required = "required", style = "text-transform: uppercase", placeholder = "серийный номер"})
+@Html.HiddenFor(m => m.ServiceSheet4Save.RealSerialNum, new { id = "realSerialNumHidden" })
+                             @Html.HiddenFor(m => m.ServiceSheet4Save.ForceSaveRealSerialNum, new { id = "forceSerialNumSave" })
+                             @*<input type="text" class="form-control " required="required" style="text-transform: uppercase" placeholder="серийный номер"/>*@
+                         </div>
+                     </div>
+                 </blockquote>
+             </div>
+         </div>
+     }
     <div class="row">
-        <label class="col-lg-4 text-right">Процесс печати восстановлен</label>
+        <label class="col-lg-4 text-right">Функциональность оборудования восстановлена</label>
         <div class="col-lg-6">
             @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, false) нет
             <span class="help-block with-errors"></span>
@@ -30,7 +50,7 @@
             <span class="help-block with-errors"></span>
         </div>
     </div>
-    <div class="row" id="zipClaimContainer">
+    <div class="row" id="zipClaimNeedContainer">
         <label class="col-lg-4 text-right">Необходим заказ ЗИП</label>
         <div class="col-lg-6">
             @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClaim, true, new {required = "required"}) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClaim, false) нет
@@ -82,9 +102,21 @@
     </div>
     <div class="row">
         <div class="col-lg-push-4 col-lg-8">
-            <button type="submit" class="btn btn-success" value="ServiceSheetSave" name="ServiceSheetSave">Сохранить</button>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-success" value="ServiceSheetSave" name="ServiceSheetSave">Сохранить</button>
+            </div>
         </div>
     </div>
+    if (TempData["error"] != null)
+    {
+        <div class="row">
+            <div class="col-lg-push-4 col-lg-8">
+                <blockquote class="alert-danger">
+                    @TempData["error"]
+                </blockquote>
+            </div>
+        </div>
+    }
 }
 @*Подобная форма ServiceSheetTech*@
 <script type="text/javascript">
@@ -116,14 +148,15 @@
 
     function displayElements() {
         setVars();
-
+        
+        
         if (procEnab && devEnab) {
-            $('#zipClaimContainer').hide();
+            $('#zipClaimNeedContainer').hide();
             $('[name="ServiceSheet4Save.ZipClaim"]:checked').prop('checked', false);
             $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', false);
-            $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
-            $('#counterUnavailableContainer').hide();
-            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
+            //$('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            //$('#counterUnavailableContainer').hide();
+            //$('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
         }
         else {
             if (procEnab) {
@@ -134,14 +167,14 @@
             }
             setVars();
             if (devDisab) {
-                $('#zipClaimContainer').show();
+                $('#zipClaimNeedContainer').show();
                 $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', true);
                 $('#counterUnavailableContainer').show();
                 $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', true);
             }
 
             if (devEnab || !devDisab) {//Nothin select
-                $('#zipClaimContainer').hide();
+                $('#zipClaimNeedContainer').hide();
                 $('[name="ServiceSheet4Save.ZipClaim"]:checked').prop('checked', false);
                 $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', false);
             }
@@ -175,30 +208,31 @@
         }
 
         setVars();
+        
         if (countHas) {//Счетчик предусмотрен
             $('#counterUnavailableContainer').show();
             $('#countersContainer').show();
             $('#counterMono').prop('required', true);
             $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', true);
         } else if (countNotHas) {//Счетчик НЕ предусмотрен
-            $('#counterUnavailableContainer').hide();
             $('#countersContainer').hide();
             $('#counterMono').prop('required', false);
             $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            $('#counterUnavailableContainer').hide();
             $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
         } else {//ничего не выбрано
-            $('#counterUnavailableContainer').hide();
             $('#countersContainer').hide();
             $('#counterMono').prop('required', false);
             $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            $('#counterUnavailableContainer').hide();
             $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
         }
 
         setVars();
+        
         if (countAvail) {//Счетчик доступен
             $('#countersContainer').show();
             $('#counterMono').prop('required', true);
-
             $('#commentCounterContainer').hide();
             $('#counterComment').prop('required', false);
         }
@@ -222,5 +256,51 @@
         $('[name="ServiceSheet4Save.CounterUnavailable"]').change(displayElements);
         $('[name="ServiceSheet4Save.NoCounter"]').change(displayElements);
         displayElements();
+
+        $('#realSerialNum').keypress(checkDeviceIsExists);
+        $('#realSerialNum').blur(checkDeviceIsExists);
     });
+
+    function checkDeviceIsExists(e) {
+            
+        var $elem = $(this);
+        var serialNum = $elem.val();
+        $('#realSerialNumHidden').val(serialNum);
+        if (serialNum.length > 5) {
+            $.ajax({
+                url: '@Url.Action("CheckDeviceIsExists")',
+                method: 'POST',
+                data: { serialNum: serialNum, idClaim:@Model.Id},
+                success:function(data) {
+                    if (data.exists == true) {
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Оборудование уже существует в списке оборудования!',
+                            message: 'Оборудование уже существует в списке! Вы уверены что хотите привязать заявку к существующему оборудованию?',
+                            buttons: [{
+                                label: 'Да',
+                                cssClass: 'btn-success btn-lg pull-left',
+                                action: function(dialog) {
+                                    dialog.close();
+                                    $elem.prop('disabled', true);
+                                    $('#forceSerialNumSave').val('True');
+                                }}, {
+                                    label: 'Нет',
+                                    cssClass: 'btn-danger btn-lg',
+                                    action: function(dialog) {
+                                        $elem.prop('disabled', true);
+                                    $elem.val('');
+                                    $elem.focus();
+                                    $('#forceSerialNumSave').val('False');
+                                }
+                            }]
+                        });
+
+                    } else {
+                        
+                    }
+                }
+            });
+        }
+    }
 </script>

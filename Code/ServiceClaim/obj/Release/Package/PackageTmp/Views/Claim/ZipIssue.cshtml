@@ -13,7 +13,7 @@
             @if ((orderedZipItemList != null && orderedZipItemList.Any()) || serviceSheet.ZipClientGivenInstall)
             {
                 <h4>Установка ЗИП</h4>
-                <table class="table table-bordered">
+                <table class="table table-bordered bg-white">
                     <tr class="bg-primary">
                         <th class="min-width"></th>
                         <th style="width: 100px">парт номер</th>
@@ -84,7 +84,7 @@
         {
             <blockquote class="bg-success text-sm">
                 <h4>Заказ ЗИП</h4>
-                <table class="table table-bordered">
+                <table class="table table-bordered bg-white">
                     
                     <tr id="zipIssueHeader" class="bg-primary" style="@(zipItemList != null && zipItemList.Any() ? String.Empty : "display: none")">
                         @*<tr class="bg-primary">*@

@@ -2,6 +2,7 @@
     font-family: Arial;
     background: #B4B4B4 url(../Content/images/bg1.png) repeat left top;
     padding-top: 50px;
+    font-size: 8pt;
 }
 
 
@@ -599,9 +600,24 @@ overflow-x: hidden;
   border-radius: 3px;   
 }
 
-.state-group-filter-item.selected {
+.state-group-filter-item .sel-mark  {
+    /*position: relative;
+    top: 10px;*/
+    display: none;
+}
+
+.state-group-filter-item.selected .sel-mark  {
+    display: block;
+}
+
+.sel-mark {
     position: relative;
-    top: 10px;
+    /*color: #e38d13;*/
+    overflow: hidden;
+    /*font-size: 3em;*/
+    /*bottom: 25px;
+    left: 7px;*/
+    float: left;
 }
 
 .text-center-xs {
@@ -618,4 +634,16 @@ overflow-x: hidden;
     .text-right-lg {
         text-align: right;
     }
+    .text-left-lg {
+        text-align: left;
+    }
+}
+
+th.row-mark, td.row-mark {
+    width: 5px !important;
+    padding: 0 !important;
+}
+
+.text-lg {
+    font-size: 1.2em;
 }

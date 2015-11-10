@@ -4,7 +4,6 @@
 @if (Model.Any())
 {
     <div>
-        <h5 class="bold">Сервисные листы</h5>
         <p>
             @foreach (var sheet in Model)
             {
@@ -18,6 +17,10 @@
                 </div>
             }
         </p>
-        
+
     </div>
+}
+else
+{
+    @:нет
 }

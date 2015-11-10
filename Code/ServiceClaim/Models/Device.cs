@@ -27,7 +27,7 @@ namespace ServiceClaim.Models
         public int ClassifierCategoryId { get; set; }
         public int? IdCity { get; set; }
         public string CityName { get; set; }
-
+        public bool? FakeSerialNum { get; set; }
 
         private void FillSelf(Device model)
         {
@@ -78,5 +78,14 @@ namespace ServiceClaim.Models
         //{
         //    SelListName = String.Format("{2} {0} №{1} {4} {3}", ModelName, SerialNum, Vendor, ObjectName, Address);
         //}
+
+        public static bool CheckSerialNumIsExists(string serialNum, int idClaim)
+        {
+            Uri uri = new Uri(
+                $"{OdataServiceUri}/Device/CheckSerialNumIsExists?serialNum={serialNum}&idClaim={idClaim}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<bool>(jsonString);
+            return model;
+        }
     }
 }

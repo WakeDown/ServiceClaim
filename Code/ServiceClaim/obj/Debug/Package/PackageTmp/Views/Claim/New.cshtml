@@ -95,7 +95,8 @@
             <div class="form-group">
                 <div class="col-lg-push-2 col-lg-5">
                     @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@
-                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;добавить</button>
+                    @*<a id="save" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</a>*@
+                    <button id="save" type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</button>
                     <a class="btn btn-default" href="@Url.Action("New")"><i class="fa fa-refresh"></i>&nbsp;очистить</a>
                     <p class="text-danger">
                         @TempData["error"]
@@ -139,6 +140,19 @@
                 showClaims();
             });
             $('#ctrFind').focus();
+            //$('#save').click(function() {
+            //    var ctr = $('#ctrList').val();
+            //    if(ctr == undefined || ctr <= 0)
+            //    { return false; }
+
+            //    var cont = $('#contList').val();
+            //    if (cont == undefined || cont <= 0)
+            //    { return false; }
+
+            //    var dev = $('#devList').val();
+            //    if (dev == undefined || dev <= 0)
+            //    { return false; }
+            //});
         });
 
         function devFind(e) {
@@ -259,6 +273,26 @@
                 showClaims();
         }
 
+        function saveDisplay(display) {
+            if (!display) {
+                $('#save').prop('disabled', true);
+            } else {
+                var ctr = $('#ctrList').val();
+                    if(ctr == undefined || ctr <= 0)
+                    { return false; }
+
+                    var cont = $('#contList').val();
+                    if (cont == undefined || cont <= 0)
+                    { return false; }
+
+                    var dev = $('#devList').val();
+                    if (dev == undefined || dev <= 0)
+                    { return false; }
+
+                    $('#save').prop('disabled', false);
+            }
+        }
+
         function displayDevs(updateCtrNcontLists) {
             var ctrName = $('#ctrFind').val();
             var ctrId = $('#ctrList').val();
@@ -274,6 +308,7 @@
             }
             $('#devSpinner').addClass('active');
             $('#devListCount').text('');
+            saveDisplay(false);
             $.ajax({
                 url: '@Url.Action("GetDevices")',
                 method: 'POST',
@@ -318,7 +353,7 @@
                         $('#devListCount').text(0);
                     }
                     $('#devSpinner').removeClass('active');
-
+                    saveDisplay(true);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
@@ -327,6 +362,7 @@
                         message: xhr.responseText
                     });
                     $('#devSpinner').removeClass('active');
+                    saveDisplay(true);
                 }
             });
             //$(this).blur();
@@ -386,6 +422,7 @@
             }
             $('#contSpinner').addClass('active');
             $('#contListCount').text('');
+            saveDisplay(false);
             $.ajax({
                 url: '@Url.Action("GetConts")',
                 method: 'POST',
@@ -414,6 +451,7 @@
                     }
                     $('#contSpinner').removeClass('active');
                     setSdNumRequiredOrNot();
+                    saveDisplay(true);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
@@ -422,6 +460,7 @@
                         message: xhr.responseText
                     });
                     $('#contSpinner').removeClass('active');
+                    saveDisplay(true);
                 }
             });
         }
@@ -444,6 +483,7 @@
             $('#ctrSpinner').addClass('active');
             $('#ctrListCount').text('');
             $('#ctrListCount').text('');
+            saveDisplay(false);
             $.ajax({
                 url: '@Url.Action("GetCtors")',
                 method: 'POST',
@@ -477,6 +517,7 @@
                         $('#ctrListCount').text(0);
                     }
                     $('#ctrSpinner').removeClass('active');
+                    saveDisplay(true);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
@@ -485,6 +526,7 @@
                         message: xhr.responseText
                     });
                     $('#ctrSpinner').removeClass('active');
+                    saveDisplay(true);
                 }
             });
         }

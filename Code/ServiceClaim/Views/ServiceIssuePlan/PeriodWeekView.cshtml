@@ -2,20 +2,15 @@
 @model IEnumerable<ServiceClaim.Models.ServiceIssuePeriodItem>
 
 @{
-    var monthes = ServiceIssuePlan.GroupByMonthes(Model);
-    int mColLenght = 12 / monthes.Count();
-    //int rowWidth = Model.Count()*240;
+    //var monthes = ServiceIssuePlan.GroupByMonthes(Model);
+    //int mColLenght = 12 / monthes.Count();
     var date = DateTime.Parse(Request.QueryString["date"]);
 }
 
-@if (Model.Any())
-{
-    @*<div class="row" style="width: @(rowWidth)px !important">*@
-    <div class="row">
-        @foreach (var mth in monthes)
-        {
+
+    @*<div class="row">
             <div class="col-lg-@mColLenght">
-                <span class="h3">@mth.Date.ToString("MMMM yyyy")</span>
+                <span class="h3" id="curMonthTitle"></span>
                 <span>
                     <input type="radio" name="issuesPlanType" value="city" checked="checked" />&nbsp;по городам
                     <input type="radio" name="issuesPlanType" value="client" />&nbsp;по клиентам
@@ -36,26 +31,14 @@
                     {
                         <div class="col-lg-@pColLenght period-container nomargin nopadding" id="period-container-@period.IdValue" name="period-container">
                             <h5 name="periodTitle" value="@period.ListValue" idval="@period.IdValue" class="cursor-pointer period-title nomargin">@period.ListName <span class="label label-info label-as-badge">@period.DaysDiff дн.</span></h5>
-
-                            @*@{
-                                    var issueList = period.GetServiceIssueList();
-                                }*@
                             <div id="periodContainer-@period.IdValue" name="period-container" std="@period.StartDate" edt="@period.EndDate" pid="@period.IdValue">
-                                @*@if (issueList.Any())
-                                    {
-                                        foreach (var issue in issueList)
-                                        {
-                                            @Html.Partial("ServiceIssuePlanItem", issue)
-                                        }
-                                    }*@
                             </div>
                         </div>
                     }
                 </div>
             </div>
-                        }
-    </div>
-                        }
+    </div>*@
+                        
 
 <script type="text/javascript">
     $(function () {
@@ -69,7 +52,7 @@
             $('#period-container-' + idval).addClass('selected');
             selPeriodIdVal = idval;
         });
-
+        
         loadPlanIssues();
         loadPlanTotal();
     });
@@ -134,7 +117,7 @@
         var endDate = $cont.attr('edt');
         $cont.html('');
         showSpinnerAppend($cont);
-        
+
         if (issuesPlanType == 'city') {
             $.ajax({
                 url: '@Url.Action("GetPlanServiceIssueCitiesList")',
@@ -307,7 +290,7 @@
             method: 'POST',
             data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, clientId: clid, done: issuesPlanDoneType },
             success: function (data) {
-                
+
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
@@ -345,13 +328,13 @@
         var $cont = $('[name="issueItemCityAddress"]', $obj);
         $cont.html('');
         showSpinnerPrepend($cont);
-        
+
         $.ajax({
             url: '@Url.Action("GetPlanServiceIssueAddressList")',
             method: 'POST',
             data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, idCity: cid, done: issuesPlanDoneType },
             success: function (data) {
-                
+
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
@@ -373,7 +356,7 @@
         });
         e.preventDefault();
     }
-    
+
 
     function loadAddressDeviceList(e) {
         var elName = $(e.target).attr('name');

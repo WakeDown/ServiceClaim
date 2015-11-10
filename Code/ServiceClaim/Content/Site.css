@@ -2,6 +2,7 @@
     font-family: Arial;
     background: #B4B4B4 url(../Content/images/bg1.png) repeat left top;
     padding-top: 50px;
+    font-size: 8pt;
 }
 
 
@@ -619,16 +620,26 @@ overflow-x: hidden;
     float: left;
 }
 
-.text-center-xs {
+@media (max-width: 767px) {
+    .text-center-xs {
         text-align: center;
     }
 
-@media (min-width: 768px) {
+    .width-40-xs {
+        min-width: 40px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
     .text-center-sm {
         text-align: center;
     }
 }
-
+@media (min-width: 992px) and (max-width: 1199px)  {
+    .width-70-md{
+        min-width: 70px;
+    }
+}
 @media (min-width: 1200px) {
     .text-right-lg {
         text-align: right;
@@ -636,9 +647,16 @@ overflow-x: hidden;
     .text-left-lg {
         text-align: left;
     }
+    .width-70-lg {
+        min-width: 70px;
+    }
 }
 
 th.row-mark, td.row-mark {
     width: 5px !important;
     padding: 0 !important;
+}
+
+.text-lg {
+    font-size: 1.2em;
 }

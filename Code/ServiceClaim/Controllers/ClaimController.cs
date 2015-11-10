@@ -30,7 +30,7 @@ namespace ServiceClaim.Controllers
         {
             if (
                 !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
-                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
+                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator, AdGroup.AddNewClaim))
                 return HttpNotFound();
 
             if (!id.HasValue || id <= 0) return RedirectToAction("New");
@@ -162,7 +162,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetClaimList(int? idClient = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null)
+        public async Task<JsonResult> GetClaimList(int? idDevice = null, int? idClient = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null)
         {
             //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
             //        AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
@@ -171,7 +171,7 @@ namespace ServiceClaim.Controllers
             //ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
 
             //var result = Claim.GetList();
-            ListResult<Claim> result = await new Claim().GetListAsync(clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address);
+            ListResult<Claim> result = await new Claim().GetListAsync(clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice);
             return Json(result);
         }
 
@@ -959,9 +959,18 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public PartialViewResult GetServiceSheetPaperGet(int? idClaim)
         {
+            if (!ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) return null;
+
             if (!idClaim.HasValue) return null;
            var  list = Claim.GetClaimServiceSheetList(idClaim.Value, false);
             return PartialView("ServiceSheetPaperGet", list);
+        }
+
+        [HttpPost]
+        public JsonResult CheckDeviceIsExists(string serialNum, int idClaim)
+        {
+            bool exists = Device.CheckSerialNumIsExists(serialNum, idClaim);
+            return Json(new {exists = exists});
         }
     }
 }

@@ -8,9 +8,9 @@
     ViewBag.Title = "Карточка заяки" + (Model.Id > 0 ? " №" + Model.Id.ToString() : "");
     Layout = "~/Views/Shared/_Editor.cshtml";
     //var stateHistory = Model.GetStateHistory();
-    var servSheetList = Model.GetClaimServiceSheetList();
-    var zipClaimList = Model.GetClaimZipClaimList();
-    var servSheetNotPayedWrapList = Model.GetClaimServiceSheetList(false);
+    //var servSheetList = Model.GetClaimServiceSheetList();
+    //var zipClaimList = Model.GetClaimZipClaimList();
+    //var servSheetNotPayedWrapList = Model.GetClaimServiceSheetList(false);
 }
 
 @section PanelHead
@@ -39,53 +39,44 @@
                 <div class="col-lg-6">
                     @if (!String.IsNullOrEmpty(Model.ClientSdNum))
                     {
-                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">№ SD клиента</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.ClientSdNum</span></div>
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">№ SD клиента</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12  text-center-sm text-center-xs">@Model.ClientSdNum</span></div>
                     }
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Клиент</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contractor.FullName</span></div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Адрес</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.CityName @Model.Device.Address @Model.Device.ObjectName</span></div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактное лицо</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.ContactName</span></div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий к объекту</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.Descr</span></div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Договор</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contract.Number</span>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Клиент</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contractor.FullName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Адрес</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.CityName @Model.Device.Address @Model.Device.ObjectName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактное лицо</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.ContactName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий к объекту</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.Descr</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Договор</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contract.Number</span>
                     @if (Model.Contract != null && Model.Contract.ContractZipTypeSysName != null)
                     {
                         <hr class="line-sm no-marg-bot @(Model.Contract.ContractZipTypeSysName == "MOREZIP" ? "line-success" : Model.Contract.ContractZipTypeSysName == "LESSZIP" ? "line-danger" : String.Empty)"/>
                     }
                     </div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Аппарат</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.ExtendedName@(Model.Device.HasGuarantee.HasValue && Model.Device.HasGuarantee.Value ? "<blockquote class='bold text-danger bg-danger nomargin'>Гарантия</blockquote>" : String.Empty)</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Аппарат</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.FullName <b>№</b>@Model.Device.SerialNum @(Model.Device.HasGuarantee.HasValue && Model.Device.HasGuarantee.Value ? "<blockquote class='bold text-danger bg-danger nomargin'>Гарантия</blockquote>" : String.Empty)</span></div>
 
                     @if (Model.WorkType != null && !String.IsNullOrEmpty(Model.WorkType.Name))
                     {
-                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Тип работ</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Тип работ</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
                     }
                     @if (Model.Specialist != null && !String.IsNullOrEmpty(Model.Specialist.DisplayName))
                     {
-                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Специалист</label> <span class="col-lg-9 col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Специалист</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
                     }
                 </div>
                 <div class="col-lg-3">
-                    @Html.Partial("ClaimServiceSheetList", servSheetList)
-                    @if (servSheetNotPayedWrapList.Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
+                    <div id="serviceSheetContainer">
+                        @*@Html.Partial("ClaimServiceSheetList", servSheetList)*@
+                    </div>
+                    <div id="btnGetPaperServiceSheetContainer">
+                        
+                    </div>
+                    @*@if (servSheetNotPayedWrapList.Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
                     {
                         @Html.Partial("ServiceSheetPaperGet", servSheetNotPayedWrapList)
-                    }
+                    }*@
                 </div>
                 <div class="col-lg-3">
-                    @if (zipClaimList.Any())
-                    {
-                        <div>
-                            <h5 class="bold">Заявки на ЗИП</h5>
-                            <p>
-                                @foreach (var zipClaim in zipClaimList)
-                                {
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <span class="monospace">@zipClaim.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@zipClaim.Id" target="_blank">№@zipClaim.Id</a>
-                                        </div>
-                                    </div>
-                                }
-                            </p>
-                        </div>
-                    }
+                    <div id="zipClaimContainer">
+                    </div>
                 </div>
             </div>
 
@@ -186,7 +177,7 @@
                     </h4>
                 </div>
                 <div class="panel-body" id="stateHistoryContainer">
-                    @{ Html.RenderAction("СlaimStateHistory", new { idClaim = Model.Id, full = false }); }
+                    @*@{ Html.RenderAction("СlaimStateHistory", new { idClaim = Model.Id, full = false }); }*@
                     @*@Html.Partial("StateHistory", stateHistory.ToList().OrderByDescending(c => c.DateCreate))*@
                     @*@Html.Partial("StateHistorySmall", stateHistory.ToList().OrderByDescending(c => c.DateCreate))*@
                 </div>
@@ -199,7 +190,7 @@
 {
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#showAllHistory').click(showAllHistory);
+
             //$('#showFullClaimHistory').click(showFullClaimHistory);
             $('#clSave').click(claimSave);
             $('#clContinue').click(claimContinue);
@@ -207,10 +198,58 @@
 
             $('[data-toggle="popover"]').popover();
             loadHistory();
+            loadServiceSheetList();
+            loadZipClaimList();
         });
 
+        function loadZipClaimList() {
+            showSpinnerAppend($('#zipClaimContainer'));
+            $.ajax({
+                url: '@Url.Action("GetClaimZipClaimList")',
+                method: 'POST',
+                data:{idClaim:@Model.Id},
+                success: function(html) {
+                    $('#zipClaimContainer').html(html);
+                }
+            });
+
+        }
+
+        function loadServiceSheetList() {
+            showSpinnerAppend($('#serviceSheetContainer'));
+            $.ajax({
+                url: '@Url.Action("GetClaimServiceSheetList")',
+                method: 'POST',
+                data:{idClaim:@Model.Id},
+                success: function(html) {
+                    $('#serviceSheetContainer').html(html);
+                    loadBtnGetServiceSheetList();
+                }
+            });
+        }
+
+        function loadBtnGetServiceSheetList() {
+            //showSpinnerAppend($('#btnGetPaperServiceSheetContainer'));
+            $.ajax({
+                url: '@Url.Action("GetServiceSheetPaperGet")',
+                method: 'POST',
+                data:{idClaim:@Model.Id},
+                success: function(html) {
+                    $('#btnGetPaperServiceSheetContainer').html(html);
+                }
+            });
+        }
+
         function loadHistory() {
-            
+            showSpinnerAppend($('#stateHistoryContainer'));
+            $.ajax({
+                url: '@Url.Action("СlaimStateHistory")?idClaim=@Model.Id&full=False',
+                method: 'GET',
+                success: function(html) {
+                    $('#stateHistoryContainer').html(html);
+                    $('#showAllHistory').click(showAllHistory);
+                }
+            });
         }
 
         @*function showFullClaimHistory() {
@@ -282,11 +321,14 @@
         }
 
         function showAllHistory() {
+            var $elem = $(this);
+            showSpinnerAppend($elem);
             $.ajax({
                 url: '@Url.Action("СlaimStateHistory")?idClaim=@Model.Id&full=true',
                 method: 'GET',
                 success: function(html) {
                     $('#stateHistoryContainer').html(html);
+                    hideSpinner($elem);
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
@@ -294,6 +336,7 @@
                         title: 'Ошибка!',
                         message: xhr.responseText
                     });
+                    hideSpinner($elem);
                 }
             });
         }

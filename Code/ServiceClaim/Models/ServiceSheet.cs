@@ -49,6 +49,9 @@ namespace ServiceClaim.Models
         public string NotPayedComment { get; set; }
         public string IsPayedCreatorSid { get; set; }
 
+        public string RealSerialNum { get; set; }
+        public bool ForceSaveRealSerialNum { get; set; }
+
         public ServiceSheet()
         {
         }
