@@ -660,3 +660,11 @@ th.row-mark, td.row-mark {
 .text-lg {
     font-size: 1.2em;
 }
+
+.bg-warning-imp {
+    background-color: #fcf8e3 !important;
+}
+
+.group-addon-input {
+    padding: 1px 5px;
+}

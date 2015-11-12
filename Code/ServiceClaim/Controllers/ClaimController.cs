@@ -148,7 +148,7 @@ namespace ServiceClaim.Controllers
         //    }
         //    return Json(new { });
         //}
-        public async Task<ActionResult> List(int? state, int? client, int? topRows)
+        public ActionResult List(int? state, int? client, int? topRows)
         {
             //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
             //        AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
@@ -213,6 +213,8 @@ namespace ServiceClaim.Controllers
                 model.Contractor = new Contractor() { Id = MainHelper.GetValueInt(Request.Form["ctrList"]) };
                 model.Contract = new Contract() { Id = MainHelper.GetValueInt(Request.Form["contList"]) };
                 model.Device = new Device() { Id = MainHelper.GetValueInt(Request.Form["devList"]) };
+                model.DeviceUnknown = Request.Form.AllKeys.Contains("DeviceUnknown");
+                model.ContractUnknown = Request.Form.AllKeys.Contains("ContractUnknown");
                 model.Descr = Request.Form["descr"];
                 model.ClientSdNum = Request.Form["client_sd_num"];
                 bool result = model.Save(out responseMessage);
@@ -971,6 +973,13 @@ namespace ServiceClaim.Controllers
         {
             bool exists = Device.CheckSerialNumIsExists(serialNum, idClaim);
             return Json(new {exists = exists});
+        }
+
+        [HttpPost]
+        public JsonResult GetModelSelectionList(string model)
+        {
+            var list = Device.GetModelSelectionList(model);
+             return Json(list);
         }
     }
 }

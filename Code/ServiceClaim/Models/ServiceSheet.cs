@@ -52,6 +52,8 @@ namespace ServiceClaim.Models
         public string RealSerialNum { get; set; }
         public bool ForceSaveRealSerialNum { get; set; }
 
+        public int RealDeviceModel { get; set; }
+
         public ServiceSheet()
         {
         }

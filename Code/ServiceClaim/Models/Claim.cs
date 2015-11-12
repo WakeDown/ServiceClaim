@@ -42,6 +42,8 @@ namespace ServiceClaim.Models
         public EmployeeSm Manager { get; set; }
         public EmployeeSm Tech { get; set; }
         public EmployeeSm Changer { get; set; }
+        public bool ContractUnknown { get; set; }
+        public bool DeviceUnknown { get; set; }
 
         public string DateStateChangeStr => string.Format("{0:dd.MM.yy hh:mm}", DateStateChange);
         public string DateCreateStr => string.Format("{0:dd.MM.yy hh:mm}", DateCreate);

@@ -87,5 +87,13 @@ namespace ServiceClaim.Models
             var model = JsonConvert.DeserializeObject<bool>(jsonString);
             return model;
         }
+
+        public static IEnumerable<KeyValuePair<int ,string>> GetModelSelectionList(string modelStr)
+        {
+            Uri uri = new Uri($"{OdataServiceUri}/Device/GetModelSelectionList?model={modelStr}");
+            string jsonString = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<int, string>>>(jsonString);
+            return model;
+        }
     }
 }

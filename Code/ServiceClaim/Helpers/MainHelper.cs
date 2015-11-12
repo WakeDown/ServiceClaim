@@ -22,6 +22,24 @@ namespace ServiceClaim.Helpers
 
             return result;
         }
+
+        public static bool GetValueBool(object obj)
+        {
+            bool result = false;
+
+            try
+            {
+                result = Convert.ToBoolean(obj);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return result;
+        }
+        
+
         public static string ShortName(string fullName)
         {
             if (String.IsNullOrEmpty(fullName)) return String.Empty;

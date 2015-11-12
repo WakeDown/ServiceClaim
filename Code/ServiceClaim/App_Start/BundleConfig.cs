@@ -14,6 +14,7 @@ namespace ServiceClaim
                        "~/Scripts/jquery.unobtrusive-ajax.js",
                        "~/Scripts/jquery.mask.min.js",
                        "~/Scripts/jquery-dateformat.js"
+                       //"~/Scripts/jquery-autocomplete.js"
                        ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -26,6 +27,7 @@ namespace ServiceClaim
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrapValidator.js",
                       "~/Scripts/bootstrap-datepicker.js",
                         "~/Scripts/bootstrap-datepicker.ru.js",
                         "~/Scripts/bootstrap-multiselect.js",
@@ -41,11 +43,13 @@ namespace ServiceClaim
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-theme.css",
+                      "~/Content/bootstrapValidator.css",
                       "~/Content/font-awesome.css",
                       "~/Content/bootstrap-datepicker3.css",
                       "~/Content/bootstrap-timepicker.min.css",
                       "~/Content/bootstrap-multiselect.min.css",
                       "~/Content/bootstrap-dialog.css",
+                       //"~/Content/jquery-autocomplete.css",
                       "~/Content/site.css",
                       "~/Content/animation.css"));
 
