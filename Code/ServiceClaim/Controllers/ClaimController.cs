@@ -481,8 +481,14 @@ namespace ServiceClaim.Controllers
                 TempData["error"] = ex.Message;
                 return RedirectToAction("Index", new { id = model.Id });
             }
-
-            return RedirectToAction("Index", new { id = model.Id });
+            if (model.ServiceSheet4Save.ZipClaim.HasValue && model.ServiceSheet4Save.ZipClaim.Value)
+            {
+                return RedirectToAction("Index", new {id = model.Id});
+            }
+            else
+            {
+                return View("WindowClose");
+            }
             //return View("WindowClose");
             //return RedirectToAction("List");
         }
@@ -618,6 +624,25 @@ namespace ServiceClaim.Controllers
 
                     //return RedirectToAction("Index", new { id = responseMessage.Id });
                 }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+
+            return View("WindowClose");
+            //return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult ContractChoice(Claim model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.Go(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {

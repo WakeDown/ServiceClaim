@@ -126,6 +126,10 @@
             {
                 @Html.Partial("ZipIssue", Model)
             }
+            @if (Model.State.SysName.ToUpper().Equals("CONTRACTSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
+            {
+                @Html.Partial("ContractChoice", Model)
+            }
             @*Доступ только текущему СТП*@
             @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech)))
             {

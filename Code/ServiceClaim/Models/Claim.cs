@@ -16,8 +16,10 @@ namespace ServiceClaim.Models
     {
         public int Id { get; set; }
         public string Sid { get; set; }
+        public int IdContractor { get; set; }
         public Contractor Contractor { get; set; }
         public Contract Contract { get; set; }
+        public int IdContract { get; set; }
         public Device Device { get; set; }
         public string ContractorName { get; set; }
         public string ContractName { get; set; }
