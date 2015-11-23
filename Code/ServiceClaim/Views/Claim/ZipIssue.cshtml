@@ -9,77 +9,79 @@
 
 <div class="row">
     <div class="col-lg-push-2 col-lg-9">
-        <blockquote class="bg-danger text-sm">
-            @if ((orderedZipItemList != null && orderedZipItemList.Any()) || serviceSheet.ZipClientGivenInstall)
+        
+    @if ((orderedZipItemList != null && orderedZipItemList.Any()) || serviceSheet.ZipClientGivenInstall)
             {
-                <h4>Установка ЗИП</h4>
-                <table class="table table-bordered bg-white">
-                    <tr class="bg-primary">
-                        <th class="min-width"></th>
-                        <th style="width: 100px">парт номер</th>
-                        <th style="width: 250px">наименование</th>
-                        <th style="width: 100px">количество</th>
-                        @*<th style="width: 15%">предоставил клиент</th>*@
-                        <th  style="width: 100px"></th>
-                    </tr>
-                    @if (orderedZipItemList.Any())
-                    {
-                        <tbody id="issuedZipIssueItemsContainer">
-                            @foreach (var item in orderedZipItemList)
+        <blockquote class="bg-danger text-sm">
+            <h4>Установка ЗИП</h4>
+            <table class="table table-bordered bg-white">
+                <tr class="bg-primary">
+                    <th class="min-width"></th>
+                    <th style="width: 100px">парт номер</th>
+                    <th style="width: 250px">наименование</th>
+                    <th style="width: 100px">количество</th>
+                    @*<th style="width: 15%">предоставил клиент</th>*@
+                    <th style="width: 100px"></th>
+                </tr>
+                @if (orderedZipItemList.Any())
+                {
+                    <tbody id="issuedZipIssueItemsContainer">
+                        @foreach (var item in orderedZipItemList)
+                        {
+                            <tr id="issued-zip-item-@item.Id" @(!item.Installed ? "notinstalled=notinstalled" : String.Empty)>
+                                <td class="text-center valign-middle">
+                                    <button ziid="@item.Id" class="btn @(item.Installed ? "btn-success" : "btn-primary")" name="btn-issued-zip-item-installed" @(item.Installed ? "disabled=disabled" : String.Empty)>Установлено</button>
+                                </td>
+                                <td class="text-center valign-middle">@item.PartNum</td>
+                                <td class="text-center valign-middle">@item.Name</td>
+                                <td class="text-center valign-middle">@item.Count</td>
+                                @*<td class="text-center">
+                                        @(item.ClientGiven ? "да" : "нет")
+                                    </td>*@
+                                <td class="text-center valign-middle">
+                                    <button ziid="@item.Id" class="btn btn-danger" name="btn-issued-zip-item-installed-cancel" @(!item.Installed ? "disabled=disabled" : String.Empty)>отмена</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+                @if (serviceSheet.ZipClientGivenInstall)
+                {
+                    <tbody id="zipClientGivenInstall" class="bg-info">
+                        @if (clientGivenInstalledZipItemList.Any())
+                        {
+                            foreach (ServiceSheetZipItem item in clientGivenInstalledZipItemList)
                             {
-                                <tr id="issued-zip-item-@item.Id" @(!item.Installed ? "notinstalled=notinstalled" : String.Empty)>
-                                    <td class="text-center valign-middle">
-                                        <button ziid="@item.Id" class="btn @(item.Installed ? "btn-success" : "btn-primary")" name="btn-issued-zip-item-installed" @(item.Installed ? "disabled=disabled" : String.Empty)>Установлено</button>
-                                    </td>
+                                <tr id="zip-clgiv-inst-item-@item.Id">
+                                    <th>предоставлено клиентом</th>
                                     <td class="text-center valign-middle">@item.PartNum</td>
                                     <td class="text-center valign-middle">@item.Name</td>
                                     <td class="text-center valign-middle">@item.Count</td>
-                                    @*<td class="text-center">
-                                        @(item.ClientGiven ? "да" : "нет")
-                                    </td>*@
-                                    <td class="text-center valign-middle">
-                                        <button ziid="@item.Id" class="btn btn-danger" name="btn-issued-zip-item-installed-cancel" @(!item.Installed ? "disabled=disabled" : String.Empty)>отмена</button>
-                                    </td>
+                                    <td class="text-center valign-middle"><a ziid="@item.Id" titel="удалить" href="#!" name="zip-clgiv-inst-item-del"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                             }
-                        </tbody>
-                    }
-                    @if (serviceSheet.ZipClientGivenInstall)
-                    {
-                        <tbody id="zipClientGivenInstall" class="bg-info">
-                            @if (clientGivenInstalledZipItemList.Any())
-                            {
-                                foreach (ServiceSheetZipItem item in clientGivenInstalledZipItemList)
-                                {
-                                    <tr id="zip-clgiv-inst-item-@item.Id">
-                                        <th>предоставлено клиентом</th>
-                                        <td class="text-center valign-middle">@item.PartNum</td>
-                                        <td class="text-center valign-middle">@item.Name</td>
-                                        <td class="text-center valign-middle">@item.Count</td>
-                                        <td class="text-center valign-middle"><a ziid="@item.Id" titel="удалить" href="#!" name="zip-clgiv-inst-item-del"><i class="fa fa-trash"></i></a></td>
-                                    </tr>
-                                }
-                            }
-                            @*<tr>
-                                    <td colspan="5"><h4>ЗИП предоставленный клиентом</h4></td>
-                                </tr>*@
-                        </tbody>
+                        }
+                        @*<tr>
+                                <td colspan="5"><h4>ЗИП предоставленный клиентом</h4></td>
+                            </tr>*@
+                    </tbody>
                         <tr class="bg-info">
                             <th>предоставлено клиентом</th>
-                            <td><input id="zipClientGivenInstallNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required"/></td>
-                            <td><input id="zipClientGivenInstallName" type="text" placeholder="наименование" class="form-control required-mark" required="required"/></td>
-                            <td><input id="zipClientGivenInstallCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1"/></td>
+                            <td><input id="zipClientGivenInstallNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required" /></td>
+                            <td><input id="zipClientGivenInstallName" type="text" placeholder="наименование" class="form-control required-mark" required="required" /></td>
+                            <td><input id="zipClientGivenInstallCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1" /></td>
                             @*<td>да</td>*@
                             <td class="text-center">
                                 <button class="btn btn-primary" id="zipClientGivenInstalled" ssid="@serviceSheet.Id">Установлено</button>
                             </td>
                         </tr>
-                        
-                    }
 
-                </table>
-            }
+                }
+
+            </table>
         </blockquote>
+    }
+        
         @if (serviceSheet.ZipClaim.HasValue && serviceSheet.ZipClaim.Value)
         {
             <blockquote class="bg-success text-sm">
@@ -107,7 +109,7 @@
                                             @(item.ClientGiven ? "да" : "нет")
                                         </td>*@
                                     <td class="text-center valign-middle">
-                                        <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a>
+                                        <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del" class="btn btn-link nopadding nomargin"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             }

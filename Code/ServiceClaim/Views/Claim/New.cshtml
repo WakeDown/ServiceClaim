@@ -328,12 +328,12 @@
             showSpinnerAppend($info);
             var devId = $('#devList').val();
             var clientSdNum = $('#devClientSdFind').val();
-            if (clientSdNum == '') {
+            if (clientSdNum == '' && (devId == null || devId <= 0)) {
                 $info.removeClass('bg-info');
                 $info.removeClass('bg-danger');
                 $info.removeClass('bg-success');
-                $info.addClass('bg-danger');
-                $info.text('Введите № SD клиента');
+                $info.addClass('bg-info');
+                $info.text(' ');
                 hideSpinner($('#claimsContainer'));
                 return;
             }

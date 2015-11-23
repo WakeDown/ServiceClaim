@@ -30,7 +30,7 @@ namespace ServiceClaim.Controllers
         {
             if (
                 !CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
-                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator, AdGroup.AddNewClaim))
+                    AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator, AdGroup.AddNewClaim, AdGroup.ServiceClaimView))
                 return HttpNotFound();
 
             if (!id.HasValue || id <= 0) return RedirectToAction("New");

@@ -46,8 +46,8 @@
                                 @*@Html.TextBoxFor(m => m.ServiceSheet4Save.RealDeviceModel, new {id = "realDeviceModel", @class = "form-control ", required = "required", placeholder = "Модель"})*@
                             </div>
                             @*@Html.HiddenFor(m => m.ServiceSheet4Save.RealDeviceModel, new {id = "realDeviceModelHidden"})*@
-                            @Html.HiddenFor(m => m.ServiceSheet4Save.RealSerialNum, new {id = "realSerialNumHidden"})
-                            @Html.HiddenFor(m => m.ServiceSheet4Save.ForceSaveRealSerialNum, new {id = "forceSerialNumSave"})
+                            @Html.HiddenFor(m => m.ServiceSheet4Save.RealSerialNum, new { id = "realSerialNumHidden" })
+                            @Html.HiddenFor(m => m.ServiceSheet4Save.ForceSaveRealSerialNum, new { id = "forceSerialNumSave" })
                             @*<input type="text" class="form-control " required="required" style="text-transform: uppercase" placeholder="серийный номер"/>*@
                         </div>
                     </div>
@@ -154,22 +154,22 @@
 }
 
 @*<div id="modalNotPayedComment" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Комментарий</h4>
-            </div>
-            <div class="modal-body">
-                <textarea id="notPayedComment" rows="3" class="form-control required-mark" placeholder="Почему не оплачено?"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                <a type="button" id="notpay" class="btn btn-primary">Сохранить</a>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Комментарий</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea id="notPayedComment" rows="3" class="form-control required-mark" placeholder="Почему не оплачено?"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <a type="button" id="notpay" class="btn btn-primary">Сохранить</a>
+                </div>
             </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
 
 @*Подобная форма ServiceSheetTech*@
 <script type="text/javascript">
@@ -303,7 +303,7 @@
         //$('#save').click(function() {
         //    $('#ServiceSheetForm').bootstrapValidator('validate');
         //    var formIsValid = $('#ServiceSheetForm').hasClass('has-success');
-            
+
         //    alert(formIsValid);
         //});
 
@@ -330,32 +330,27 @@
                 }
             }
         }).on('success.form.bv', function(e) {
-            if (!forceSubmit){
-            // Prevent form submission
-            e.preventDefault();
-            // Get the form instance
             var $form = $(e.target);
-            // Get the BootstrapValidator instance
-            var bv = $form.data('bootstrapValidator');
-            // Use Ajax to submit form data
-            //$.post($form.attr('action'), $form.serialize(), function(result) {
-            //    console.log(result);
-            //}, 'json');
-            showRetrySerialNum();
-}
+            var deviceHasNoNumber = @(deviceHasNoNumber?"true":"false");
+            if (deviceHasNoNumber) {
+                e.preventDefault();
+                if (!forceSubmit){
+                    var bv = $form.data('bootstrapValidator');
+                    showRetrySerialNum();
+                }
+            } else {
+
+                //$.post($form.attr('action'), $form.serialize(), function(result) {
+                //    console.log(result);
+                //}, 'json');
+            }
         }).on('error.form.bv', function(e) {
-            // Prevent form submission
             e.preventDefault();
-            // Get the form instance
             var $form = $(e.target);
-            // Get the BootstrapValidator instance
             var bv = $form.data('bootstrapValidator');
             // Use Ajax to submit form data
-            //$.post($form.attr('action'), $form.serialize(), function(result) {
-            //    console.log(result);
-            //}, 'json');
+            
             setTimeout(function() {
-                
                 var $btnSave = $('#save');
                 hideSpinner($btnSave);
                 $btnSave.prop('disabled', false);
@@ -424,22 +419,22 @@
             });
         }
     }
-    
+
 
     function findDeviceModel() {
         var $elem = $('#deviceModelSearch');
         var model = $elem.val();
         var $sel = $('#realDeviceModel');
         $sel.find('option').remove();
-        
+
         if (model.length >= 3) {
             $.ajax({
                 url: '@Url.Action("GetModelSelectionList")',
                 method: 'POST',
                 data: { model: model },
                 success: function(data) {
-                    
-                    
+
+
                     if (data.length > 0) {
                         $sel.append('<option value="">выберите модель</option>');
                         for (var i = 0; i < data.length; i++) {
@@ -447,7 +442,7 @@
                             var opt = '<option value="' + item.Key + '">' + item.Value + '</option>';
                             $sel.append(opt);
                         }
-                        
+
                     } else {
                         $sel.append('<option value="">ничего не найдено</option>');
                     }

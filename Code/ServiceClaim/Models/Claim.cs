@@ -47,8 +47,8 @@ namespace ServiceClaim.Models
         public bool ContractUnknown { get; set; }
         public bool DeviceUnknown { get; set; }
 
-        public string DateStateChangeStr => string.Format("{0:dd.MM.yy hh:mm}", DateStateChange);
-        public string DateCreateStr => string.Format("{0:dd.MM.yy hh:mm}", DateCreate);
+        public string DateStateChangeStr => string.Format("{0:dd.MM.yy HH:mm}", DateStateChange);
+        public string DateCreateStr => string.Format("{0:dd.MM.yy HH:mm}", DateCreate);
         public string ClaimTypeSysName { get; set; }
 
         public string StateChangeDateDiffStr
