@@ -12,7 +12,7 @@
 
 <p>
     <div class="row">
-        <div class="col-lg-3 col-sm-12 col-xs-12 hidden-sm hidden-xs">
+        <div class="col-lg-2 col-sm-12 col-xs-12 hidden-sm hidden-xs">
             <div class="pull-left">
                 <nav>
                     <ul class="pagination nomargin pages">
@@ -20,7 +20,7 @@
                 </nav>
             </div>
         </div>
-        <div class="col-lg-7 col-sm-12 col-xs-12">
+        <div class="col-lg-8 col-sm-12 col-xs-12">
             <div id="stateGroupFilter"></div>
         </div>
         <div class="col-sm-6 col-xs-6 hidden-md hidden-lg">
@@ -344,11 +344,12 @@
             success: function(data) {
                 var $cont = $('#stateGroupFilter');
                 $cont.find('ul').remove();
-                var $ul = $('<div class="row"></div>');
+                var $ul = $('<ul class="list-inline"></div>');
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
-                        var li = '<div class="col-sm-6 col-xs-6 col-lg-2"><a name="stateGroupFilterItem" value="' + item.Id + '" class="btn btn-block state-group-filter-item text-sm" style="background-color: #' + item.BackgroundColor + '; color: #' + item.ForegroundColor + '"><span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge">' + item.ClaimCount + '</span>&nbsp;' + item.Name + '&nbsp;</a></div>';
+                        //var li = '<div class="col-sm-6 col-xs-6 col-lg-2"><a name="stateGroupFilterItem" value="' + item.Id + '" class="btn btn-block state-group-filter-item text-sm" style="background-color: #' + item.BackgroundColor + '; color: #' + item.ForegroundColor + '"><span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge">' + item.ClaimCount + '</span>&nbsp;' + item.Name + '&nbsp;</a></div>';
+                        var li = '<li><a name="stateGroupFilterItem" value="' + item.Id + '" class="btn btn-block state-group-filter-item text-sm" style="background-color: #' + item.BackgroundColor + '; color: #' + item.ForegroundColor + '"><span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge">' + item.ClaimCount + '</span>&nbsp;' + item.Name + '&nbsp;</a></div>';
                         $ul.append(li);
                     }
                     $cont.append($ul);

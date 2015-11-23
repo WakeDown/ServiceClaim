@@ -49,6 +49,7 @@ namespace ServiceClaim.Models
 
         public string DateStateChangeStr => string.Format("{0:dd.MM.yy hh:mm}", DateStateChange);
         public string DateCreateStr => string.Format("{0:dd.MM.yy hh:mm}", DateCreate);
+        public string ClaimTypeSysName { get; set; }
 
         public string StateChangeDateDiffStr
         {

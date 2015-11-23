@@ -11,102 +11,171 @@
 }
 @section PanelBody
 {
-    @using (Html.BeginForm("New", "Claim", FormMethod.Post, new { @id = "clForm", @class = "form-horizontal", role = "form" }))
-    {
-        <div class="form-group">
-            <label class="col-lg-2 control-label" for="ctrFind">Клиент</label>
-            <div class="col-lg-2">
-                <input id="ctrFind" type="text" placeholder="поиск клиента" class="form-control" />
-                <small class="text-danger"></small>
+    <div id="tabs" class="row">
+        <div class="col-lg-6 col-lg-push-2">
+            <div class="row">
+                <div class="col-lg-6">
+                    <a id="tabIncident" class="tab tab-danger active">Обращение</a>
+                </div>
+                @*<div class="col-lg-6">
+                    <a id="tabCartridges" class="tab tab-warning">Заказ</a>
+                </div>*@
             </div>
-            <div class="col-lg-4">
-                <div class="input-group" style="width: 100%">
-                    <div id="ctrSpinner" class="spinner on-input"><i class="fa fa-spinner fa-spin"></i></div>
-                    <select id="ctrList" name="ctrList" class="form-control required-mark" required="required" data-error="Выберите Контрагента"></select>
-                    <div class="input-group-addon" style="width: 50px">
-                        <span id="ctrListCount" class="label label-info"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-lg-push-2">
+            @*<ul class="nav nav-tabs" role="tablist" style="display: none !important">
+                    <li role="presentation" class="active"><a href="#incident" aria-controls="incident" role="tab" data-toggle="tab" class="tab-danger">Инцидент</a></li>
+                    <li role="presentation"><a href="#cartridges" aria-controls="cartridges" role="tab" data-toggle="tab">Картриджи</a></li>
+                </ul>*@
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active panel-danger light" id="incidentForm">
+                    <div class="panel-body">
+                        @using (Html.BeginForm("New", "Claim", FormMethod.Post, new { @id = "clForm", @class = "form-horizontal", role = "form" }))
+                        {
+                            <input type="hidden" value="INCIDENT" id="ClaimTypeSysName" name="ClaimTypeSysName" />
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label" for="ctrFind">Клиент</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group">
+                                        <input id="ctrFind" type="text" placeholder="поиск клиента" class="form-control"/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" id="ctrSearch"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                    </div>
+                                <div class="col-lg-7">
+                                    <div class="input-group" style="width: 100%">
+                                        <div class="input-group-addon" style="width: 50px">
+                                            <span id="ctrListCount" class="label label-info"></span>
+                                        </div>
+                                        <div id="ctrSpinner" class="spinner on-input">
+                                            <i class="fa fa-spinner fa-spin"></i>
+                                        </div>
+                                        <select id="ctrList" name="ctrList" class="form-control required-mark" required="required" data-error="Выберите Контрагента"></select>
+                                    </div>
+                                </div>
+                                @*<div class="col-lg-1"><span class="help-block with-errors"></span></div>*@
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label" for="contFind">Договор</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group">
+                                        <input id="contFind" type="text" placeholder="поиск договора" class="form-control" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" id="contSearch"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="input-group" style="width: 100%">
+                                        <div class="input-group-addon" style="width: 50px">
+                                            <span id="contListCount" class="label label-info"></span>
+                                        </div>
+                                        <span id="contSpinner" class="spinner on-input"><i class="fa fa-spinner fa-spin"></i></span>
+                                        <select id="contList" name="contList" class="form-control required-mark" required="required" data-error="Выберите Договор"></select>
+                                        <div class="input-group-addon" style="width: 100px">
+                                            <input id="contUnknown" name="ContractUnknown" type="checkbox" />&nbsp; неизвестен
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="col-lg-1"><span class="help-block with-errors"></span></div>*@
+                            </div>
+                            <div class="form-group" id="devGroup">
+                                <label class="col-lg-2 control-label" for="devFind">Аппарат</label>
+                                <div class="col-lg-3">
+                                    <p class="no-marg-bot">
+                                        <div class="input-group">
+                                            <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" id="devSearch"><i class="fa fa-search"></i></button>
+                                            </span>
+                                        </div>
+                                        <div class="input-group">
+                                            <input id="devSnFind" type="text" placeholder="cерийный номер" class="form-control" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" id="devSnSearch"><i class="fa fa-search"></i></button>
+                                            </span>
+                                        </div>
+                                        
+                                    </p>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="input-group" style="width: 100%">
+                                        <div class="input-group-addon" style="width: 50px">
+                                            <span id="devListCount" class="label label-info"></span>
+                                        </div>
+                                        <span id="devSpinner" class="spinner on-input"><i class="fa fa-spinner fa-spin"></i></span>
+                                        <select id="devList" name="devList" class="form-control required-mark" required="required" data-error="Выберите Аппарат"></select>
+                                        <input id="devListData" type="hidden" value=""/>
+                                        <div class="input-group-addon" style="width: 100px">
+                                            <input id="devUnknown" name="DeviceUnknown" type="checkbox"/>&nbsp; неизвестен
+                                        </div>
+                                    </div>
+                                    <p>
+                                        <div id="vendorFilterCntnr"></div>
+                                    </p>
+                                </div>
+                                @*<div class="col-lg-1"><span class="help-block with-errors"></span></div>*@
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label" for="devClientSdFind">№ SD клиента</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group">
+                                        <input id="devClientSdFind" name="client_sd_num" type="text" placeholder="№ SD клиента" class="form-control" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" id="clientSdsearch"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-push-2 col-lg-10">
+                                    <blockquote class="bg-info no-marg-bot" id="activeClaimsInfo">&nbsp;</blockquote>
+                                    <div id="claimsContainer" class="row">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label" for="descr">Описание</label>
+                                <div class="col-lg-10">
+                                    <textarea id="descr" name="descr" type="text" placeholder="Что случилось?" class="form-control required-mark" required="required" rows="3" data-error="Введите описание заявки"></textarea>
+                                </div>
+                                @*<div class="col-lg-1"><span class="help-block with-errors"></span></div>*@
+                            </div>
+                            @*<div class="form-group">
+                                <label class="col-lg-2 control-label" for="client_sd_num">№ SD заказчика</label>
+                                <div class="col-lg-4">
+                                    <input id="client_sd_num" name="client_sd_num" type="text" class="form-control" data-error="Введите № SD заказчика" />
+                                </div>
+                            </div>*@
+                            <div class="form-group">
+                                <div class="col-lg-push-2 col-lg-5">
+                                    @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@
+                                    @*<a id="save" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</a>*@
+                                    <button id="save" type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</button>
+                                    <a class="btn btn-default" href="@Url.Action("New")"><i class="fa fa-refresh"></i>&nbsp;очистить</a>
+                                    @if (TempData["error"] != null)
+                                    {
+                                        <blockquote class="alert-danger">
+                                            @TempData["error"]
+                                        </blockquote>
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label" for="contFind">Договор</label>
-            <div class="col-lg-2">
-                <input id="contFind" type="text" placeholder="поиск договора" class="form-control" />
-            </div>
-            <div class="col-lg-4">
-                <div class="input-group" style="width: 100%">
-                    <span id="contSpinner" class="spinner on-input"><i class="fa fa-spinner fa-spin"></i></span>
-                    <select id="contList" name="contList" class="form-control required-mark" required="required" data-error="Выберите Договор"></select>
-                    <div class="input-group-addon" style="width: 50px">
-                        <span id="contListCount" class="label label-info"></span>
+                @*<div role="tabpanel" class="tab-pane bg-warning" id="cartridges">
+                    <div class="panel-body">
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label" for="devFind">Аппарат</label>
-            <div class="col-lg-2">
-                <p>
-                    <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control" />
-                    <input id="devSnFind" type="text" placeholder="cерийный номер" class="form-control"/>
-                    <input id="devClientSdFind" type="text" placeholder="№ SD клиента" class="form-control" />
-                </p>
-            </div>
-            <div class="col-lg-4">
-                <div class="input-group" style="width: 100%">
-                    <span id="devSpinner" class="spinner on-input"><i class="fa fa-spinner fa-spin"></i></span>
-                    <select id="devList" name="devList" class="form-control required-mark" required="required" data-error="Выберите Аппарат"></select>
-                    <input id="devListData" type="hidden" value="" />
-                    <div class="input-group-addon" style="width: 50px">
-                        <span id="devListCount" class="label label-info"></span>
-                    </div>
-                </div>
-                <p>
-                    <div id="vendorFilterCntnr"></div>
-                </p>
-            </div>
-            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
-        </div>
-        <div class="form-group">
-            <div class="col-lg-push-2 col-lg-6">
-                <blockquote class="bg-info no-marg-bot" id="activeClaimsInfo">&nbsp;</blockquote>
-                <div id="claimsContainer" class="row">
-
-                </div>
+                </div>*@
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label" for="descr">Описание</label>
-            <div class="col-lg-6">
-                <textarea id="descr" name="descr" type="text" placeholder="Что случилось?" class="form-control required-mark" required="required" rows="3" data-error="Введите описание заявки"></textarea>
-            </div>
-            <div class="col-lg-2"><span class="help-block with-errors"></span></div>
-        </div>
-            <div class="form-group">
-                <label class="col-lg-2 control-label" for="client_sd_num">№ SD заказчика</label>
-                <div class="col-lg-2">
-                    <input id="client_sd_num" name="client_sd_num" type="text" class="form-control" data-error="Введите № SD заказчика" />
-                </div>
-                <div class="col-lg-2"><span class="help-block with-errors"></span></div>
-            </div>
-            <div class="form-group">
-                <div class="col-lg-push-2 col-lg-5">
-                    @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@
-                    @*<a id="save" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</a>*@
-                    <button id="save" type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</button>
-                    <a class="btn btn-default" href="@Url.Action("New")"><i class="fa fa-refresh"></i>&nbsp;очистить</a>
-                    @if (TempData["error"] != null)
-                    {
-                        <blockquote class="alert-danger">
-                            @TempData["error"]
-                        </blockquote>
-                    }
-                </div>
-            </div>
-    }
+    </div>
 }
 
 @section scripts
@@ -114,29 +183,39 @@
     <script type="text/javascript">
         var updCtorList = false;
         var updContList = false;
-        $(document).ready(function() {
-            $('#ctrFind').keypress(function(e) {
+        $(document).ready(function () {
+            $('#ctrFind').keypress(function (e) {
                 if (e.which !== 13) return;
                 ctrFind(e);
             });
+            $('#ctrSearch').click(ctrFind);
             //.blur(ctrFind);
-            $('#contFind').keypress(function(e) {
+            $('#contFind').keypress(function (e) {
                 if (e.which !== 13) return;
-                e.preventDefault();
-                displayCtrs();
-                displayConts();
-                $('#contList').focus();
+                contFind();
             });
+            $('#contSearch').click(contFind);
             //    .blur(function () {
             //    displayCtrs();
             //    displayConts();
             //});
-            $('#devFind').keypress(devFind);
-            $('#devSnFind').keypress(devFind);
+            $('#devFind').keypress(function(e) {
+                if (e.which !== 13) return;
+                devFind();
+            });
+            $('#devSearch').click(devFind);
+            $('#devSnFind').keypress(
+                function (e) {
+                    if (e.which !== 13) return;
+                    devFind();
+                }
+                );
+            $('#devSnSearch').click(devFind);
             $('#devClientSdFind').keypress(function (e) {
                 if (e.which !== 13) return;
                 showClaims();
             });
+            $('#clientSdsearch').click(showClaims);
             $('#ctrList').change(setCtrContNdev);
             $('#contList').change(setContDev);
             $('#devList').change(function () {
@@ -156,10 +235,79 @@
             //    if (dev == undefined || dev <= 0)
             //    { return false; }
             //});
+
+            $('#contUnknown').click(function () {
+                var checked = $(this).is(':checked');
+                contUnknownDisplay(checked);
+            });
+
+            $('#devUnknown').click(devUnknownClick);
+
+            $('#tabIncident').click(function() {
+                //$('.nav-tabs a[href="#incident"]').tab('show');
+                var $cont = $('#incidentForm');
+                $cont.addClass('panel-danger');
+                $cont.removeClass('panel-warning');
+                $('.tab', '#tabs').removeClass('active');
+                $(this).addClass('active');
+                $('#devGroup').show();
+                $('#devList').prop('required', true);
+                $('#ClaimTypeSysName').val('INCIDENT');
+            });
+            $('#tabCartridges').click(function () {
+                //$('.nav-tabs a[href="#cartridges"]').tab('show');
+                var $cont = $('#incidentForm');
+                $cont.removeClass('panel-danger');
+                $cont.addClass('panel-warning');
+                $('.tab', '#tabs').removeClass('active');
+                $(this).addClass('active');
+                $('#devGroup').hide();
+                $('#devList').prop('required', false);
+                $('#ClaimTypeSysName').val('CARTRIDGE');
+            });
         });
 
+        function contFind(e) {
+            e.preventDefault();
+            displayCtrs();
+            displayConts();
+            $('#contList').focus();
+        }
+
+        function contUnknownDisplay(unknown) {
+            $('#contList').prop('disabled', unknown);
+            var $elem = $('#contUnknown');
+
+
+            if (unknown == true) {
+                $('#devUnknown').prop('checked', true);
+                $elem.parent().addClass('bg-warning-imp');
+                devUnknownDisplay(true);
+            } else {
+                $elem.parent().removeClass('bg-warning-imp');
+                $elem.prop('checked', false);
+            }
+        }
+
+        function devUnknownClick() {
+            var $elem = $('#devUnknown');
+            var checked = $elem.is(':checked');
+            devUnknownDisplay(checked);
+        }
+
+        function devUnknownDisplay(unknown) {
+            var $elem = $('#devUnknown');
+            $('#devList').prop('disabled', unknown);
+            if (unknown) {
+                $elem.parent().addClass('bg-warning-imp');
+            } else {
+                contUnknownDisplay(false);
+                $elem.parent().removeClass('bg-warning-imp');
+            }
+        }
+
         function devFind(e) {
-            if (e.which !== 13) return;
+            
             $('#ctrFind').text('');
             $('#contFind').text('');
             $('#devFind').text('');
@@ -167,11 +315,10 @@
             $('#devList').focus();
         }
 
-//Список активных заявок
+        //Список активных заявок
         function showClaims() {
             $('#claimsContainer').empty();
             var $info = $('#activeClaimsInfo');
-            
             $info.removeClass('bg-info');
             $info.removeClass('bg-danger');
             $info.removeClass('bg-success');
@@ -181,10 +328,19 @@
             showSpinnerAppend($info);
             var devId = $('#devList').val();
             var clientSdNum = $('#devClientSdFind').val();
+            if (clientSdNum == '') {
+                $info.removeClass('bg-info');
+                $info.removeClass('bg-danger');
+                $info.removeClass('bg-success');
+                $info.addClass('bg-danger');
+                $info.text('Введите № SD клиента');
+                hideSpinner($('#claimsContainer'));
+                return;
+            }
             $.ajax({
                 url: '@Url.Action("GetClaimList")?idDevice=' + devId + '&clientSdNum=' + clientSdNum + '&serialNum=',
                 method: 'POST',
-                success: function(data) {
+                success: function (data) {
                     $('#claimsContainer').empty();
                     if (data.List.length > 0) {
                         $info.removeClass('bg-info');
@@ -271,9 +427,9 @@
             $('#ctrList').find('option').remove();
             $('#ctrListCount').text(0);
             $('#contListCount').text(0);
-                displayCtrs();
-                displayConts();
-                showClaims();
+            displayCtrs();
+            displayConts();
+            showClaims();
         }
 
         function saveDisplay(display) {
@@ -281,18 +437,21 @@
                 $('#save').prop('disabled', true);
             } else {
                 var ctr = $('#ctrList').val();
-                    if(ctr == undefined || ctr <= 0)
-                    { return false; }
+                if (ctr == undefined || ctr <= 0) {
+                    return false;
+                }
 
-                    var cont = $('#contList').val();
-                    if (cont == undefined || cont <= 0)
-                    { return false; }
+                var cont = $('#contList').val();
+                if (cont == undefined || cont <= 0) {
+                    return false;
+                }
 
-                    var dev = $('#devList').val();
-                    if (dev == undefined || dev <= 0)
-                    { return false; }
+                var dev = $('#devList').val();
+                if (dev == undefined || dev <= 0) {
+                    return false;
+                }
 
-                    $('#save').prop('disabled', false);
+                $('#save').prop('disabled', false);
             }
         }
 
@@ -316,7 +475,7 @@
                 url: '@Url.Action("GetDevices")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName, serialNum: serialNum },
-                success: function(data) {
+                success: function (data) {
                     var $devList = $('#devList');
                     var $vFltrCntnr = $('#vendorFilterCntnr');
                     $devList.find('option').remove();
@@ -398,7 +557,7 @@
 
         function setSdNumRequiredOrNot() {
             var sdrequired = $('#contList :selected').attr('sdrequired');
-            var $sdnum = $('#client_sd_num');
+            var $sdnum = $('#devClientSdFind');
             if (sdrequired === "true") {
                 $sdnum.prop('required', true);
                 $sdnum.addClass('required-mark');
@@ -409,16 +568,16 @@
         }
 
         function displayConts() {
-            
+
             var ctrName = $('#ctrFind').val();
             var ctrId = $('#ctrList').val();
             var contName = $('#contFind').val();
             var contId = $('#contList').val();
             var devId = $('#devList').val();
             var devName = $('#devFind').val();
-            
+
             if (ctrId == 0 || devId == 0) return;
-            
+
             if ((ctrName === '' || ctrId === null) && (contName === '' || contId === null) && devId === null) {
                 $('#contList').find('option').remove();
                 return;
@@ -431,7 +590,7 @@
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
                 success: function (data) {
-                    
+
                     if (data) {
                         if (data.length > 0) {
                             var contList = $('#contList');
@@ -469,7 +628,7 @@
         }
 
         function displayCtrs(updateConNdevLists) {
-            
+
             var ctrName = $('#ctrFind').val();
             var ctrId = $('#ctrList').val();
             var contName = $('#contFind').val();
@@ -491,7 +650,7 @@
                 url: '@Url.Action("GetCtors")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
-                success: function(data) {
+                success: function (data) {
                     var $ctrList = $('#ctrList');
                     $ctrList.find('option').remove();
 

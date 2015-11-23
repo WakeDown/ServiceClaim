@@ -1,4 +1,5 @@
-﻿@model ServiceClaim.Models.Claim
+﻿@using ServiceClaim.Models
+@model ServiceClaim.Models.Claim
 
 @{
     bool deviceHasNoNumber = (Model.Device.FakeSerialNum.HasValue && Model.Device.FakeSerialNum.Value) || Model.DeviceUnknown;
@@ -25,10 +26,10 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        @Html.TextBoxFor(m => m.ServiceSheet4Save.RealSerialNum, new { id = "realSerialNum", @class = "form-control ", required = "required", style = "text-transform: uppercase", placeholder = "серийный номер" })
+                                        @Html.TextBoxFor(m => m.ServiceSheet4Save.RealSerialNum, new { id = "realSerialNum", @class = "form-control input-sm", required = "required", style = "text-transform: uppercase", placeholder = "серийный номер" })
                                     </div>
                                 </div>
-                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
@@ -54,6 +55,13 @@
             </div>
         </div>
     }
+    <div class="row">
+        <label class="col-lg-4 text-right">Тип работ</label>
+        <div class="col-lg-4">
+            @Html.DropDownListFor(m => m.ServiceSheet4Save.WorkTypeId, WorkType.GetSelectionList(), "--выберите тип работ--", new { @class = "form-control required-mark", required = "required", data_error = "Выберите Тип работ", multicol = "true" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
     <div class="row">
         <label class="col-lg-4 text-right">Функциональность оборудования восстановлена</label>
         <div class="col-lg-2">

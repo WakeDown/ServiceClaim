@@ -50,7 +50,7 @@ namespace ServiceClaim.Models
         public string IsPayedCreatorSid { get; set; }
 
         public string RealSerialNum { get; set; }
-        public bool ForceSaveRealSerialNum { get; set; }
+        public bool? ForceSaveRealSerialNum { get; set; }
 
         public int? RealDeviceModel { get; set; }
 

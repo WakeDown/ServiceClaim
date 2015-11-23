@@ -36,3 +36,8 @@ D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\VBCS
 D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\roslyn\VBCSCompiler.exe.config
 D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\Microsoft.Web.Helpers.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\System.Web.Helpers.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\System.Web.WebPages.Deployment.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\System.Web.WebPages.dll
+D:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\System.Web.WebPages.Razor.dll

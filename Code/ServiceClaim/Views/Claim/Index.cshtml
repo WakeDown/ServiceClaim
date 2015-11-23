@@ -21,7 +21,7 @@
 @section PanelBody
 {
     @*@using(Html.BeginForm("Index", "Claim", FormMethod.Post, new {@class="form-horizontal"}))*@
-
+    [@ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)]
     <div class="row">
         <div class="col-lg-8">
             @if (TempData["error"] != null)
