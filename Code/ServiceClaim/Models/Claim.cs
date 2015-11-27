@@ -46,10 +46,16 @@ namespace ServiceClaim.Models
         public EmployeeSm Changer { get; set; }
         public bool ContractUnknown { get; set; }
         public bool DeviceUnknown { get; set; }
-
+        public string AddressStrId { get; set; }
         public string DateStateChangeStr => string.Format("{0:dd.MM.yy HH:mm}", DateStateChange);
         public string DateCreateStr => string.Format("{0:dd.MM.yy HH:mm}", DateCreate);
         public string ClaimTypeSysName { get; set; }
+        public int? IdCity { get; set; }
+        public string CityName { get; set; }
+        public string Address { get; set; }
+        public string ContactName { get; set; }
+        public string ContactPhone { get; set; }
+        public bool DeviceCollective { get; set; }
 
         public string StateChangeDateDiffStr
         {

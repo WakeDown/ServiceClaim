@@ -28,10 +28,10 @@ namespace ServiceClaim.Models
             //Contractor = con.Contractor;
         }
 
-        internal static IEnumerable<Contract> GetList(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null)
+        internal static IEnumerable<Contract> GetList(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null, string addrStrId = null)
         {
             Uri uri = new Uri(
-                $"{OdataServiceUri}/Contract/GetList?idContractor={idContractor}&contractorName={contractorName}&idContract={idContract}&contractNumber={contractNumber}&idDevice={idDevice}&deviceName={deviceName}");
+                $"{OdataServiceUri}/Contract/GetList?idContractor={idContractor}&contractorName={contractorName}&idContract={idContract}&contractNumber={contractNumber}&idDevice={idDevice}&deviceName={deviceName}&addrStrId={addrStrId}");
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<Contract>>(jsonString);
             return model;

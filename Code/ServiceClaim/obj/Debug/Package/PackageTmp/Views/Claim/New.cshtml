@@ -19,7 +19,6 @@
                 </div>
                 <div class="col-lg-6">
                     <a id="tabCartridges" class="tab tab-warning">Заказ</a>
-                    @*btn btn-lg btn-block btn-tab btn-warning light*@
                 </div>
             </div>
         </div>
@@ -33,7 +32,7 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active panel-danger light" id="incidentForm">
                     <div class="panel-body">
-                        @using (Html.BeginForm("New", "Claim", FormMethod.Post, new { @id = "clForm", @class = "form-horizontal", role = "form" }))
+                        @using (Html.BeginForm("New", "Claim", FormMethod.Post, new { @id = "clForm", @class = "form-horizontal" }))
                         {
                             <input type="hidden" value="INCIDENT" id="ClaimTypeSysName" name="ClaimTypeSysName" />
                             <div class="form-group">
@@ -45,7 +44,7 @@
                                             <button class="btn btn-default" type="button" id="ctrSearch"><i class="fa fa-search"></i></button>
                                         </span>
                                     </div>
-                                    </div>
+                                </div>
                                 <div class="col-lg-7">
                                     <div class="input-group" style="width: 100%">
                                         <div class="input-group-addon" style="width: 50px">
@@ -60,15 +59,36 @@
                                 @*<div class="col-lg-1"><span class="help-block with-errors"></span></div>*@
                             </div>
                             <div class="form-group">
+                                <label class="col-lg-2 control-label" for="addrFind">Адрес</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group">
+                                        <input id="addrFind" type="text" placeholder="поиск адреса" class="form-control" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" id="addrSearch"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="input-group" style="width: 100%">
+                                        <div class="input-group-addon" style="width: 50px">
+                                            <span id="addrListCount" class="label label-info"></span>
+                                        </div>
+                                        <span id="addrSpinner" class="spinner on-input"><i class="fa fa-spinner fa-spin"></i></span>
+                                        <select id="addrList" name="addrList" class="form-control required-mark" required="required" data-error="Выберите Адрес"></select>
+                                    </div>
+                                </div>
+                                @*<div class="col-lg-1"><span class="help-block with-errors"></span></div>*@
+                            </div>
+                            <div class="form-group">
                                 <label class="col-lg-2 control-label" for="contFind">Договор</label>
                                 <div class="col-lg-3">
                                     <div class="input-group">
-                                        <input id="contFind" type="text" placeholder="поиск договора" class="form-control" />
+                                        <input id="contFind" type="text" placeholder="поиск договора" class="form-control"/>
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" id="contSearch"><i class="fa fa-search"></i></button>
                                         </span>
                                     </div>
-                                    
                                 </div>
                                 <div class="col-lg-7">
                                     <div class="input-group" style="width: 100%">
@@ -78,7 +98,7 @@
                                         <span id="contSpinner" class="spinner on-input"><i class="fa fa-spinner fa-spin"></i></span>
                                         <select id="contList" name="contList" class="form-control required-mark" required="required" data-error="Выберите Договор"></select>
                                         <div class="input-group-addon" style="width: 100px">
-                                            <input id="contUnknown" name="ContractUnknown" type="checkbox" />&nbsp; неизвестен
+                                            <input id="contUnknown" name="ContractUnknown" type="checkbox"/>&nbsp; неизвестен
                                         </div>
                                     </div>
                                 </div>
@@ -141,9 +161,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-lg-2 control-label" for="descr">Описание</label>
+                                <label class="col-lg-2 control-label" for="descr"></label>
                                 <div class="col-lg-10">
-                                    <textarea id="descr" name="descr" type="text" placeholder="Что случилось?" class="form-control required-mark" required="required" rows="3" data-error="Введите описание заявки"></textarea>
+                                    <input id="contactName" name="contactName" type="text" placeholder="Контактное лицо" class="form-control required-mark" required="required"/>
+                                    <input id="contactPhone" name="contactPhone" type="text" placeholder="Контактный номер телнфона" class="form-control required-mark" required="required"/>
+                                    <textarea id="descr" name="descr" type="text" placeholder="Что случилось?" class="form-control required-mark" required="required" rows="2" data-error="Введите описание заявки"></textarea>
                                 </div>
                                 @*<div class="col-lg-1"><span class="help-block with-errors"></span></div>*@
                             </div>
@@ -184,89 +206,89 @@
     <script type="text/javascript">
         var updCtorList = false;
         var updContList = false;
-        $(document).ready(function () {
-            $('#ctrFind').keypress(function (e) {
+        $(document).ready(function() {
+            $('#addrFind').keypress(function(e) {
+                if (e.which !== 13) return;
+                addrFind(e);
+            });
+            $('#addrSearch').click(addrFind);
+
+            $('#ctrFind').keypress(function(e) {
                 if (e.which !== 13) return;
                 ctrFind(e);
             });
             $('#ctrSearch').click(ctrFind);
-            //.blur(ctrFind);
-            $('#contFind').keypress(function (e) {
+
+            $('#contFind').keypress(function(e) {
                 if (e.which !== 13) return;
                 contFind();
             });
             $('#contSearch').click(contFind);
-            //    .blur(function () {
-            //    displayCtrs();
-            //    displayConts();
-            //});
+
             $('#devFind').keypress(function(e) {
                 if (e.which !== 13) return;
                 devFind();
             });
             $('#devSearch').click(devFind);
             $('#devSnFind').keypress(
-                function (e) {
+                function(e) {
                     if (e.which !== 13) return;
                     devFind();
                 }
-                );
+            );
             $('#devSnSearch').click(devFind);
-            $('#devClientSdFind').keypress(function (e) {
+            $('#devClientSdFind').keypress(function(e) {
                 if (e.which !== 13) return;
                 showClaims();
             });
             $('#clientSdsearch').click(showClaims);
-            $('#ctrList').change(setCtrContNdev);
+            $('#ctrList').change(function() {
+                updateLists(false, true, true);
+            });
+            $('#addrList').change(function() {
+                updateLists(false, true, true);
+            });
             $('#contList').change(setContDev);
-            $('#devList').change(function () {
+            $('#devList').change(function() {
+                updateLists(true, true, false);
                 showClaims();
             });
             $('#ctrFind').focus();
-            //$('#save').click(function() {
-            //    var ctr = $('#ctrList').val();
-            //    if(ctr == undefined || ctr <= 0)
-            //    { return false; }
 
-            //    var cont = $('#contList').val();
-            //    if (cont == undefined || cont <= 0)
-            //    { return false; }
-
-            //    var dev = $('#devList').val();
-            //    if (dev == undefined || dev <= 0)
-            //    { return false; }
-            //});
-
-            $('#contUnknown').click(function () {
+            $('#contUnknown').click(function() {
                 var checked = $(this).is(':checked');
                 contUnknownDisplay(checked);
+                updateLists(true, true, true);
             });
 
-            $('#devUnknown').click(devUnknownClick);
+            $('#devUnknown').click(function() {
+                devUnknownClick();
+                updateLists(true, true, true);
+            });
 
-            $('#tabIncident').click(function() {
-                //$('.nav-tabs a[href="#incident"]').tab('show');
-                var $cont = $('#incidentForm');
-                $cont.addClass('panel-danger');
-                $cont.removeClass('panel-warning');
-                $('.tab', '#tabs').removeClass('active');
-                $(this).addClass('active');
-                $('#devGroup').show();
-                $('#devList').prop('required', true);
-                $('#ClaimTypeSysName').val('INCIDENT');
-            });
-            $('#tabCartridges').click(function () {
-                //$('.nav-tabs a[href="#cartridges"]').tab('show');
-                var $cont = $('#incidentForm');
-                $cont.removeClass('panel-danger');
-                $cont.addClass('panel-warning');
-                $('.tab', '#tabs').removeClass('active');
-                $(this).addClass('active');
-                $('#devGroup').hide();
-                $('#devList').prop('required', false);
-                $('#ClaimTypeSysName').val('CARTRIDGE');
-            });
+        $('#tabIncident').click(function() {
+            //$('.nav-tabs a[href="#incident"]').tab('show');
+            var $cont = $('#incidentForm');
+            $cont.addClass('panel-danger');
+            $cont.removeClass('panel-warning');
+            $('.tab', '#tabs').removeClass('active');
+            $(this).addClass('active');
+            $('#devGroup').show();
+            $('#devList').prop('required', true);
+            $('#ClaimTypeSysName').val('INCIDENT');
         });
+        $('#tabCartridges').click(function() {
+            //$('.nav-tabs a[href="#cartridges"]').tab('show');
+            var $cont = $('#incidentForm');
+            $cont.removeClass('panel-danger');
+            $cont.addClass('panel-warning');
+            $('.tab', '#tabs').removeClass('active');
+            $(this).addClass('active');
+            $('#devGroup').hide();
+            $('#devList').prop('required', false);
+            $('#ClaimTypeSysName').val('COLLECTIVE');
+        });
+    });
 
         function contFind(e) {
             e.preventDefault();
@@ -308,7 +330,7 @@
         }
 
         function devFind(e) {
-            
+
             $('#ctrFind').text('');
             $('#contFind').text('');
             $('#devFind').text('');
@@ -329,32 +351,32 @@
             showSpinnerAppend($info);
             var devId = $('#devList').val();
             var clientSdNum = $('#devClientSdFind').val();
-            if (clientSdNum == '') {
+            if (clientSdNum == '' && (devId == null || devId <= 0)) {
                 $info.removeClass('bg-info');
                 $info.removeClass('bg-danger');
                 $info.removeClass('bg-success');
-                $info.addClass('bg-danger');
-                $info.text('Введите № SD клиента');
+                $info.addClass('bg-info');
+                $info.html('&nbsp;');
                 hideSpinner($('#claimsContainer'));
                 return;
             }
             $.ajax({
                 url: '@Url.Action("GetClaimList")?idDevice=' + devId + '&clientSdNum=' + clientSdNum + '&serialNum=',
                 method: 'POST',
-                success: function (data) {
+                success: function(data) {
                     $('#claimsContainer').empty();
                     if (data.List.length > 0) {
                         $info.removeClass('bg-info');
                         $info.removeClass('bg-danger');
                         $info.removeClass('bg-success');
-                        $info.addClass('bg-success');
+                        $info.addClass('bg-danger');
                         $info.text('Найдено активных заявок - ' + data.List.length);
                         $info.append('&nbsp;&nbsp;<a class="btn btn-default btn-xs" id="showActiveClaims">показать</a>');
                         for (var i = 0; i < data.List.length; i++) {
                             var item = data.List[i];
                             $('#claimsContainer').append('<div class="col-lg-3"><a class="issue-item-sm" style="border: 1px solid #' + item.State.BackgroundColor + '; background-color: #' + item.State.BackgroundColor + '; color: #' + item.State.ForegroundColor + '" target="_blank" href="@Url.Action("Index")/' + item.Id + '">№' + item.Id + ' (кл№' + item.ClientSdNum + ')<br /><small>Создано ' + item.DateCreateStr + '</small><br />' + item.State.Name + '<br /><small>' + item.DateStateChangeStr + '</small></a></div>');
                         }
-                        $('#showActiveClaims').click(function () {
+                        $('#showActiveClaims').click(function() {
                             $(this).remove();
                             $('#claimsContainer').show();
                         });
@@ -362,12 +384,12 @@
                         $info.removeClass('bg-info');
                         $info.removeClass('bg-danger');
                         $info.removeClass('bg-success');
-                        $info.addClass('bg-danger');
+                        $info.addClass('bg-success');
                         $info.text('Активных заявок для выбранного аппарата не найдено');
                     }
                     hideSpinner($info);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function(xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
                         type: 'type-danger',
                         title: 'Ошибка!',
@@ -397,9 +419,24 @@
         //}
 
         function setContDev() {
+            if ($('#ClaimTypeSysName').val() != 'CARTRIDGE'){
+                $('#devList').find('option').remove();
+                $('#devListCount').text(0);
+                displayDevs(false);
+            }
+        }
+
+        function addrFind(e) {
+            $('#contList').find('option').remove();
             $('#devList').find('option').remove();
             $('#devListCount').text(0);
-            displayDevs(false);
+            $('#contListCount').text(0);
+            $('#addrListCount').text(0);
+            $('#contFind').val('');
+            $('#devFind').val('');
+            displayAddrs(true);
+            //e.preventDefault();
+            $('#addrList').focus();
         }
 
         function ctrFind(e) {
@@ -414,13 +451,35 @@
             $('#ctrList').focus();
         }
 
-        function setCtrContNdev() {
-            $('#contList').find('option').remove();
-            $('#devList').find('option').remove();
-            $('#devListCount').text(0);
-            $('#conListCount').text(0);
-            displayConts();
-            displayDevs(false);
+        //function setCtrContNdev() {
+        //    //$('#contList').find('option').remove();
+        //    //$('#devList').find('option').remove();
+        //    //$('#devListCount').text(0);
+        //    //$('#conListCount').text(0);
+        //    //displayAddrs();
+        //    //displayConts();
+        //    //displayDevs(false);
+        //    updateLists(false, true, true);
+        //}
+
+        function updateLists(addr, cont, dev) {
+            if (addr == true) {
+                $('#addrList').find('option').remove();
+                $('#addrListCount').text(0);
+                displayAddrs();
+            }
+            if (cont == true) {
+                $('#contList').find('option').remove();
+                $('#conListCount').text(0);
+                displayConts();
+            }
+            if (dev == true) {
+                $('#devList').find('option').remove();
+                $('#devListCount').text(0);
+                displayDevs(false);
+            }
+
+            showClaims();
         }
 
         function setDevCtrNcont() {
@@ -434,6 +493,7 @@
         }
 
         function saveDisplay(display) {
+            return;
             if (!display) {
                 $('#save').prop('disabled', true);
             } else {
@@ -441,14 +501,20 @@
                 if (ctr == undefined || ctr <= 0) {
                     return false;
                 }
+                //var addr = $('#addrList').val();
+                //if (addr == undefined || addr == '') {
+                //    return false;
+                //}
 
                 var cont = $('#contList').val();
-                if (cont == undefined || cont <= 0) {
+                var contUnknown = $('#contUnknown').is(':shecked');
+                if (contUnknown != true && (cont == undefined || cont <= 0)) {
                     return false;
                 }
 
                 var dev = $('#devList').val();
-                if (dev == undefined || dev <= 0) {
+                var devUnknown = $('#devUnknown').is(':shecked');
+                if (devUnknown != true && (dev == undefined || dev <= 0)) {
                     return false;
                 }
 
@@ -464,9 +530,16 @@
             var devId = $('#devList').val();
             var devName = $('#devFind').val();
             var serialNum = $('#devSnFind').val();
+            var devUnknown = $('#devUnknown').is(':checked');
+            if (devUnknown == undefined) devUnknown = false;
+            if (devUnknown) devId = null;
+            var contUnknown = $('#contUnknown').is(':checked');
+            if (contUnknown == undefined) contUnknown = false;
+            if (contUnknown) contId = null;
 
-            if ((ctrId === null || ctrId == 0) && (contId === null || contId == 0) && devName === '' && serialNum === '') {
+            if (devUnknown == true || ((ctrId === null || ctrId == 0) && (contId === null || contId == 0) && devName === '' && serialNum === '')) {
                 $('#devList').find('option').remove();
+                $('#vendorFilterCntnr').find('.btn').remove();
                 return;
             }
             $('#devSpinner').addClass('active');
@@ -476,7 +549,7 @@
                 url: '@Url.Action("GetDevices")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName, serialNum: serialNum },
-                success: function (data) {
+                success: function(data) {
                     var $devList = $('#devList');
                     var $vFltrCntnr = $('#vendorFilterCntnr');
                     $devList.find('option').remove();
@@ -490,7 +563,6 @@
                                 $vFltrCntnr.append($("<span name='filter-vendor' class='btn btn-default btn-xs' vlaue='" + vend + "'></span>").text(vend));
                             }
                             $("[name='filter-vendor']").click(filterVendor);
-
                         }
 
                         if (data.Devices.length > 0) {
@@ -518,7 +590,7 @@
                     $('#devSpinner').removeClass('active');
                     saveDisplay(true);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function(xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
                         type: 'type-danger',
                         title: 'Ошибка!',
@@ -554,6 +626,7 @@
             }
             //displayDevs(false);
             $('#devListCount').text(cnt);
+            $('#devList').change();
         }
 
         function setSdNumRequiredOrNot() {
@@ -569,18 +642,25 @@
         }
 
         function displayConts() {
-
             var ctrName = $('#ctrFind').val();
             var ctrId = $('#ctrList').val();
             var contName = $('#contFind').val();
             var contId = $('#contList').val();
             var devId = $('#devList').val();
             var devName = $('#devFind').val();
+            var addrStrId = $('#addrList').val();
+            var devUnknown = $('#devUnknown').is(':checked');
+            if (devUnknown == undefined) devUnknown = false;
+            if (devUnknown) devId = null;
+            var contUnknown = $('#contUnknown').is(':checked');
+            if (contUnknown == undefined) contUnknown = false;
+            if (contUnknown) contId = null;
 
             if (ctrId == 0 || devId == 0) return;
 
-            if ((ctrName === '' || ctrId === null) && (contName === '' || contId === null) && devId === null) {
+            if (contUnknown == true || ((ctrName === '' || ctrId === null) && (contName === '' || contId === null) && devId === null)) {
                 $('#contList').find('option').remove();
+                setSdNumRequiredOrNot();
                 return;
             }
             $('#contSpinner').addClass('active');
@@ -589,9 +669,8 @@
             $.ajax({
                 url: '@Url.Action("GetConts")',
                 method: 'POST',
-                data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
-                success: function (data) {
-
+                data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName, addrStrId: addrStrId },
+                success: function(data) {
                     if (data) {
                         if (data.length > 0) {
                             var contList = $('#contList');
@@ -605,15 +684,88 @@
                             }
                             $('#contListCount').text(data.length);
                         } else {
+                            $('#contList').find('option').remove();
                             $('#contList').append($("<option>договор не найден</option>").attr("value", 0));
                             $('#contListCount').text(0);
                         }
                     } else {
+                        $('#contList').find('option').remove();
                         $('#contList').append($("<option>договор не найден</option>").attr("value", 0));
                         $('#contListCount').text(0);
                     }
                     $('#contSpinner').removeClass('active');
                     setSdNumRequiredOrNot();
+                    saveDisplay(true);
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
+                    $('#contSpinner').removeClass('active');
+                    saveDisplay(true);
+                }
+            });
+        }
+
+        function displayAddrs(updateLists) {
+
+            var ctrName = $('#ctrFind').val();
+            var ctrId = $('#ctrList').val();
+            var contName = $('#contFind').val();
+            var contId = $('#contList').val();
+            var devId = $('#devList').val();
+            var devName = $('#devFind').val();
+            var addrName = $('#addrFind').val();
+            var devUnknown = $('#devUnknown').is(':checked');
+            if (devUnknown == undefined) devUnknown = false;
+            if (devUnknown) devId = null;
+            var contUnknown = $('#contUnknown').is(':checked');
+            if (contUnknown == undefined) contUnknown = false;
+            if (contUnknown) contId = null;
+
+            if (addrName === '' && ctrId === null && contId === null && devId === null) {
+                $('#ctrList').find('option').remove();
+                return;
+            }
+            $('#addrSpinner').addClass('active');
+            $('#addrListCount').text('');
+            $('#addrListCount').text('');
+            saveDisplay(false);
+            $.ajax({
+                url: '@Url.Action("GetAddrs")',
+                method: 'POST',
+                data: { idContractor: ctrId, idContract: contId, idDevice: devId, addrName: addrName },
+                success: function (data) {
+                    var $select = $('#addrList');
+                    $select.find('option').remove();
+
+                    if (data) {
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                var item = data[i];
+                                $select.append($("<option></option>").attr("value", item.Id).text(item.Name));
+                            }
+                            $('#addrListCount').text(data.length);
+                        } else {
+                            $('#addrList').append($("<option>адрес не найден</option>").attr("value", 0));
+                            $('#addrListCount').text(0);
+                        }
+
+                        if (updateLists) {
+
+                            updateLists(false, true, true);
+                        }
+                        //else {
+                        //    var help = $ctrList.next('small');
+                        //    help.text('ничего не найдено');
+                        //}
+                    } else {
+                        $('#addrList').append($("<option>адрес не найден</option>").attr("value", 0));
+                        $('#addrListCount').text(0);
+                    }
+                    $('#addrSpinner').removeClass('active');
                     saveDisplay(true);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -622,7 +774,7 @@
                         title: 'Ошибка!',
                         message: xhr.responseText
                     });
-                    $('#contSpinner').removeClass('active');
+                    $('#addrSpinner').removeClass('active');
                     saveDisplay(true);
                 }
             });
@@ -636,7 +788,13 @@
             var contId = $('#contList').val();
             var devId = $('#devList').val();
             var devName = $('#devFind').val();
-
+            var devUnknown = $('#devUnknown').is(':checked');
+            if (devUnknown == undefined) devUnknown = false;
+            if (devUnknown) devId = null;
+            var contUnknown = $('#contUnknown').is(':checked');
+            if (contUnknown == undefined) contUnknown = false;
+            if (contUnknown) contId = null;
+            
             if (devId == 0 || contId == 0) return;
 
             if (ctrName === '' && ctrId === null && contId === null && devId === null) {
@@ -651,7 +809,7 @@
                 url: '@Url.Action("GetCtors")',
                 method: 'POST',
                 data: { idContractor: ctrId, contractorName: ctrName, idContract: contId, contractNumber: contName, idDevice: devId, deviceName: devName },
-                success: function (data) {
+                success: function(data) {
                     var $ctrList = $('#ctrList');
                     $ctrList.find('option').remove();
 
@@ -669,7 +827,7 @@
 
                         if (updateConNdevLists) {
 
-                            setCtrContNdev();
+                            updateLists(true, true, true);
                         }
                         //else {
                         //    var help = $ctrList.next('small');
@@ -682,7 +840,7 @@
                     $('#ctrSpinner').removeClass('active');
                     saveDisplay(true);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function(xhr, ajaxOptions, thrownError) {
                     BootstrapDialog.show({
                         type: 'type-danger',
                         title: 'Ошибка!',

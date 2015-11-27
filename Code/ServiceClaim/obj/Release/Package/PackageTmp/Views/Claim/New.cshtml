@@ -219,6 +219,8 @@
             $('#ctrList').change(setCtrContNdev);
             $('#contList').change(setContDev);
             $('#devList').change(function () {
+                displayCtrs();
+                displayConts();
                 showClaims();
             });
             $('#ctrFind').focus();
@@ -328,7 +330,7 @@
             showSpinnerAppend($info);
             var devId = $('#devList').val();
             var clientSdNum = $('#devClientSdFind').val();
-            if (clientSdNum == '') {
+            if (clientSdNum == '' && (devId == null || devId <= 0)) {
                 $info.removeClass('bg-info');
                 $info.removeClass('bg-danger');
                 $info.removeClass('bg-success');
@@ -346,7 +348,7 @@
                         $info.removeClass('bg-info');
                         $info.removeClass('bg-danger');
                         $info.removeClass('bg-success');
-                        $info.addClass('bg-success');
+                        $info.addClass('bg-danger');
                         $info.text('Найдено активных заявок - ' + data.List.length);
                         $info.append('&nbsp;&nbsp;<a class="btn btn-default btn-xs" id="showActiveClaims">показать</a>');
                         for (var i = 0; i < data.List.length; i++) {
@@ -361,7 +363,7 @@
                         $info.removeClass('bg-info');
                         $info.removeClass('bg-danger');
                         $info.removeClass('bg-success');
-                        $info.addClass('bg-danger');
+                        $info.addClass('bg-success');
                         $info.text('Активных заявок для выбранного аппарата не найдено');
                     }
                     hideSpinner($info);
@@ -604,10 +606,12 @@
                             }
                             $('#contListCount').text(data.length);
                         } else {
+                            $('#contList').find('option').remove();
                             $('#contList').append($("<option>договор не найден</option>").attr("value", 0));
                             $('#contListCount').text(0);
                         }
                     } else {
+                        $('#contList').find('option').remove();
                         $('#contList').append($("<option>договор не найден</option>").attr("value", 0));
                         $('#contListCount').text(0);
                     }

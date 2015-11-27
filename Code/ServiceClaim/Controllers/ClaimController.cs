@@ -210,13 +210,18 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                model.Contractor = new Contractor() { Id = MainHelper.GetValueInt(Request.Form["ctrList"]) };
-                model.Contract = new Contract() { Id = MainHelper.GetValueInt(Request.Form["contList"]) };
-                model.Device = new Device() { Id = MainHelper.GetValueInt(Request.Form["devList"]) };
                 model.DeviceUnknown = Request.Form.AllKeys.Contains("DeviceUnknown");
-                model.ContractUnknown = Request.Form.AllKeys.Contains("ContractUnknown");
+                model.ContractUnknown = Request.Form["Device"] == "ContractUnknown";
+                model.ClaimTypeSysName = Request.Form["ClaimTypeSysName"];
+                model.Contractor = new Contractor() { Id = MainHelper.GetValueInt(Request.Form["ctrList"]) };
+                if (!model.ContractUnknown) model.Contract = new Contract() { Id = MainHelper.GetValueInt(Request.Form["contList"]) };
+                if (!model.DeviceUnknown) model.Device = new Device() { Id = MainHelper.GetValueInt(Request.Form["devList"]) };
                 model.Descr = Request.Form["descr"];
                 model.ClientSdNum = Request.Form["client_sd_num"];
+                model.AddressStrId = Request.Form["addrList"];
+                model.ContactName = Request.Form["contactName"];
+                model.ContactPhone = Request.Form["contactPhone"];
+                model.DeviceCollective = Request.Form["Device"]== "DeviceCollective";
                 bool result = model.Save(out responseMessage);
                 //var response = DbModel.DeserializeResponse(result);
                 if (!result) throw new Exception(responseMessage.ErrorMessage);
@@ -266,14 +271,21 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetConts(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null)
+        public JsonResult GetConts(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null, string addrStrId = null)
         {
-            var list = Contract.GetList(idContractor, contractorName, idContract, contractNumber, idDevice, deviceName);
+            var list = Contract.GetList(idContractor, contractorName, idContract, contractNumber, idDevice, deviceName, addrStrId);
             return Json(list);
         }
 
         [HttpPost]
-        public JsonResult GetDevices(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null, string serialNum = null)
+        public JsonResult GetAddrs(int? idContractor = null, int? idContract = null, int? idDevice = null, string addrName = null)
+        {
+            var list = Address.GetList(idContractor, idContract, idDevice, addrName);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetDevices(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null, string serialNum = null, string addrStrId = null)
         {
             var result = Device.GetSearchList(idContractor, contractorName, idContract, contractNumber, idDevice, deviceName, serialNum);
             return Json(result);

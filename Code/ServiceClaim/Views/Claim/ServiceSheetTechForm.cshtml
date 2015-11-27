@@ -1,4 +1,5 @@
 ﻿
+@using ServiceClaim.Models
 @model ServiceClaim.Models.Claim
 
 
@@ -8,6 +9,13 @@
     <div class="row">
         <div class="col-lg-push-4 col-lg-8">
             <blockquote class="alert-warning">Сохраните чтобы заказать или отметить установку ЗИП.</blockquote>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-4 text-right">Тип работ</label>
+        <div class="col-lg-4">
+            @Html.DropDownListFor(m => m.ServiceSheet4Save.WorkTypeId, WorkType.GetSelectionList(), "--выберите тип работ--", new { @class = "form-control required-mark", required = "required", data_error = "Выберите Тип работ", multicol = "true" })
+            <span class="help-block with-errors"></span>
         </div>
     </div>
     <div class="row">

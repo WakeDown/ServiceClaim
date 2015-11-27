@@ -142,6 +142,7 @@
     <Compile Include="Helpers\AdHelper.cs" />
     <Compile Include="Helpers\HtmlExtensions.cs" />
     <Compile Include="Helpers\MainHelper.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Claim.cs" />
     <Compile Include="Models\Claim2ClaimState.cs" />
     <Compile Include="Models\ClaimState.cs" />
