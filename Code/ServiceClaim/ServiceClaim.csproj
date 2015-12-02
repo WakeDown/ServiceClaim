@@ -300,6 +300,10 @@
     <Content Include="Views\Claim\List.cshtml" />
     <Content Include="Views\Claim\ClaimZipList.cshtml" />
     <Content Include="Views\Claim\ContractChoice.cshtml" />
+    <Content Include="Views\Claim\ServiceSheetTechCollectiveForm.cshtml" />
+    <Content Include="Views\Claim\ServiceSheetFormCollective.cshtml" />
+    <Content Include="Views\Claim\CartridgeList.cshtml" />
+    <Content Include="Views\Claim\CartridgeRefill.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -170,8 +170,19 @@ namespace ServiceClaim.Controllers
 
             //ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
 
+            string servAdminSid = null;
+            string servEngeneerSid = null;
+            string managerSid = null;
+            string techSid = null;
+            string servManagerSid = null;
+            if (CurUser.Is(AdGroup.ServiceAdmin)) servAdminSid = CurUser.Sid;
+            if (CurUser.Is(AdGroup.ServiceEngeneer)) servEngeneerSid = CurUser.Sid;
+            if (CurUser.Is(AdGroup.ServiceCenterManager)) servManagerSid = CurUser.Sid;
+            if (CurUser.Is(AdGroup.ServiceManager)) managerSid = CurUser.Sid;
+            if (CurUser.Is(AdGroup.ServiceTech)) techSid = CurUser.Sid;
+
             //var result = Claim.GetList();
-            ListResult<Claim> result = await new Claim().GetListAsync(clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice);
+            ListResult<Claim> result = await new Claim().GetListAsync(servAdminSid: servAdminSid, servEngeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid,  clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice);
             return Json(result);
         }
 
@@ -205,7 +216,6 @@ namespace ServiceClaim.Controllers
         public ActionResult New(Claim model)
         {
             //if (!CurUser.UserCanCreateClaim()) return RedirectToAction("AccessDenied", "Error");
-
             //Создаем заявку с основными полями и одельно первый статус с комментарием
             try
             {
@@ -364,8 +374,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -397,12 +407,42 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
         public ActionResult ServiceSheetTechForm(Claim model)
+        {
+            try
+            {
+                ResponseMessage responseMessage = null;
+                bool complete = false;
+                if (!String.IsNullOrEmpty(Request.Form["ServiceSheetSave"]))
+                {
+                    complete = model.Go(out responseMessage);
+
+                }
+                else if (!String.IsNullOrEmpty(Request.Form["ServiceSheetCancel"]))
+                {
+                    complete = model.GoBack(out responseMessage);
+                    return RedirectToAction("List");
+                }
+
+                if (responseMessage == null) responseMessage = new ResponseMessage();
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ServiceSheetTechCollectiveForm(Claim model)
         {
             try
             {
@@ -446,8 +486,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -465,8 +505,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -499,7 +539,35 @@ namespace ServiceClaim.Controllers
             }
             else
             {
-                return View("WindowClose");
+                //return View("WindowClose");
+                return RedirectToAction("List");
+            }
+            //return View("WindowClose");
+            //return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult ServiceSheetFormCollective(Claim model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.Go(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+            if (model.ServiceSheet4Save.ZipClaim.HasValue && model.ServiceSheet4Save.ZipClaim.Value)
+            {
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+            else
+            {
+                //return View("WindowClose");
+                return RedirectToAction("List");
             }
             //return View("WindowClose");
             //return RedirectToAction("List");
@@ -520,8 +588,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -539,8 +607,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -576,7 +644,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -610,8 +679,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -643,8 +712,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -662,8 +731,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -681,8 +750,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
 
@@ -715,8 +784,8 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
-            return View("WindowClose");
-            //return RedirectToAction("List");
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -855,7 +924,8 @@ namespace ServiceClaim.Controllers
                 bool complete = model.Go(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
-                return View("WindowClose");
+                //return View("WindowClose");
+                return RedirectToAction("List");
                 //return RedirectToAction("Index", new { id = responseMessage.Id });
             }
             catch (Exception ex)
@@ -864,6 +934,53 @@ namespace ServiceClaim.Controllers
                 return RedirectToAction("Index", new { id = model.Id });
             }
 
+            //return View("WindowClose");
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult CartridgeList(Claim model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.Go(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                //return View("WindowClose");
+                return RedirectToAction("List");
+                //return RedirectToAction("Index", new { id = responseMessage.Id });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+
+            //return View("WindowClose");
+            //return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult CartridgeRefill(Claim model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                bool complete = model.Go(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                //return View("WindowClose");
+                return RedirectToAction("List");
+                //return RedirectToAction("Index", new { id = responseMessage.Id });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+
+            return RedirectToAction("List");
             //return View("WindowClose");
             //return RedirectToAction("List");
         }
@@ -976,9 +1093,20 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetStateGroupFilterList()
+        public JsonResult GetStateGroupFilterList(int? idDevice = null, int? idClient = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null)
         {
-            return Json(ClaimStateGroup.GetFilterList());
+            string servAdminSid = null;
+            string servEngeneerSid = null;
+            string managerSid = null;
+            string techSid = null;
+            string servManagerSid = null;
+            if (CurUser.Is(AdGroup.ServiceAdmin)) servAdminSid = CurUser.Sid;
+            if (CurUser.Is(AdGroup.ServiceEngeneer)) servEngeneerSid = CurUser.Sid;
+            if (CurUser.Is(AdGroup.ServiceCenterManager)) servManagerSid = CurUser.Sid;
+            if (CurUser.Is(AdGroup.ServiceManager)) managerSid = CurUser.Sid;
+            if (CurUser.Is(AdGroup.ServiceTech)) techSid = CurUser.Sid;
+
+            return Json(ClaimStateGroup.GetFilterList(servAdminSid: servAdminSid, servEngeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid, clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice));
         }
 
         [HttpPost]

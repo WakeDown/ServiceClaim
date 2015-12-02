@@ -21,7 +21,6 @@
 @section PanelBody
 {
     @*@using(Html.BeginForm("Index", "Claim", FormMethod.Post, new {@class="form-horizontal"}))*@
-    [@ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)]
     <div class="row">
         <div class="col-lg-8">
             @if (TempData["error"] != null)
@@ -34,7 +33,7 @@
                     </div>
                 </div>
             }
-            
+
             <div class="row pad-b-md">
                 <div class="col-lg-6">
                     @if (!String.IsNullOrEmpty(Model.ClientSdNum))
@@ -42,30 +41,44 @@
                         <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">№ SD клиента</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12  text-center-sm text-center-xs">@Model.ClientSdNum</span></div>
                     }
                     <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Клиент</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contractor.FullName</span></div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Адрес</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.CityName @Model.Device.Address @Model.Device.ObjectName</span></div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактное лицо</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.ContactName</span></div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий к объекту</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.Descr</span></div>
-                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Договор</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contract.Number</span>
+                    <div class="row">
+                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Адрес</label>
+                        <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.CityName @Model.Address</span>
+                    </div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактное лицо</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.ContactName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактный телефон</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.ContactPhone</span></div>
+                    @*<div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий к объекту</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.Descr</span></div>*@
+                    <div class="row">
+                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Договор</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contract.Number</span>
                         @if (Model.Contract != null && Model.Contract.ContractZipTypeSysName != null)
                         {
                             <hr class="line-sm no-marg-bot @(Model.Contract.ContractZipTypeSysName == "MOREZIP" ? "line-success" : Model.Contract.ContractZipTypeSysName == "LESSZIP" ? "line-danger" : String.Empty)"/>
                         }
                     </div>
-                    <div class="row">
-                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Серийный номер</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.SerialNum</span>
+                    @if (Model.DeviceCollective)
+                    {
+                        <div class="row">
+                            <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs"></label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs text-danger">Массовая заявка</span>
                         </div>
-                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Аппарат</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.FullName @(Model.Device.HasGuarantee.HasValue && Model.Device.HasGuarantee.Value ? "<blockquote class='bold text-danger bg-danger nomargin'>Гарантия</blockquote>" : String.Empty)</span></div>
-
-                        @if (Model.WorkType != null && !String.IsNullOrEmpty(Model.WorkType.Name))
-                        {
-                            <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Тип работ</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
-                        }
-                        @if (Model.Specialist != null && !String.IsNullOrEmpty(Model.Specialist.DisplayName))
-                        {
-                            <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Специалист</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
-                        }
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Серийный номер</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.SerialNum</span>
+                        </div>
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Аппарат</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.FullName @(Model.Device.HasGuarantee.HasValue && Model.Device.HasGuarantee.Value ? "<blockquote class='bold text-danger bg-danger nomargin'>Гарантия</blockquote>" : String.Empty)</span>
+                        </div>
+                    }
+                    @if (Model.WorkType != null && !String.IsNullOrEmpty(Model.WorkType.Name))
+                    {
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Тип работ</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
+                    }
+                    @if (Model.Specialist != null && !String.IsNullOrEmpty(Model.Specialist.DisplayName))
+                    {
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Специалист</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
+                    }
                     <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Descr</span></div>
-                    </div>
+                </div>
                 <div class="col-lg-3">
                     <h5 class="bold">Сервисные листы</h5>
                     <div id="serviceSheetContainer">
@@ -75,9 +88,9 @@
 
                     </div>
                     @*@if (servSheetNotPayedWrapList.Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
-                    {
-                        @Html.Partial("ServiceSheetPaperGet", servSheetNotPayedWrapList)
-                    }*@
+                        {
+                            @Html.Partial("ServiceSheetPaperGet", servSheetNotPayedWrapList)
+                        }*@
                 </div>
                 <div class="col-lg-3">
                     <h5 class="bold">Заявки на ЗИП</h5>
@@ -100,15 +113,28 @@
             }
             @if (Model.State.SysName.ToUpper().Equals("TECHSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
             {
-                @Html.Partial("TechConfirm", Model)
+                
+                    @Html.Partial("TechConfirm", Model)
+                
             }
-            @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)))
+            {
+                @Html.Partial("ConfirmWork", Model)
+            }
+            @if ((Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
             {
                 @Html.Partial("ConfirmWork", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("TECHWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
             {
-                @Html.Partial("ServiceSheetTechForm", Model)
+                if (Model.DeviceCollective)
+                {
+                    @Html.Partial("ServiceSheetTechCollectiveForm", Model)
+                }
+                else
+                {
+                    @Html.Partial("ServiceSheetTechForm", Model)
+                }
             }
             @if (Model.State.SysName.ToUpper().Equals("SRVENGGET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
             {
@@ -125,6 +151,14 @@
             @if (Model.State.SysName.ToUpper().Equals("ZIPISSUE") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
             {
                 @Html.Partial("ZipIssue", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("CARTRIDGELIST") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("CartridgeList", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("CARTRIDGEREFILL") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("CartridgeRefill", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("CONTRACTSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
             {
@@ -144,17 +178,17 @@
                 @Html.Partial("ZipConfirm", Model)
             }
             @*@if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRMED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
-            {
-                @Html.Partial("ZipOrdered", Model)
-            }*@
+                {
+                    @Html.Partial("ZipOrdered", Model)
+                }*@
             @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceControler))
             {
                 @Html.Partial("ZipOrderConfirm", Model)
             }
             @*@if (Model.State.SysName.ToUpper().Equals("DONE") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
-            {
-                @Html.Partial("StateDone", Model)
-            }*@
+                {
+                    @Html.Partial("StateDone", Model)
+                }*@
 
 
             <div class="row">
@@ -234,7 +268,7 @@
                 data:{idClaim:@Model.Id},
                 success: function(html) {
                     $('#serviceSheetContainer').html(html);
-                        loadBtnGetServiceSheetList();
+                    loadBtnGetServiceSheetList();
                     hideSpinner($cont);
                 },
                 error: function() {

@@ -141,7 +141,7 @@ namespace ServiceClaim.Models
         {
             Uri uri = new Uri(String.Format("{0}/ServiceSheet/SavePayed", OdataServiceUri));
             string json = JsonConvert.SerializeObject(this);
-            bool result = PostJson(uri, json, out responseMessage);
+            bool result =  PostJson(uri, json, out responseMessage);
             return result;
         }
 

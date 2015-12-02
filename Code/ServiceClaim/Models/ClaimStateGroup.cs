@@ -17,9 +17,13 @@ namespace ServiceClaim.Models
         public string ForegroundColor { get; set; }
         public int ClaimCount { get; set; }
 
-        public static IEnumerable<ClaimStateGroup> GetFilterList()
+        public static IEnumerable<ClaimStateGroup> GetFilterList(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool activeClaimsOnly = false, int? idClaimState = null, int? clientId = null, string clientSdNum = null, int? claimId = null, string deviceName = null, int? pageNum = null, int[] groupStateList = null, string address = null, string servManagerSid = null)
         {
-            Uri uri = new Uri(String.Format("{0}/ClaimState/GetGroupFilterList", OdataServiceUri));
+            string groupStates = null;
+            if (groupStateList != null && groupStateList.Any()) groupStates = String.Join(",", groupStateList);
+            
+            Uri uri = new Uri($"{OdataServiceUri}/ClaimState/GetGroupFilterList?servAdminSid={servAdminSid}&servManagerSid={servManagerSid}&servEngeneerSid={servEngeneerSid}&dateStart={dateStart}&dateEnd={dateEnd}&topRows={topRows}&managerSid={managerSid}&techSid={techSid}&serialNum={serialNum}&idDevice={idDevice}&activeClaimsOnly={activeClaimsOnly}&idClaimState={idClaimState}&clientId={clientId}&clientSdNum={clientSdNum}&claimId={claimId}&deviceName={deviceName}&pageNum={pageNum}&groupStates={groupStates}&address={address}");
+
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<IEnumerable<ClaimStateGroup>>(jsonString);
             return model;

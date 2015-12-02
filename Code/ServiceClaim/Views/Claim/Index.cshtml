@@ -21,7 +21,6 @@
 @section PanelBody
 {
     @*@using(Html.BeginForm("Index", "Claim", FormMethod.Post, new {@class="form-horizontal"}))*@
-    [@ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)]
     <div class="row">
         <div class="col-lg-8">
             @if (TempData["error"] != null)
@@ -47,6 +46,7 @@
                         <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.CityName @Model.Address</span>
                     </div>
                     <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактное лицо</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.ContactName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактный телефон</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.ContactPhone</span></div>
                     @*<div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий к объекту</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.Descr</span></div>*@
                     <div class="row">
                         <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Договор</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contract.Number</span>
@@ -113,15 +113,28 @@
             }
             @if (Model.State.SysName.ToUpper().Equals("TECHSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
             {
-                @Html.Partial("TechConfirm", Model)
+                
+                    @Html.Partial("TechConfirm", Model)
+                
             }
-            @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)))
+            {
+                @Html.Partial("ConfirmWork", Model)
+            }
+            @if ((Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
             {
                 @Html.Partial("ConfirmWork", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("TECHWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
             {
-                @Html.Partial("ServiceSheetTechForm", Model)
+                if (Model.DeviceCollective)
+                {
+                    @Html.Partial("ServiceSheetTechCollectiveForm", Model)
+                }
+                else
+                {
+                    @Html.Partial("ServiceSheetTechForm", Model)
+                }
             }
             @if (Model.State.SysName.ToUpper().Equals("SRVENGGET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
             {
@@ -138,6 +151,14 @@
             @if (Model.State.SysName.ToUpper().Equals("ZIPISSUE") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
             {
                 @Html.Partial("ZipIssue", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("CARTRIDGELIST") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("CartridgeList", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("CARTRIDGEREFILL") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("CartridgeRefill", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("CONTRACTSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
             {

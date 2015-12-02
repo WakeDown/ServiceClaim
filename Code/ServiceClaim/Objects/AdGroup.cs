@@ -22,6 +22,7 @@ namespace ServiceClaim.Objects
         ServiceZipClaimConfirm,
         AddNewClaim,
         ServiceClaimView,
+        ServiceCenterManager,
         //---доступы
         ServiceClaimClassifier,
         ServiceClaimClientAccess

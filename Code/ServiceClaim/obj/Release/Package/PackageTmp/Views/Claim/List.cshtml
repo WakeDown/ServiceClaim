@@ -158,7 +158,9 @@
         if (data.List.length > 0) {
             for (var i = 0; i < data.List.length; i++) {
                 var item = data.List[i];
-                var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="row-mark" style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '"></th><th class="valign-middle text-center"></div>' + item.Id + '</th><th class="valign-middle hidden-sm hidden-xs text-center">' + item.ClientSdNum + '</th><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="hidden-sm hidden-xs">' + (item.Device != null ? (item.Device.CityName != null ? item.Device.CityName : '') + (item.Device.Address != null ? '<br />' + item.Device.Address : '') + (item.Device.ObjectName != null ? '<br />' + item.Device.ObjectName : '') : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.FullName : '') + '</td><td class="valign-middle">' + (item.Device != null ? item.Device.SerialNum : '') + '</td><td class="hidden-sm hidden-xs"><div><span class="small"><span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div></td><td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #' + (item.State != null ? item.State.ForegroundColor : '') + '" class="valign-middle hidden-sm hidden-xs">' + (item.State != null ? item.State.Name : '') + '<div class="small">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle hidden-sm hidden-xs">' + item.DateCreateStr + '</td></tr>';
+                var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="row-mark" style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '"></th><th class="valign-middle text-center"></div>' + item.Id + '</th><th class="valign-middle hidden-sm hidden-xs text-center">' + (item.ClientSdNum != null ? item.ClientSdNum : '') + '</th><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="hidden-sm hidden-xs">' + (item != null ? (item.CityName != null ? item.CityName : '') + (item.Address != null ? '<br />' + item.Address : '') : '') + '</td><td class="valign-middle">'
+                    + (item.DeviceCollective != null && item.DeviceCollective == true ? 'массовая заявка' : (item.Device != null && item.Device.FullName != null ? item.Device.FullName : ''))
+                    + '</td><td class="valign-middle">' + (item.Device != null && item.Device.SerialNum != null ? item.Device.SerialNum : '') + '</td><td class="hidden-sm hidden-xs"><div><span class="small"><span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div><div><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div></td><td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #' + (item.State != null ? item.State.ForegroundColor : '') + '" class="valign-middle hidden-sm hidden-xs">' + (item.State != null ? item.State.Name : '') + '<div class="small">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle hidden-sm hidden-xs">' + item.DateCreateStr + '</td></tr>';
 
                 $cont.append($trItem);
             }
@@ -206,12 +208,12 @@
     function initListButtons($container) {
         if ($container == null) {
             $('tr[claimid]', $('#claimList')).click(function () {
-                window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
+                window.location = '@Url.Action("Index")/' + $(this).attr('claimid');
             });
             $container = $('#claimList');
         } else {
             $container.click(function () {
-                window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
+                window.location = '@Url.Action("Index")/' + $(this).attr('claimid');
             });
         }
 
@@ -265,7 +267,7 @@
         }
     }
 
-    function loadClaimList() {
+    function getFilterValues() {
         var num = $('#numFilter').val();
         var idClient = $('#clientFilter').val();
         var clSdNum = $('#clientSdNumFilter').val();
@@ -287,17 +289,49 @@
             }
         }
         var address = $('#addressFilter').val();
+
+        var filter = { num: num, idClient: idClient, clSdNum: clSdNum, devName: devName, serial: serial, address: address, topRows: topRows, selPage: selPage, grpState: grpState };
+        return filter;
+    }
+
+    function loadClaimList(reloadStateGroupFilter) {
+        //var num = $('#numFilter').val();
+        //var idClient = $('#clientFilter').val();
+        //var clSdNum = $('#clientSdNumFilter').val();
+        //var devName = $('#deviceFilter').val();
+        //var serial = $('#serialNumFilter').val();
+        //var topRows = $('[name="pageSize"].selected').attr('value');
+        //var selPage = 1;
+
+        //if ($('[name="page"].active a').length > 0) {
+        //    selPage = $('[name="page"].active a').attr('value');
+        //}
+
+        //var $grpStateElem = $('[name="stateGroupFilterItem"].selected');
+        //var grpState = [];
+        //if ($grpStateElem.length > 0) {
+        //    for (var i = 0; i < $grpStateElem.length; i++) {
+        //        var val = $($grpStateElem[i]).attr('value');
+        //        grpState.push(val);
+        //    }
+        //}
+        //var address = $('#addressFilter').val();
+
+        var filter = getFilterValues();
+
         $.ajax({
             url: '@Url.Action("GetClaimList")',
             method: 'POST',
-            data: { idClient: idClient, claimId: num, clientSdNum: clSdNum, deviceName: devName, serialNum: serial, topRows: topRows, pageNum: selPage, groupStateList: grpState, address: address },
+            data: { idClient: filter.idClient, claimId: filter.num, clientSdNum: filter.clSdNum, deviceName: filter.devName, serialNum: filter.serial, topRows: filter.topRows, pageNum: filter.selPage, groupStateList: filter.grpState, address: filter.address },
             success: function (data) {
                 fillClaimList(data);
                 writeLastupdateTime();
                 //$('#lastUpdateTime').attr('t', 0);
-                fillPager(topRows, data.TotalCount, selPage);
+                fillPager(filter.topRows, data.TotalCount, filter.selPage);
             }
         });
+
+        if (reloadStateGroupFilter == true) loadStateGroupFilter();
     }
 
     function fillPager(topRows, totalCount, selPage) {
@@ -305,7 +339,6 @@
         if ((totalCount % topRows) > 0) pages++;
         $('.pagination.pages li').remove();
         for (var i = 0; i < pages; i++) {
-
             var btn = '<li name="page" value="' + (i + 1) + '" class="' + (selPage == i + 1 ? 'active' : '') + '"><a value="' + (i + 1) + '" href="#!">' + (i + 1) + '</a></li>';
             $('.pagination.pages').append(btn);
         }
@@ -338,9 +371,12 @@
     }
 
     function loadStateGroupFilter() {
+        var filter = getFilterValues();
+
         $.ajax({
             url: '@Url.Action("GetStateGroupFilterList")',
             method: 'POST',
+            data: { idClient: filter.idClient, claimId: filter.num, clientSdNum: filter.clSdNum, deviceName: filter.devName, serialNum: filter.serial, topRows: filter.topRows, pageNum: filter.selPage, groupStateList: filter.grpState, address: filter.address },
             success: function(data) {
                 var $cont = $('#stateGroupFilter');
                 $cont.find('ul').remove();
@@ -376,43 +412,43 @@
         //window.location.hash = 'claimList';
         $('#clientFilter').change(function () {
             removeRowsAndShowSpinnerOnTable();
-            loadClaimList();
+            loadClaimList(true);
         });
         $('#numFilter').keypress(function (e) {
             if (e.keyCode == 13) {
                 removeRowsAndShowSpinnerOnTable();
-                loadClaimList();
+                loadClaimList(true);
             }
         });
         $('#clientSdNumFilter').keypress(function (e) {
             if (e.keyCode == 13) {
                 removeRowsAndShowSpinnerOnTable();
-                loadClaimList();
+                loadClaimList(true);
             }
         });
         $('#deviceFilter').keypress(function (e) {
             if (e.keyCode == 13) {
                 removeRowsAndShowSpinnerOnTable();
-                loadClaimList();
+                loadClaimList(true);
             }
         });
         $('#serialNumFilter').keypress(function (e) {
             if (e.keyCode == 13) {
                 removeRowsAndShowSpinnerOnTable();
-                loadClaimList();
+                loadClaimList(true);
             }
         });
         $('#addressFilter').keypress(function (e) {
             if (e.keyCode == 13) {
                 removeRowsAndShowSpinnerOnTable();
-                loadClaimList();
+                loadClaimList(true);
             }
         }); 
         $('[name="pageSize"]').click(function () {
             $('[name="pageSize"].selected').removeClass('selected');
             $('[name="pageSize"][value="' + $(this).attr('value') + '"]').addClass('selected');
             removeRowsAndShowSpinnerOnTable();
-            loadClaimList();
+            loadClaimList(true);
         });
         setInterval(function () { loadClaimList(); }, 30000);
         //setInterval(lastUpdateTimer, 1000);

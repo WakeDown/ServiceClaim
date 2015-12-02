@@ -7,6 +7,7 @@ using System.Net;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
+using ServiceClaim.Helpers;
 using ServiceClaim.Objects;
 
 namespace ServiceClaim.Objects
@@ -38,6 +39,11 @@ namespace ServiceClaim.Objects
         [NonAction]
         public AdUser GetCurUser()
         {
+            if (Session["CurUser"] != null)
+            {
+                return (AdUser)Session["CurUser"];
+            }
+
             AdUser user = new AdUser();
             try
             {
@@ -102,6 +108,7 @@ namespace ServiceClaim.Objects
                             //        user.AdGroups.Add(role.Group);
                             //    }
                             //}
+                            AdHelper.SetUserAdGroups(wi, ref user);
                         }
                     }
                 }
@@ -110,6 +117,8 @@ namespace ServiceClaim.Objects
             {
                 throw;
             }
+
+            Session["CurUser"] = user;
 
             return user;
         }
