@@ -311,8 +311,15 @@ namespace ServiceClaim.Controllers
                 bool complete = model.Go(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
-                return View("WindowClose");
-                return RedirectToAction("List");
+                //return View("WindowClose");
+                if (!String.IsNullOrEmpty(Request.Form["AddNew"]))
+                {
+                    return RedirectToAction("New");
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
             catch (Exception ex)
             {
@@ -321,6 +328,28 @@ namespace ServiceClaim.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult EngeneerSelect(Claim model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                //model.ServiceIssue4Save.Descr = model.Descr;
+                //model.ServiceIssue4Save.IdClaim = model.Id;
+                //model.SpecialistSid = model.SpecialistSid;
+                bool complete = model.Go(out responseMessage);
+                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                //return View("WindowClose");
+
+                return RedirectToAction("List");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+        }
 
         [HttpPost]
         public ActionResult SpecialistSelect(Claim model)
@@ -334,9 +363,11 @@ namespace ServiceClaim.Controllers
                 bool complete = model.Go(out responseMessage);
                 if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
-                return View("WindowClose");
+                //return View("WindowClose");
 
-                return RedirectToAction("List");
+                
+                    return RedirectToAction("List");
+                
             }
             catch (Exception ex)
             {

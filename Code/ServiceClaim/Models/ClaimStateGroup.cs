@@ -15,6 +15,7 @@ namespace ServiceClaim.Models
         public int OrderNum { get; set; }
         public string BackgroundColor { get; set; }
         public string ForegroundColor { get; set; }
+        public string BorderColor { get; set; }
         public int ClaimCount { get; set; }
 
         public static IEnumerable<ClaimStateGroup> GetFilterList(string servAdminSid = null, string servEngeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool activeClaimsOnly = false, int? idClaimState = null, int? clientId = null, string clientSdNum = null, int? claimId = null, string deviceName = null, int? pageNum = null, int[] groupStateList = null, string address = null, string servManagerSid = null)

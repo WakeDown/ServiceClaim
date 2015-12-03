@@ -17,6 +17,7 @@ namespace ServiceClaim.Models
         public string Descr { get; set; }
         public string BackgroundColor { get; set; }
         public string ForegroundColor { get; set; }
+        public string BorderColor { get; set; }
         public int ClaimCount { get; set; }
 
         public static IEnumerable<ClaimState> GetHistory(int idClaim)

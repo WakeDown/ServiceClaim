@@ -57,6 +57,7 @@ namespace ServiceClaim.Models
         public string ContactPhone { get; set; }
         public bool DeviceCollective { get; set; }
 
+
         public string StateChangeDateDiffStr
         {
             get
