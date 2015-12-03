@@ -1,0 +1,472 @@
+﻿@using ServiceClaim.Models
+@model ServiceClaim.Models.Claim
+@{
+    var serviceSheet = Model.GetLastServiceSheet();
+    var zipItemList = serviceSheet.GetIssuedZipItemList();
+    var orderedZipItemList = Model.GetOrderedZipItemList(serviceSheet.Id);//Заказанные
+    var clientGivenInstalledZipItemList = serviceSheet.GetClientGivenInstalledZipItemList();
+}
+
+<div class="row">
+    <div class="col-lg-push-2 col-lg-9">
+        
+    @if ((orderedZipItemList != null && orderedZipItemList.Any()) || serviceSheet.ZipClientGivenInstall)
+            {
+        <blockquote class="bg-danger text-sm">
+            <h4>Установка ЗИП</h4>
+            <table class="table table-bordered bg-white">
+                <tr class="bg-primary">
+                    <th class="min-width"></th>
+                    <th style="width: 100px">парт номер</th>
+                    <th style="width: 250px">наименование</th>
+                    <th style="width: 100px">количество</th>
+                    @*<th style="width: 15%">предоставил клиент</th>*@
+                    <th style="width: 100px"></th>
+                </tr>
+                @if (orderedZipItemList.Any())
+                {
+                    <tbody id="issuedZipIssueItemsContainer">
+                        @foreach (var item in orderedZipItemList)
+                        {
+                            <tr id="issued-zip-item-@item.Id" @(!item.Installed ? "notinstalled=notinstalled" : String.Empty)>
+                                <td class="text-center valign-middle">
+                                    <button ziid="@item.Id" class="btn @(item.Installed ? "btn-success" : "btn-primary")" name="btn-issued-zip-item-installed" @(item.Installed ? "disabled=disabled" : String.Empty)>Установлено</button>
+                                </td>
+                                <td class="text-center valign-middle">@item.PartNum</td>
+                                <td class="text-center valign-middle">@item.Name</td>
+                                <td class="text-center valign-middle">@item.Count</td>
+                                @*<td class="text-center">
+                                        @(item.ClientGiven ? "да" : "нет")
+                                    </td>*@
+                                <td class="text-center valign-middle">
+                                    <button ziid="@item.Id" class="btn btn-danger" name="btn-issued-zip-item-installed-cancel" @(!item.Installed ? "disabled=disabled" : String.Empty)>отмена</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+                @if (serviceSheet.ZipClientGivenInstall)
+                {
+                    <tbody id="zipClientGivenInstall" class="bg-info">
+                        @if (clientGivenInstalledZipItemList.Any())
+                        {
+                            foreach (ServiceSheetZipItem item in clientGivenInstalledZipItemList)
+                            {
+                                <tr id="zip-clgiv-inst-item-@item.Id">
+                                    <th>предоставлено клиентом</th>
+                                    <td class="text-center valign-middle">@item.PartNum</td>
+                                    <td class="text-center valign-middle">@item.Name</td>
+                                    <td class="text-center valign-middle">@item.Count</td>
+                                    <td class="text-center valign-middle"><a ziid="@item.Id" titel="удалить" href="#!" name="zip-clgiv-inst-item-del"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                            }
+                        }
+                        @*<tr>
+                                <td colspan="5"><h4>ЗИП предоставленный клиентом</h4></td>
+                            </tr>*@
+                    </tbody>
+                        <tr class="bg-info">
+                            <th>предоставлено клиентом</th>
+                            <td><input id="zipClientGivenInstallNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required" /></td>
+                            <td><input id="zipClientGivenInstallName" type="text" placeholder="наименование" class="form-control required-mark" required="required" /></td>
+                            <td><input id="zipClientGivenInstallCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1" /></td>
+                            @*<td>да</td>*@
+                            <td class="text-center">
+                                <button class="btn btn-primary" id="zipClientGivenInstalled" ssid="@serviceSheet.Id">Установлено</button>
+                            </td>
+                        </tr>
+
+                }
+
+            </table>
+        </blockquote>
+    }
+        
+        @if (serviceSheet.ZipClaim.HasValue && serviceSheet.ZipClaim.Value)
+        {
+            <blockquote class="bg-success text-sm">
+                <h4>Заказ ЗИП</h4>
+                <table class="table table-bordered bg-white">
+                    
+                    <tr id="zipIssueHeader" class="bg-primary" style="@(zipItemList != null && zipItemList.Any() ? String.Empty : "display: none")">
+                        @*<tr class="bg-primary">*@
+                        <th>парт номер</th>
+                        <th>наименование</th>
+                        <th>количество</th>
+                        @*<th>предоставил клиент</th>*@
+                        <th></th>
+                    </tr>
+                    <tbody id="zipIssueItemsContainer">
+                        @if (zipItemList != null && zipItemList.Any())
+                        {
+                            foreach (var item in zipItemList)
+                            {
+                                <tr id="zip-item-@item.Id">
+                                    <td class="text-center valign-middle">@item.PartNum</td>
+                                    <td class="text-center valign-middle">@item.Name</td>
+                                    <td class="text-center valign-middle">@item.Count</td>
+                                    @*<td>
+                                            @(item.ClientGiven ? "да" : "нет")
+                                        </td>*@
+                                    <td class="text-center valign-middle">
+                                        <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del" class="btn btn-link nopadding nomargin"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tr>
+                        <td style="width: 100px"><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required" /></td>
+                        <td style="width: 250px"><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required" /></td>
+                        <td style="width: 100px">
+                            <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1" />
+                        </td>
+                        @*<td class="text-nowrap valign-middle">
+                <div>предоставил клиент</div>
+                <input type="radio" name="clientGiven" value="False" checked="checked" required="required"/>&nbsp;нет
+                &nbsp;&nbsp;&nbsp;
+                <input type="radio" name="clientGiven" value="True" required="required"/>&nbsp;да
+            </td>*@
+                        <td style="width: 100px" class="text-center">
+                            <button type="submit" class="btn btn-success" id="addZipItem" ssid="@serviceSheet.Id">
+                                @*<i class="fa fa-save"></i>*@
+                                Сохранить
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </blockquote>
+        }
+    </div>
+</div>
+@using (Html.BeginForm("ZipIssue", "Claim", FormMethod.Post, new { @id = "ZipIssueForm", role = "form" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    <div class="row">
+        <div class="col-lg-push-2 col-lg-10">
+            <a class="btn btn-success" id="btnSendServiceSheet">Передать сервисный лист</a>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-lg-push-2 col-lg-10">
+        <p class="text-danger">@TempData["error"]</p>
+    </div>
+</div>
+
+@*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+<div id="notInstalledModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-danger" id="notInstalledCommentTitle"></h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("ZipIssue", "Claim", FormMethod.Post, new { @id = "ZipIssueNotInstalledForm", role = "form" }))
+                {
+                    @Html.HiddenFor(m => m.Id)
+                    <textarea id="notInstalledComment" class="form-control required-mark" type="text" placeholder="Почему не установлен ЗИП?" required="required" rows="3"></textarea>
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-success" id="notInstalledCommentSave">Сохранить</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('[name="zip-clgiv-inst-item-del"]').click(zipClientGivenInstallItemDelete);
+        $('#zipClientGivenInstalled').click(addClientGivenInstalledZipItem);
+
+        $('#addZipItem').click(addZipItem);
+        $('[name="zip-item-del"]').click(zipItemDelete);
+        $('[name="btn-issued-zip-item-installed"]').click(zipItemInstall);
+        $('[name="btn-issued-zip-item-installed-cancel"]').click(zipItemInstallCancel);
+        $('#notInstalledCommentSave').click(function() {
+            var $curObj = $(this);
+            showSpinnerAppend($curObj);
+            $('button', $('#notInstalledModal')).prop('disabled', true);
+            //$(this).prop('disabled', true);
+            var $comment = $('#notInstalledComment');
+
+            if ($comment.val() != '') {
+                $.ajax({
+                    url: '@Url.Action("ServiceSheetSaveNotInstalledComment")',
+                    method:'POST',
+                    data: {id: @serviceSheet.Id, comment: $comment.val()},
+                    success:function() {
+                        $('#ZipIssueNotInstalledForm').submit();
+                    },
+                    error:function() {
+                        hideSpinner($curObj);
+                        $('button', $('#notInstalledModal')).prop('disabled', false);
+                    }
+                });
+
+            }
+            return false;
+        });
+        $('#btnSendServiceSheet').click(function() {
+            showSpinnerAppend($(this));
+            $(this).prop('disabled', true);
+            var notinstalledLength =  $('[notinstalled="notinstalled"]', $('#issuedZipIssueItemsContainer')).length;
+
+            var zipNeed = @(serviceSheet.ZipClaim.HasValue && serviceSheet.ZipClaim.Value? "true":"false");
+            if (zipNeed && $('#zipIssueItemsContainer tr').length <= 0) {
+
+                BootstrapDialog.show({
+                    type:'type-danger',
+                    title: 'Внимание!',
+                    message: 'Необходимо заказать ЗИП.'
+                });
+                hideSpinner($(this));
+                $(this).prop('disabled', false);
+                return false;
+            }
+
+            if (notinstalledLength > 0) {
+                $('#notInstalledModal').modal();
+                $('#notInstalledCommentTitle').text('Остался неустановленный ЗИП - ' + notinstalledLength + ' шт. Укажите причину');
+                hideSpinner($(this));
+                $(this).prop('disabled', false);
+                return false;
+            }
+
+            var clientGivenInstalledCount = $('#zipClientGivenInstall tr').length;
+            var clientGivenInstallNeed =  @(serviceSheet.ZipClientGivenInstall ? "true" : "false");
+
+            if (clientGivenInstallNeed && clientGivenInstalledCount <= 0) {
+                BootstrapDialog.show({
+                    type:'type-danger',
+                    title: 'Внимание!',
+                    message: 'Необходимо указать какой ЗИП был получен от заказчика.'
+                });
+                hideSpinner($(this));
+                $(this).prop('disabled', false);
+                return false;
+            }
+
+            $('#ZipIssueForm').submit();
+        });
+    });
+    function addClientGivenInstalledZipItem() {
+        var ssid = $(this).attr('ssid');
+        var zipClientGivenInstallNum = $('#zipClientGivenInstallNum').val();
+        var zipClientGivenInstallName = $('#zipClientGivenInstallName').val();
+        var zipClientGivenInstallCount = $('#zipClientGivenInstallCount').val();
+            
+        if (zipClientGivenInstallNum == '' || zipClientGivenInstallName == '' || zipClientGivenInstallCount == '') {
+            BootstrapDialog.show({
+                type: 'type-warning',
+                title: 'Внимание!',
+                message: 'Заполните все поля.'
+            });
+            return;
+        }
+        var curObj = $(this);
+        showSpinnerAppend(curObj);
+        curObj.prop('disabled', true);
+        $.ajax({
+            url: '@Url.Action("AddServiceSheetClientGivenInstalledZipItem")',
+            method: 'POST',
+            contentType: 'application/json;charset=utf-8 ',
+            data: JSON.stringify({ PartNum: zipClientGivenInstallNum, Name: zipClientGivenInstallName, Count: zipClientGivenInstallCount, ServiceSheetId: ssid, ClientGiven:true }),
+            success: function (data) {
+                if (!data.error) {
+                    //var clientGivenStr = clientGiven === 'True' ? 'да' : 'нет';
+                    //var item = '<tr id="zip-item-' + data.id + '" class="updated"><td>' + zipIssueNewPartNum + '</td><td>' + zipIssueNewName + '</td><td>' + zipIssueNewCount + '</td><td>' + clientGivenStr +  '</td><td class="text-center"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a></td></tr>';
+                    var item = '<tr id="zip-clgiv-inst-item-' + data.id + '" class="updated"><th>предоставлено клиентом</th><td class="text-center valign-middle">' + zipClientGivenInstallNum + '</td><td class="text-center valign-middle">' + zipClientGivenInstallName + '</td><td class="text-center valign-middle">' + zipClientGivenInstallCount + '</td><td class="text-center valign-middle"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-clgiv-inst-item-del"><i class="fa fa-trash"></i></a></td></tr>';
+                    $('#zipClientGivenInstall').append(item);
+                    $('[name="zip-clgiv-inst-item-del"]').click(zipClientGivenInstallItemDelete);
+                    $('#zipClientGivenInstallNum').val('');
+                    $('#zipClientGivenInstallName').val('');
+                    $('#zipClientGivenInstallCount').val('1');
+                } else {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: data.error
+                    });
+                }
+                curObj.prop('disabled', false);
+                hideSpinner(curObj);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
+                curObj.prop('disabled', false);
+                hideSpinner(curObj);
+            }
+        });
+    }
+    function zipClientGivenInstallItemDelete() {
+        if (!confirm('Вы уверены что хотите удалить ЗИП?')) return;
+        var ziid = $(this).attr('ziid');
+        $.ajax({
+            url: '@Url.Action("ServiceSheetZipItemClientGivenInstalledDelete")',
+            method: 'POST',
+            data: { id: ziid },
+            success: function (data) {
+                $('#zip-clgiv-inst-item-' + ziid).remove();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
+            }
+        });
+    }
+
+    function zipItemInstallCancel() {
+        var curObj = $(this);
+        showSpinnerAppend(curObj);
+        curObj.prop('disabled', true);
+        var ziid = $(this).attr('ziid');
+        $.ajax({
+            url: '@Url.Action("ServiceSheetZipItemSetInstalledCancel")',
+            method: 'POST',
+            data: { id: ziid, idServiceSheet: @serviceSheet.Id },
+            success: function (data) {
+                $('#issued-zip-item-' + ziid).attr('notinstalled', 'notinstalled');
+                $('[name="btn-issued-zip-item-installed-cancel"]', $('#issued-zip-item-' + ziid)).prop('disabled', true);
+                var $btnInst = $('[name="btn-issued-zip-item-installed"]', $('#issued-zip-item-' + ziid));
+                $btnInst.prop('disabled', false);
+                $btnInst.removeClass('btn-success');
+                $btnInst.addClass('btn-primary');
+                hideSpinner(curObj);
+                curObj.prop('disabled', false);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
+                hideSpinner(curObj);
+                curObj.prop('disabled', false);
+            }
+        });
+    }
+
+    function zipItemInstall() {
+        var curObj = $(this);
+        showSpinnerAppend(curObj);
+        curObj.prop('disabled', true);
+        var ziid = $(this).attr('ziid');
+        $.ajax({
+            url: '@Url.Action("ServiceSheetZipItemSetInstalled")',
+            method: 'POST',
+            data: { id: ziid, idServiceSheet: @serviceSheet.Id },
+            success: function (data) {
+                $('#issued-zip-item-' + ziid).removeAttr('notinstalled');
+                $('[name="btn-issued-zip-item-installed-cancel"]', $('#issued-zip-item-' + ziid)).prop('disabled', false);
+                var $btnInst = $('[name="btn-issued-zip-item-installed"]', $('#issued-zip-item-' + ziid));
+                $btnInst.prop('disabled', true);
+                $btnInst.removeClass('btn-primary');
+                $btnInst.addClass('btn-success');
+                hideSpinner(curObj);
+                curObj.prop('disabled', false);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
+                hideSpinner(curObj);
+                curObj.prop('disabled', false);
+            }
+        });
+    }
+
+    function zipItemDelete() {
+        if (!confirm('Вы уверены что хотите удалить ЗИП?')) return;
+        var ziid = $(this).attr('ziid');
+        $.ajax({
+            url: '@Url.Action("ServiceSheetIssuedZipItemDelete")',
+            method: 'POST',
+            data: { id: ziid },
+            success: function (data) {
+                $('#zip-item-' + ziid).remove();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
+            }
+        });
+    }
+
+    function addZipItem() {
+
+        var ssid = $(this).attr('ssid');
+        var zipIssueNewPartNum = $('#zipIssueNewPartNum').val();
+        var zipIssueNewName = $('#zipIssueNewName').val();
+        var zipIssueNewCount = $('#zipIssueNewCount').val();
+        //var clientGiven = $('[name="clientGiven"]:checked').val();
+
+        if (zipIssueNewPartNum == '' || zipIssueNewName == '' || zipIssueNewCount == '') {
+            BootstrapDialog.show({
+                type: 'type-warning',
+                title: 'Внимание!',
+                message: 'Заполните все поля.'
+            });
+            return;
+        }
+        var curObj = $(this);
+        showSpinnerAppend(curObj);
+        curObj.prop('disabled', true);
+        $.ajax({
+            url: '@Url.Action("AddServiceSheetIssuedZipItem")',
+            method: 'POST',
+            contentType: 'application/json;charset=utf-8 ',
+            data: JSON.stringify({ PartNum: zipIssueNewPartNum, Name: zipIssueNewName, Count: zipIssueNewCount, ServiceSheetId: ssid }),
+            success: function (data) {
+                if (!data.error) {
+                    $('#zipIssueHeader').show();
+                    //var clientGivenStr = clientGiven === 'True' ? 'да' : 'нет';
+                    //var item = '<tr id="zip-item-' + data.id + '" class="updated"><td>' + zipIssueNewPartNum + '</td><td>' + zipIssueNewName + '</td><td>' + zipIssueNewCount + '</td><td>' + clientGivenStr +  '</td><td class="text-center"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a></td></tr>';
+                    var item = '<tr id="zip-item-' + data.id + '" class="updated"><td class="text-center valign-middle">' + zipIssueNewPartNum + '</td><td class="text-center valign-middle">' + zipIssueNewName + '</td><td class="text-center valign-middle">' + zipIssueNewCount + '</td><td class="text-center valign-middle"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a></td></tr>';
+                    $('#zipIssueItemsContainer').append(item);
+                    $('[name="zip-item-del"]').click(zipItemDelete);
+                    $('#zipIssueNewPartNum').val('');
+                    $('#zipIssueNewName').val('');
+                    $('#zipIssueNewCount').val('1');
+                } else {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: data.error
+                    });
+                }
+                curObj.prop('disabled', false);
+                hideSpinner(curObj);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                BootstrapDialog.show({
+                    type: 'type-danger',
+                    title: 'Ошибка!',
+                    message: xhr.responseText
+                });
+                curObj.prop('disabled', false);
+                hideSpinner(curObj);
+            }
+        });
+    }
+</script>

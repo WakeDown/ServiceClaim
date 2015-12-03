@@ -1,0 +1,402 @@
+﻿@using ServiceClaim.Models
+@model IEnumerable<ServiceClaim.Models.ServiceIssuePeriodItem>
+
+@{
+    //var monthes = ServiceIssuePlan.GroupByMonthes(Model);
+    //int mColLenght = 12 / monthes.Count();
+    var date = DateTime.Parse(Request.QueryString["date"]);
+}
+
+
+    @*<div class="row">
+            <div class="col-lg-@mColLenght">
+                <span class="h3" id="curMonthTitle"></span>
+                <span>
+                    <input type="radio" name="issuesPlanType" value="city" checked="checked" />&nbsp;по городам
+                    <input type="radio" name="issuesPlanType" value="client" />&nbsp;по клиентам
+                    <input type="radio" name="issuesPlanType" value="engeneer" />&nbsp;по инженерам
+                </span>
+                <div>
+                    <span>
+                        <input type="radio" name="issuesPlanDoneType" value="null" checked="checked" /><span name="planTotalCount" class="label label-primary label-as-badge">-</span>&nbsp;все
+                        <input type="radio" name="issuesPlanDoneType" value="1" /><span name="planDoneCount" class="label label-success label-as-badge">-</span>&nbsp;выполнено
+                        <input type="radio" name="issuesPlanDoneType" value="0" /><span name="planUndoneCount" class="label label-danger label-as-badge">-</span>&nbsp;невыполнено
+                    </span>
+                </div>
+                <div>
+                    @{
+                        int pColLenght = 12 / mth.Periods.Count();
+                    }
+                    @foreach (var period in mth.Periods)
+                    {
+                        <div class="col-lg-@pColLenght period-container nomargin nopadding" id="period-container-@period.IdValue" name="period-container">
+                            <h5 name="periodTitle" value="@period.ListValue" idval="@period.IdValue" class="cursor-pointer period-title nomargin">@period.ListName <span class="label label-info label-as-badge">@period.DaysDiff дн.</span></h5>
+                            <div id="periodContainer-@period.IdValue" name="period-container" std="@period.StartDate" edt="@period.EndDate" pid="@period.IdValue">
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+    </div>*@
+                        
+
+<script type="text/javascript">
+    $(function () {
+        $('[name="issuesPlanType"]').click(loadPlanIssues);
+        $('[name="issuesPlanDoneType"]').click(loadPlanIssues);
+        $('[name="periodTitle"]').click(function () {
+            var val = $(this).attr('value');
+            $('#selPeriod').val(val);
+            var idval = $(this).attr('idval');
+            $('[name="period-container"]').removeClass('selected');
+            $('#period-container-' + idval).addClass('selected');
+            selPeriodIdVal = idval;
+        });
+        
+        loadPlanIssues();
+        loadPlanTotal();
+    });
+
+    function loadPlanTotal() {
+        var engSid = getEngeneerSelectedValues();
+        if (engSid == null || engSid.length <= 0) {
+            setTimeout(loadPlanTotal, 100);
+            return;
+        }
+        var year = @date.Year;
+        var month = @date.Month;
+        $.ajax({
+            url: '@Url.Action("GetPlanServiceIssueTotal")',
+            method: 'POST',
+            data: { year: year, month: month, engeneerSid: engSid },
+            success: function (data) {
+                $('[name="planTotalCount"]').text(data.TotalCount);
+                $('[name="planDoneCount"]').text(data.DoneCount);
+                $('[name="planUndoneCount"]').text(data.UndoneCount);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //alert(xhr.responseText);
+                //hideSpinner($cont);
+            }
+        });
+    }
+
+    var selPeriodIdVal = '';
+
+    function updateSelectedPeriod() {
+        loadPeriodPlanIssues('periodContainer-' + selPeriodIdVal);
+    }
+
+    function loadPlanIssues() {
+        var periodArr = $('[name="period-container"]');
+        for (var i = 0; i < periodArr.length; i++) {
+            var pid = $(periodArr[i]).attr('pid');
+            loadPeriodPlanIssues('periodContainer-' + pid);
+        }
+    }
+
+    function getIssuesPlanDoneType() {
+        var val = $('[name="issuesPlanDoneType"]:checked').val();
+        if (val == 'null') return null;
+        return val == 1;
+    }
+
+    function loadPeriodPlanIssues(contId) {
+        var engSid = getEngeneerSelectedValues();
+        if (engSid == null || engSid.length <= 0) {
+            setTimeout(function() {
+                loadPeriodPlanIssues(contId);
+            }, 100);
+            return;
+        }
+
+        var issuesPlanType = $('[name="issuesPlanType"]:checked').val();
+        var issuesPlanDoneType = getIssuesPlanDoneType();
+        var $cont = $('#' + contId);
+        var startDate = $cont.attr('std');
+        var endDate = $cont.attr('edt');
+        $cont.html('');
+        showSpinnerAppend($cont);
+
+        if (issuesPlanType == 'city') {
+            $.ajax({
+                url: '@Url.Action("GetPlanServiceIssueCitiesList")',
+                method: 'POST',
+                data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, done: issuesPlanDoneType },
+                success: function (data) {
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            issuesPlanType = $('[name="issuesPlanType"]:checked').val();
+                            if (issuesPlanType != 'city') return;
+                            var item = data[i];
+                            var htmlItem = '<div name="issueItemCity" sdt="' + startDate + '" edt="' + endDate + '" cid="' + item.Id + '" class="issue-plan-item city" planids="' + item.PlanIdList + '"><button type="button" name="delete" class="close" >&times;</button><div class="h5 margin-sm" name="issueItemCityName">' + item.ShortName + '</div><span class="label label-primary label-as-badge">' + item.IssuesCount + '</span>' + (item.CamesCount != null ? '<span class="label label-success label-as-badge">' + item.CamesCount + '</span>' : '') + '' + (item.NoCamesCount != null ? '<span class="label label-danger label-as-badge">' + item.NoCamesCount + '</span>' : '') + '<div name="issueItemCityAddress"></div></div>';
+                            $cont.append(htmlItem);
+                        }
+                        $('[name="issueItemCity"]', $cont).click(loadCityAddressList);
+                        $('[name="delete"]', $cont).click(deleteIssuesFromPlan);
+                    } else {
+                        $cont.append('пусто');
+                    }
+                    hideSpinner($cont);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //alert(xhr.responseText);
+                    hideSpinner($cont);
+                }
+            });
+        }
+        else if (issuesPlanType == 'client') {
+            $.ajax({
+                url: '@Url.Action("GetPlanServiceIssueClientList")',
+                method: 'POST',
+                data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, done: issuesPlanDoneType },
+                success: function (data) {
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            issuesPlanType = $('[name="issuesPlanType"]:checked').val();
+                            if (issuesPlanType != 'client') return;
+                            var item = data[i];
+                            var htmlItem = '<div name="issueItemClient" sdt="' + startDate + '" edt="' + endDate + '" clid="' + item.Id + '" class="issue-plan-item client" planids="' + item.PlanIdList + '"><button type="button" name="delete" class="close" >&times;</button><div class="h5 margin-sm" name="issueItemClientName">' + item.Name + '</div><span class="label label-primary label-as-badge">' + item.IssuesCount + '</span>' + (item.CamesCount != null ? '<span class="label label-success label-as-badge">' + item.CamesCount + '</span>' : '') + '' + (item.NoCamesCount != null ? '<span class="label label-danger label-as-badge">' + item.NoCamesCount + '</span>' : '') + '<div name="issueItemClientCity"></div></div>';
+                            $cont.append(htmlItem);
+                        }
+                        $('[name="issueItemClient"]', $cont).click(loadClientCityList);
+                        $('[name="delete"]', $cont).click(deleteIssuesFromPlan);
+                    } else {
+                        $cont.append('пусто');
+                    }
+                    hideSpinner($cont);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //alert(xhr.responseText);
+                    hideSpinner($cont);
+                }
+            });
+        }
+        else if (issuesPlanType == 'engeneer') {
+            $.ajax({
+                url: '@Url.Action("GetPlanServiceIssueEngeneerList")',
+                method: 'POST',
+                data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, done: issuesPlanDoneType },
+                success: function (data) {
+                    if (data.length > 0) {
+                        issuesPlanType = $('[name="issuesPlanType"]:checked').val();
+                        if (issuesPlanType != 'engeneer') return;
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var htmlItem = '<div name="issueItemEngeneer" sdt="' + startDate + '" edt="' + endDate + '" esid="' + item.Sid + '" class="issue-plan-item engeneer" planids="' + item.PlanIdList + '"><button type="button" name="delete" class="close" >&times;</button><div class="h5 margin-sm" name="issueItemEngeneerName">' + item.Name + '</div><span class="label label-primary label-as-badge">' + item.IssuesCount + '</span>' + (item.CamesCount != null ? '<span class="label label-success label-as-badge">' + item.CamesCount + '</span>' : '') + '' + (item.NoCamesCount != null ? '<span class="label label-danger label-as-badge">' + item.NoCamesCount + '</span>' : '') + '<div name="issueItemEngeneerCity"></div></div>';
+                            $cont.append(htmlItem);
+                        }
+                        $('[name="issueItemEngeneer"]', $cont).click(loadEngeneerCityList);
+                        $('[name="delete"]', $cont).click(deleteIssuesFromPlan);
+                    } else {
+                        $cont.append('пусто');
+                    }
+                    hideSpinner($cont);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //alert(xhr.responseText);
+                    hideSpinner($cont);
+                }
+            });
+        }
+    }
+
+    function deleteIssuesFromPlan() {
+        var $elem = $(this);
+        var $issueItem = $elem.closest('[name^="issueItem"]');
+
+        if (!confirm('Вы действительно хотите убрать элементы из плана?')) {
+            return false;
+        }
+        var planIds = $issueItem.attr('planids');
+        $.ajax({
+            url: '@Url.Action("DeleteIssueItemPlan")',
+            method: 'POST',
+            data: { planIds: planIds },
+            success: function (data) {
+                if (!data.error) {
+                    $issueItem.remove();
+                    fillPlaningIssuesList();
+                } else {
+                    alert(data.error);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.responseText);
+            }
+        });
+    }
+
+    function loadEngeneerCityList(e) {
+        var elName = $(e.target).attr('name');
+        if (elName != 'issueItemEngeneer' && elName != 'issueItemEngeneerName') {
+            e.preventDefault();
+            return;
+        }
+        var issuesPlanDoneType = getIssuesPlanDoneType();
+        var $obj = $(this);
+        var esid = [$obj.attr('esid')];
+        var startDate = $obj.attr('sdt');
+        var endDate = $obj.attr('edt');
+        //var engSid = getEngeneerSelectedValues();
+        var $cont = $('[name="issueItemEngeneerCity"]', $obj);
+        $cont.html('');
+        showSpinnerPrepend($cont);
+        $.ajax({
+            url: '@Url.Action("GetPlanServiceIssueCitiesList")',
+            method: 'POST',
+            data: { startDate: startDate, endDate: endDate, engeneerSid: esid, done: issuesPlanDoneType },
+            success: function (data) {
+
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var htmlItem = '<div name="issueItemCity" sdt="' + startDate + '" edt="' + endDate + '" esid="' + esid + '" cid="' + item.Id + '" class="issue-plan-item city" planids="' + item.PlanIdList + '"><button type="button" name="delete" class="close" >&times;</button><div class="h5 margin-sm" name="issueItemCityName">' + item.ShortName + '</div><span class="label label-primary label-as-badge">' + item.IssuesCount + '</span>' + (item.CamesCount != null ? '<span class="label label-success label-as-badge">' + item.CamesCount + '</span>' : '') + '' + (item.NoCamesCount != null ? '<span class="label label-danger label-as-badge">' + item.NoCamesCount + '</span>' : '') + '<div name="issueItemCityAddress"></div></div>';
+                        $cont.append(htmlItem);
+                    }
+                    $('[name="issueItemCity"]', $cont).click(loadCityAddressList);
+                    $('[name="delete"]', $cont).click(deleteIssuesFromPlan);
+                } else {
+                    $cont.append('пусто');
+                }
+                hideSpinner($cont);
+            }
+                ,
+            error: function (xhr, ajaxOptions, thrownError) {
+                //alert(xhr.responseText);
+                hideSpinner($cont);
+            }
+        });
+        e.preventDefault();
+    }
+
+    function loadClientCityList(e) {
+        var elName = $(e.target).attr('name');
+        if (elName != 'issueItemClient' && elName != 'issueItemClientName') {
+            e.preventDefault();
+            return;
+        }
+        var issuesPlanDoneType = getIssuesPlanDoneType();
+        var $obj = $(this);
+        var clid = $obj.attr('clid');
+        var startDate = $obj.attr('sdt');
+        var endDate = $obj.attr('edt');
+        var engSid = getEngeneerSelectedValues();
+        var $cont = $('[name="issueItemClientCity"]', $obj);
+        $cont.html('');
+        showSpinnerPrepend($cont);
+        $.ajax({
+            url: '@Url.Action("GetPlanServiceIssueCitiesList")',
+            method: 'POST',
+            data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, clientId: clid, done: issuesPlanDoneType },
+            success: function (data) {
+
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var htmlItem = '<div name="issueItemCity" sdt="' + startDate + '" edt="' + endDate + '" clid="' + clid + '" cid="' + item.Id + '" class="issue-plan-item city" planids="' + item.PlanIdList + '"><button type="button" name="delete" class="close" >&times;</button><div class="h5 margin-sm" name="issueItemCityName">' + item.ShortName + '</div><span class="label label-primary label-as-badge">' + item.IssuesCount + '</span>' + (item.CamesCount != null ? '<span class="label label-success label-as-badge">' + item.CamesCount + '</span>' : '') + '' + (item.NoCamesCount != null ? '<span class="label label-danger label-as-badge">' + item.NoCamesCount + '</span>' : '') + '<div name="issueItemCityAddress"></div></div>';
+                        $cont.append(htmlItem);
+                    }
+                    $('[name="issueItemCity"]', $cont).click(loadCityAddressList);
+                    $('[name="delete"]', $cont).click(deleteIssuesFromPlan);
+                } else {
+                    $cont.append('пусто');
+                }
+                hideSpinner($cont);
+            }
+                ,
+            error: function (xhr, ajaxOptions, thrownError) {
+                //alert(xhr.responseText);
+                hideSpinner($cont);
+            }
+        });
+        e.preventDefault();
+    }
+
+    function loadCityAddressList(e) {
+        var elName = $(e.target).attr('name');
+        if (elName != 'issueItemCity' && elName != 'issueItemCityName') {
+            e.preventDefault();
+            return;
+        }
+        var issuesPlanDoneType = getIssuesPlanDoneType();
+        var $obj = $(this);
+        var cid = $obj.attr('cid');
+        var startDate = $obj.attr('sdt');
+        var endDate = $obj.attr('edt');
+        var engSid = getEngeneerSelectedValues();
+        var $cont = $('[name="issueItemCityAddress"]', $obj);
+        $cont.html('');
+        showSpinnerPrepend($cont);
+
+        $.ajax({
+            url: '@Url.Action("GetPlanServiceIssueAddressList")',
+            method: 'POST',
+            data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, idCity: cid, done: issuesPlanDoneType },
+            success: function (data) {
+
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var htmlItem = '<div name="issueItemAddress" sdt="' + startDate + '" edt="' + endDate + '" cid="' + cid + '" aid="' + item.Name + '" class="issue-plan-item address" planids="' + item.PlanIdList + '"><button type="button" name="delete" class="close" >&times;</button><div class="h5 margin-sm" name="issueItemAddressName">' + item.Name + '</div><span class="label label-primary label-as-badge">' + item.IssuesCount + '</span>' + (item.CamesCount != null ? '<span class="label label-success label-as-badge">' + item.CamesCount + '</span>' : '') + '' + (item.NoCamesCount != null ? '<span class="label label-danger label-as-badge">' + item.NoCamesCount + '</span>' : '') + '<div name="issueItemAddressDevice"></div></div>';
+                        $cont.append(htmlItem);
+                    }
+                    $('[name="issueItemAddress"]', $cont).click(loadAddressDeviceList);
+                    $('[name="delete"]', $cont).click(deleteIssuesFromPlan);
+                } else {
+                    $cont.append('пусто');
+                }
+                hideSpinner($cont);
+            }
+                ,
+            error: function (xhr, ajaxOptions, thrownError) {
+                //alert(xhr.responseText);
+                hideSpinner($cont);
+            }
+        });
+        e.preventDefault();
+    }
+
+
+    function loadAddressDeviceList(e) {
+        var elName = $(e.target).attr('name');
+        if (elName != 'issueItemAddress' && elName != 'issueItemAddressName') {
+            e.preventDefault();
+            return;
+        }
+        var issuesPlanDoneType = getIssuesPlanDoneType();
+        var $obj = $(this);
+        var cid = $obj.attr('cid');
+        var aid = $obj.attr('aid');
+        var startDate = $obj.attr('sdt');
+        var endDate = $obj.attr('edt');
+        var engSid = getEngeneerSelectedValues();
+        var $cont = $('[name="issueItemAddressDevice"]', $obj);
+        $cont.html('');
+        showSpinnerPrepend($cont);
+
+        $.ajax({
+            url: '@Url.Action("GetPlanServiceIssueDeviceIssueList")',
+            method: 'POST',
+            data: { startDate: startDate, endDate: endDate, engeneerSid: engSid, idCity: cid, address: aid, done: issuesPlanDoneType },
+            success: function (data) {
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var htmlItem = '<div name="issueItemDevice" sdt="' + startDate + '" edt="' + endDate + '" cid="' + cid + '" aid="' + aid + '" did="' + item.Id + '" class="issue-plan-item device" planids="' + item.PlanIdList + '"><button type="button" name="delete" class="close" >&times;</button><div class="h5 margin-sm" name="issueItemDeviceName">' + item.Name + '</div><span class="label label-primary label-as-badge">' + item.IssuesCount + '</span>' + (item.CamesCount != null ? '<span class="label label-success label-as-badge">' + item.CamesCount + '</span>' : '') + '' + (item.NoCamesCount != null ? '<span class="label label-danger label-as-badge">' + item.NoCamesCount + '</span>' : '') + '</div>';
+                        $cont.append(htmlItem);
+                    }
+                    $('[name="delete"]', $cont).click(deleteIssuesFromPlan);
+                } else {
+                    $cont.append('пусто');
+                }
+                hideSpinner($cont);
+            }
+                ,
+            error: function (xhr, ajaxOptions, thrownError) {
+                //alert(xhr.responseText);
+                hideSpinner($cont);
+            }
+        });
+    }
+</script>

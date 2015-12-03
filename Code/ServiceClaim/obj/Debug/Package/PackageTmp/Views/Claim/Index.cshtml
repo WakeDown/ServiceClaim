@@ -1,0 +1,377 @@
+﻿@using System.Configuration
+@using System.Linq
+@using ServiceClaim.Models
+@using ServiceClaim.Objects
+@model ServiceClaim.Models.Claim
+
+@{
+    ViewBag.Title = "Карточка заяки";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+    //var stateHistory = Model.GetStateHistory();
+    //var servSheetList = Model.GetClaimServiceSheetList();
+    //var zipClaimList = Model.GetClaimZipClaimList();
+    //var servSheetNotPayedWrapList = Model.GetClaimServiceSheetList(false);
+}
+
+@section PanelHead
+{
+    Карточка заявки @(Model.Id > 0 ? " №" + Model.Id.ToString() : "")
+}
+
+@section PanelBody
+{
+    @*@using(Html.BeginForm("Index", "Claim", FormMethod.Post, new {@class="form-horizontal"}))*@
+    [@ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)]
+    <div class="row">
+        <div class="col-lg-8">
+            @if (TempData["error"] != null)
+            {
+                <div class="row">
+                    <div class="col-lg-push-2 col-lg-10">
+                        <blockquote class="alert-danger">
+                            @TempData["error"]
+                        </blockquote>
+                    </div>
+                </div>
+            }
+            
+            <div class="row pad-b-md">
+                <div class="col-lg-6">
+                    @if (!String.IsNullOrEmpty(Model.ClientSdNum))
+                    {
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">№ SD клиента</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12  text-center-sm text-center-xs">@Model.ClientSdNum</span></div>
+                    }
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Клиент</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contractor.FullName</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Адрес</label> 
+                    <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.CityName @Model.Address</span></div>
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Контактное лицо</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.ContactName</span></div>
+                    @*<div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий к объекту</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.Descr</span></div>*@
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Договор</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contract.Number</span>
+                        @if (Model.Contract != null && Model.Contract.ContractZipTypeSysName != null)
+                        {
+                            <hr class="line-sm no-marg-bot @(Model.Contract.ContractZipTypeSysName == "MOREZIP" ? "line-success" : Model.Contract.ContractZipTypeSysName == "LESSZIP" ? "line-danger" : String.Empty)"/>
+                        }
+                    </div>
+                    <div class="row">
+                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Серийный номер</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.SerialNum</span>
+                        </div>
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Аппарат</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Device.FullName @(Model.Device.HasGuarantee.HasValue && Model.Device.HasGuarantee.Value ? "<blockquote class='bold text-danger bg-danger nomargin'>Гарантия</blockquote>" : String.Empty)</span></div>
+
+                        @if (Model.WorkType != null && !String.IsNullOrEmpty(Model.WorkType.Name))
+                        {
+                            <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Тип работ</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
+                        }
+                        @if (Model.Specialist != null && !String.IsNullOrEmpty(Model.Specialist.DisplayName))
+                        {
+                            <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Специалист</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
+                        }
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Descr</span></div>
+                    </div>
+                <div class="col-lg-3">
+                    <h5 class="bold">Сервисные листы</h5>
+                    <div id="serviceSheetContainer">
+                        @*@Html.Partial("ClaimServiceSheetList", servSheetList)*@
+                    </div>
+                    <div id="btnGetPaperServiceSheetContainer">
+
+                    </div>
+                    @*@if (servSheetNotPayedWrapList.Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
+                    {
+                        @Html.Partial("ServiceSheetPaperGet", servSheetNotPayedWrapList)
+                    }*@
+                </div>
+                <div class="col-lg-3">
+                    <h5 class="bold">Заявки на ЗИП</h5>
+                    <div id="zipClaimContainer">
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.State.SysName.ToUpper().Equals("NEW") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager, AdGroup.AddNewClaim))
+            {
+                @Html.Partial("SetWorkType", Model)
+            }
+            @if ((Model.State.SysName.ToUpper().Equals("NEWADD") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager, AdGroup.AddNewClaim)) || (Model.State.SysName.ToUpper().Equals("SERVADMSETWAIT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager, AdGroup.AddNewClaim, AdGroup.ServiceTech)))
+            {
+                @Html.Partial("AdminSelect", Model)
+            }
+            @if ((Model.State.SysName.ToUpper().Equals("SRVADMWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (Model.State.SysName.ToUpper().Equals("SERVENGSETWAIT")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
+            {
+                @Html.Partial("EngeneerSelect", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("TECHSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
+            {
+                @Html.Partial("TechConfirm", Model)
+            }
+            @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("ConfirmWork", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("TECHWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
+            {
+                @Html.Partial("ServiceSheetTechForm", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("SRVENGGET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("StateEngOutWait", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("SRVENGWENT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("SetServEngOnWork", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("SRVENGWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("ServiceSheetForm", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("ZIPISSUE") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
+            {
+                @Html.Partial("ZipIssue", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("CONTRACTSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
+            {
+                @Html.Partial("ContractChoice", Model)
+            }
+            @*Доступ только текущему СТП*@
+            @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech)))
+            {
+                @Html.Partial("ZipGetOnCheck", Model)
+            }
+            @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECKINWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech) && Model.CurTechSid == ViewBag.CurUser.Sid))
+            {
+                @Html.Partial("ZipCheck", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRM") && ViewBag.CurUser.HasAccess(AdGroup.ServiceZipClaimConfirm))
+            {
+                @Html.Partial("ZipConfirm", Model)
+            }
+            @*@if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRMED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
+            {
+                @Html.Partial("ZipOrdered", Model)
+            }*@
+            @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceControler))
+            {
+                @Html.Partial("ZipOrderConfirm", Model)
+            }
+            @*@if (Model.State.SysName.ToUpper().Equals("DONE") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
+            {
+                @Html.Partial("StateDone", Model)
+            }*@
+
+
+            <div class="row">
+                @*<label class="col-lg-2 text-right">Комментарий</label>*@
+                <div class="col-lg-12">
+                    @*@if (!Model.State.SysName.ToUpper().Equals("END"))
+                        {
+                            <p>
+                                <textarea id="descr" class="form-control required-mark" rows="3" required="required" placeholder="Ваш комментарий"></textarea>
+                            </p>
+                            <div>
+                                <button id="clSave" class="btn btn-primary">Сохранить</button>
+                                <button id="clContinue" class="btn btn-success">Передать</button>
+                                <button id="clEnd" class="btn btn-danger">Закрыть</button>
+                            </div>
+                        }*@
+                </div>
+            </div>
+            @*<p>
+                    @Html.Partial("StateHistory", stateHistory.ToList().OrderByDescending(c => c.DateCreate))
+                </p>*@
+        </div>
+        @* История статусов *@
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        История изменений заявки
+                        @*<button id="showFullClaimHistory" class="btn btn-default btn-xs">показать полную</button>*@
+                    </h4>
+                </div>
+                <div class="panel-body" id="stateHistoryContainer">
+                    @*@{ Html.RenderAction("СlaimStateHistory", new { idClaim = Model.Id, full = false }); }*@
+                    @*@Html.Partial("StateHistory", stateHistory.ToList().OrderByDescending(c => c.DateCreate))*@
+                    @*@Html.Partial("StateHistorySmall", stateHistory.ToList().OrderByDescending(c => c.DateCreate))*@
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            //$('#showFullClaimHistory').click(showFullClaimHistory);
+            $('#clSave').click(claimSave);
+            $('#clContinue').click(claimContinue);
+            //$('#clEnd').click(claimEnd);
+
+            $('[data-toggle="popover"]').popover();
+            loadHistory();
+            loadServiceSheetList();
+            loadZipClaimList();
+        });
+
+        function loadZipClaimList() {
+            showSpinnerAppend($('#zipClaimContainer'));
+            $.ajax({
+                url: '@Url.Action("GetClaimZipClaimList")',
+                method: 'POST',
+                data:{idClaim:@Model.Id},
+                success: function(html) {
+                    $('#zipClaimContainer').html(html);
+                }
+            });
+
+        }
+
+        function loadServiceSheetList() {
+            var $cont = $('#serviceSheetContainer');
+            showSpinnerAppend($cont);
+            $.ajax({
+                url: '@Url.Action("GetClaimServiceSheetList")',
+                method: 'POST',
+                data:{idClaim:@Model.Id},
+                success: function(html) {
+                    $('#serviceSheetContainer').html(html);
+                        loadBtnGetServiceSheetList();
+                    hideSpinner($cont);
+                },
+                error: function() {
+                    hideSpinner($cont);
+                }
+            });
+        }
+
+
+
+        function loadBtnGetServiceSheetList() {
+            //showSpinnerAppend($('#btnGetPaperServiceSheetContainer'));
+            $.ajax({
+                url: '@Url.Action("GetServiceSheetPaperGet")',
+                method: 'POST',
+                data:{idClaim:@Model.Id},
+                success: function(html) {
+                    $('#btnGetPaperServiceSheetContainer').html(html);
+                }
+            });
+        }
+
+        function loadHistory() {
+            showSpinnerAppend($('#stateHistoryContainer'));
+            $.ajax({
+                url: '@Url.Action("СlaimStateHistory")?idClaim=@Model.Id&full=False',
+                method: 'GET',
+                success: function(html) {
+                    $('#stateHistoryContainer').html(html);
+                    $('#showAllHistory').click(showAllHistory);
+                }
+            });
+        }
+
+        @*function showFullClaimHistory() {
+
+            $.ajax({
+                url:'@Url.Action("FullClaimHistory")', method:'POST', data:{idClaim:id},
+                success: function(data) {
+
+                }
+            });
+        }*@
+
+
+        function claimSave() {
+            var id = @Model.Id;
+            var descr = $('#descr').val();
+            $.ajax({
+                url: '@Url.Action("ClaimSave")',
+                method: 'POST',
+                data: { id: id, descr: descr },
+                success: function(data) {
+                    if (data.errorMessage) {
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Ошибка!',
+                            message: data.errorMessage
+                        });
+                    } else {
+                        window.location.reload(); // = '';
+                        //alert('OK');
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
+                }
+            });
+        }
+
+        function claimContinue() {
+            var id = @Model.Id;
+            var descr = $('#descr').val();
+            $.ajax({
+                url: '@Url.Action("ClaimContinue")',
+                method: 'POST',
+                data: { id: id, descr: descr },
+                success: function(data) {
+                    if (data.errorMessage) {
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Ошибка!',
+                            message: data.errorMessage
+                        });
+                    } else {
+                        window.location.reload();
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
+                }
+            });
+        }
+
+        function showAllHistory() {
+            var $elem = $(this);
+            showSpinnerAppend($elem);
+            $.ajax({
+                url: '@Url.Action("СlaimStateHistory")?idClaim=@Model.Id&full=true',
+                method: 'GET',
+                success: function(html) {
+                    $('#stateHistoryContainer').html(html);
+                    hideSpinner($elem);
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
+                    hideSpinner($elem);
+                }
+            });
+        }
+
+        @*function claimEnd() {
+            var id = @Model.Id;
+            var descr = $('#descr').val();
+            $.ajax({
+                url:'@Url.Action("ClaimEnd")', method:'POST', data:{id:id, descr: descr},
+                success: function(data) {
+                    if (data.errorMessage) {
+                        alert(data.errorMessage);
+                    } else {
+                        window.location.reload();
+                    }
+                }
+            });
+        }*@
+    </script>
+}

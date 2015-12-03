@@ -1,0 +1,51 @@
+﻿@using ServiceClaim.Models
+@model ServiceClaim.Models.Claim
+
+@{
+    var cartridgeList = Model.GetCartridgeList();
+}
+
+<div class="row">
+    <div class="col-lg-push-2 col-lg-9">
+        <h4>Список картриджей</h4>
+
+        <table class="table table-bordered bg-white">
+            <tr class="bg-primary">
+                <th class="min-width"></th>
+                <th style="width: 100px">парт номер</th>
+                <th style="width: 250px">наименование</th>
+                <th style="width: 100px">количество</th>
+                <th style="width: 100px"></th>
+            </tr>
+            @if (cartridgeList.Any())
+            {
+                <tbody id="issuedZipIssueItemsContainer">
+                @foreach (var item in cartridgeList)
+                {
+                    <tr id="issued-zip-item-@item.Id" @(!item.Installed ? "notinstalled=notinstalled" : String.Empty)>
+                        <td class="text-center valign-middle">
+                            <button ziid="@item.Id" class="btn @(item.Installed ? "btn-success" : "btn-primary")" name="btn-issued-zip-item-installed" @(item.Installed ? "disabled=disabled" : String.Empty)>Установлено</button>
+                        </td>
+                        <td class="text-center valign-middle">@item.PartNum</td>
+                        <td class="text-center valign-middle">@item.Name</td>
+                        <td class="text-center valign-middle">@item.Count</td>
+                        <td class="text-center valign-middle">
+                            <button ziid="@item.Id" class="btn btn-danger" name="btn-issued-zip-item-installed-cancel" @(!item.Installed ? "disabled=disabled" : String.Empty)>отмена</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            }
+        </table>
+        <blockquote class="alert-danger">Функционал по указанию списка картриджей в разработке, сейчас список можно не указывать</blockquote>
+        @using (Html.BeginForm("CartridgeRefill", "Claim", FormMethod.Post, new { @id = "CartridgeList", role = "form" }))
+        {
+            @Html.HiddenFor(m => m.Id)
+            <div class="row">
+                <div class="col-lg-push-2 col-lg-10">
+                    <button type="submit" class="btn btn-success" id="btnSendServiceSheet">Передано</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,24 @@
+﻿@using System.Configuration
+@using ServiceClaim.Models
+@using ServiceClaim.Objects
+@model IEnumerable<ZipClaim>
+
+@if (Model.Any())
+{
+    <div>
+        <p>
+            @foreach (var zipClaim in Model)
+            {
+                <div class="row">
+                    <div class="col-lg-12">
+                        <span class="monospace">@zipClaim.DateCreate.ToString("dd.MM.yyyy HH:mm")</span>&nbsp;<a href="@ConfigurationManager.AppSettings["zipClaimHost"]/Claims/Editor?id=@zipClaim.Id" target="_blank">№@zipClaim.Id</a>
+                    </div>
+                </div>
+            }
+        </p>
+    </div>
+}
+else
+{
+    @:нет
+}
