@@ -56,7 +56,8 @@ namespace ServiceClaim.Models
         public string ContactName { get; set; }
         public string ContactPhone { get; set; }
         public bool DeviceCollective { get; set; }
-
+        public string CurClientManagerSid { get; set; }
+        public EmployeeSm ClientManager { get; set; }
 
         public string StateChangeDateDiffStr
         {

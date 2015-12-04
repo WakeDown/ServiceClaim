@@ -63,7 +63,7 @@
                 <select id="clientFilter" class="form-control input-xs"></select>
             </th>
             <th class="hidden-sm hidden-xs"><input id="addressFilter" type="text" placeholder="Адрес" class="form-control input-xs" /></th>
-            <th><input id="deviceFilter" type="text" placeholder="Аппарат" class="form-control input-xs" /></th>
+            <th class="width-25perc-lg width-40perc-sm"><input id="deviceFilter" type="text" placeholder="Аппарат" class="form-control input-xs" /></th>
             <th><input id="serialNumFilter" type="text" placeholder="S/N" class="form-control input-xs" /></th>
             @*<th>Последнее изменение</th>*@
             <th class="hidden-sm hidden-xs"></th>
@@ -167,7 +167,9 @@
                     '</div>' +
                     '<div class="text-nowrap"><span class="small"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div>' +
                     '<div class="text-nowrap"><span class="small"><span class="bold monospace text-nowrap">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div>' +
-                    '<div class="text-nowrap"><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div></td>' +
+                    '<div class="text-nowrap"><span class="small"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div>' +
+                    '<div class="text-nowrap"><span class="small"><span class="bold monospace">МРК:</span>&nbsp;' + (item.ClientManager != null && item.ClientManager.DisplayName != null ? item.ClientManager.DisplayName : '') + '</span></div>' +
+                    '</td>' +
                     '<td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #' + (item.State != null ? item.State.ForegroundColor : '') + '" class="valign-middle hidden-sm hidden-xs">' + (item.State != null ? item.State.Name : '') + '<div class="small text-nowrap">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle hidden-sm hidden-xs">' + item.DateCreateStr + '</td></tr>';
 
                 $cont.append($trItem);

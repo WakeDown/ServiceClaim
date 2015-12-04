@@ -634,6 +634,10 @@ overflow-x: hidden;
     .text-center-sm {
         text-align: center;
     }
+
+    .width-40perc-sm {
+        width: 40% !important;
+    }
 }
 @media (min-width: 992px) and (max-width: 1199px)  {
     .width-70-md{
@@ -649,6 +653,9 @@ overflow-x: hidden;
     }
     .width-70-lg {
         min-width: 70px;
+    }
+    .width-25perc-lg {
+        width: 25% !important;
     }
 }
 
