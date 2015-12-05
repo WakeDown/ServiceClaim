@@ -23,7 +23,18 @@ namespace ServiceClaim.Controllers
         //    Claim model = new Claim(id.Value);
         //    return View(model);
         //}
-
+        [HttpPost]
+        public JsonResult Add2Session(string name, string value)
+        {
+            Session[name] = value;
+            return Json(new {});
+        }
+        [HttpPost]
+        public JsonResult GetFromSession(string name)
+        {
+            var value = Session[name];
+            return Json(new { val= value });
+        }
 
         [HttpGet]
         public ActionResult Index(int? id)
@@ -162,7 +173,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetClaimList(int? idDevice = null, int? idClient = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null)
+        public async Task<JsonResult> GetClaimList(int? idDevice = null, string client = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null, int? idState = null, string dateCreate = null, string curSpec = null)
         {
             //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
             //        AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
@@ -182,7 +193,7 @@ namespace ServiceClaim.Controllers
             if (CurUser.Is(AdGroup.ServiceTech)) techSid = CurUser.Sid;
 
             //var result = Claim.GetList();
-            ListResult<Claim> result = await new Claim().GetListAsync(servAdminSid: servAdminSid, servEngeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid,  clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice);
+            ListResult<Claim> result = await new Claim().GetListAsync(servAdminSid: servAdminSid, servEngeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid,  client: client, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice, idState: idState, dateCreate: dateCreate, curSpec: curSpec);
             return Json(result);
         }
 
@@ -1124,7 +1135,13 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetStateGroupFilterList(int? idDevice = null, int? idClient = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null)
+        public JsonResult GetStateFilterList()
+        {
+            return Json(ClaimState.GetFilterList());
+        }
+
+        [HttpPost]
+        public JsonResult GetStateGroupFilterList(int? idDevice = null, string client = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null, int? idState = null, string dateCreate = null, string curSpec = null)
         {
             string servAdminSid = null;
             string servEngeneerSid = null;
@@ -1137,7 +1154,7 @@ namespace ServiceClaim.Controllers
             if (CurUser.Is(AdGroup.ServiceManager)) managerSid = CurUser.Sid;
             if (CurUser.Is(AdGroup.ServiceTech)) techSid = CurUser.Sid;
 
-            return Json(ClaimStateGroup.GetFilterList(servAdminSid: servAdminSid, servEngeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid, clientId: idClient, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice));
+            return Json(ClaimStateGroup.GetFilterList(servAdminSid: servAdminSid, servEngeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid, client: client, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice, idState: idState, dateCreate: dateCreate, curSpec: curSpec));
         }
 
         [HttpPost]

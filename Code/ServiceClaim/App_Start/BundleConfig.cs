@@ -13,7 +13,8 @@ namespace ServiceClaim
                        "~/Scripts/jquery-ui.js",
                        "~/Scripts/jquery.unobtrusive-ajax.js",
                        "~/Scripts/jquery.mask.min.js",
-                       "~/Scripts/jquery-dateformat.js"
+                       "~/Scripts/jquery-dateformat.js",
+                       "~/Scripts/deeplink-0.1.22.js"
                        //"~/Scripts/jquery-autocomplete.js"
                        ));
 

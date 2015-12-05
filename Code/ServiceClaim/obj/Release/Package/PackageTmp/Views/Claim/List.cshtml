@@ -36,9 +36,9 @@
                     <nav>
                         <ul class="pagination pagesize nomargin">
                             @*<li>записей на странице</li>*@
-                            <li><a name="pageSize" value="30" href="#!" class="btn btn-default btn-sm selected">30</a></li>
-                            <li><a name="pageSize" value="100" href="#!" class="btn btn-default btn-sm">100</a></li>
-                            <li><a name="pageSize" value="300" href="#!" class="btn btn-default btn-sm">300</a></li>
+                            <li><a name="pageSize" value="30" class="btn btn-default btn-sm selected">30</a></li>
+                            <li><a name="pageSize" value="100" class="btn btn-default btn-sm">100</a></li>
+                            <li><a name="pageSize" value="300" class="btn btn-default btn-sm">300</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -60,17 +60,18 @@
             </th>
             <th class="min-width hidden-sm hidden-xs"><input id="clientSdNumFilter" type="text" placeholder="№ SD клиента" class="form-control input-xs" style="min-width: 85px;" /></th>
             <th>
-                <select id="clientFilter" class="form-control input-xs"></select>
+                @*<select id="clientFilter" class="form-control input-xs"></select>*@
+                <input id="clientFilter" type="text" placeholder="Клиент" class="form-control input-xs" />
             </th>
             <th class="hidden-sm hidden-xs"><input id="addressFilter" type="text" placeholder="Адрес" class="form-control input-xs" /></th>
             <th class="width-25perc-lg width-40perc-sm"><input id="deviceFilter" type="text" placeholder="Аппарат" class="form-control input-xs" /></th>
             <th><input id="serialNumFilter" type="text" placeholder="S/N" class="form-control input-xs" /></th>
             @*<th>Последнее изменение</th>*@
-            <th class="hidden-sm hidden-xs"></th>
-            <th class="hidden-sm hidden-xs">Статус</th>
+            <th class="hidden-sm hidden-xs"><input id="curSpec" type="text" placeholder="Ответственные" class="form-control input-xs" /></th>
+            <th class="hidden-sm hidden-xs"><select id="state" class="form-control input-xs"></select></th>
             @*<th>Время с момента создания</th>*@
 
-            <th class="hidden-sm hidden-xs">Дата создания</th>
+            <th class="hidden-sm hidden-xs"><input id="dateCreate" type="text" placeholder="Дата создания" class="form-control input-xs" /></th>
         </tr>
         <tbody id="claimContainer"></tbody>
     </table>
@@ -102,9 +103,9 @@
             <nav>
                 <ul class="pagination pagesize nomargin">
                     @*<li>записей на странице</li>*@
-                    <li><a name="pageSize" value="30" href="#!" class="btn btn-default btn-sm selected">30</a></li>
-                    <li><a name="pageSize" value="100" href="#!" class="btn btn-default btn-sm">100</a></li>
-                    <li><a name="pageSize" value="300" href="#!" class="btn btn-default btn-sm">300</a></li>
+                    <li><a name="pageSize" value="30" class="btn btn-default btn-sm selected">30</a></li>
+                    <li><a name="pageSize" value="100" class="btn btn-default btn-sm">100</a></li>
+                    <li><a name="pageSize" value="300" class="btn btn-default btn-sm">300</a></li>
                 </ul>
             </nav>
         </div>
@@ -131,8 +132,49 @@
     </div>*@
 
 <script type="text/javascript">
+    var dlnk = new Deeplink();
+    $(window).on('hashchange', function () {
+        removeRowsAndShowSpinnerOnTable();
+        loadClaimList(true);
+    });
+    $(function() {
+        loadStateFilter();
+            var sesFilter = getFromSession('filter');
+            if (sesFilter) {
+                sesFilter = JSON.parse(sesFilter);
+                dlnk.hashupdate({ 'num': getEmptyIfNull(sesFilter.num), 'cli': getEmptyIfNull(sesFilter.client), 'csdn': getEmptyIfNull(sesFilter.clSdNum), 'dev': getEmptyIfNull(sesFilter.devName), 'snum': getEmptyIfNull(sesFilter.serial), 'top': getEmptyIfNull(sesFilter.topRows), 'page': getEmptyIfNull(sesFilter.selPage), 'addr': getEmptyIfNull(sesFilter.address), 'grst': getEmptyIfNull(sesFilter.grpState), 'st': getEmptyIfNull(sesFilter.idState), 'dc': getEmptyIfNull(sesFilter.dateCreate), 'spec': getEmptyIfNull(sesFilter.curSpec) });
+            } else {
+                removeRowsAndShowSpinnerOnTable();
+                loadClaimList(true);
+            }
+    });
 
-    function loadClientFilter() {
+    function getEmptyIfNull(val) {
+        if (!val || val == null) return '';
+        else return val;
+    }
+
+    function loadStateFilter() {
+        var $elem = $('#state');
+        $.ajax({
+            url: '@Url.Action("GetStateFilterList")',
+            method: 'POST',
+            success: function (data) {
+                $elem.find('option').remove();
+                if (data.length > 0) {
+                    var option = '<option value="">--все статусы--</option>';
+                    $elem.append(option);
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        option = '<option value="' + item.Id + '">' + item.Name + '</option>';
+                        $elem.append(option);
+                    }
+                }
+            }
+        });
+    }
+
+    @*function loadClientFilter() {
         var $elem = $('#clientFilter');
         $.ajax({
             url: '@Url.Action("GetClientFilterList")',
@@ -150,7 +192,7 @@
                 }
             }
         });
-    }
+    }*@
 
     function fillClaimList(data) {
         removeRowsAndShowSpinnerOnTable();
@@ -181,16 +223,16 @@
         hideSpinner($cont);
     }
 
-    $('[name="displayRows"]').click(function () {
-        var rows = $(this).attr('value');
-        reload(rows);
-    });
+    //$('[name="displayRows"]').click(function () {
+    //    var rows = $(this).attr('value');
+    //    reload(rows);
+    //});
 
-    function reload(topRows) {
+    @*function reload(topRows) {
         var client = $('#clientFilter').val();
         var url = '@Url.Action("List")?client=' + client + '&state=@Request.QueryString["state"]' + '&topRows=' + topRows;
         window.location = url;
-    }
+    }*@
 
     function updateListItem(claimId) {
         $.ajax({
@@ -277,62 +319,77 @@
         }
     }
 
-    function getFilterValues() {
-        var num = $('#numFilter').val();
-        var idClient = $('#clientFilter').val();
-        var clSdNum = $('#clientSdNumFilter').val();
-        var devName = $('#deviceFilter').val();
-        var serial = $('#serialNumFilter').val();
-        var topRows = $('[name="pageSize"].selected').attr('value');
-        var selPage = 1;
-
-        if ($('[name="page"].active a').length > 0) {
-            selPage = $('[name="page"].active a').attr('value');
-        }
-
-        var $grpStateElem = $('[name="stateGroupFilterItem"].selected');
-        var grpState = [];
-        if ($grpStateElem.length > 0) {
-            for (var i = 0; i < $grpStateElem.length; i++) {
-                var val = $($grpStateElem[i]).attr('value');
-                grpState.push(val);
+    function add2Session(name, val) {
+        $.ajax({
+            url: '@Url.Action("Add2Session")',
+            method: 'POST',
+            data: { name: name, value: val },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.responseText);
             }
-        }
-        var address = $('#addressFilter').val();
+        });
+    }
 
-        var filter = { num: num, idClient: idClient, clSdNum: clSdNum, devName: devName, serial: serial, address: address, topRows: topRows, selPage: selPage, grpState: grpState };
+    function getFromSession(name) {
+        var result = null;
+        $.ajax({
+            url: '@Url.Action("GetFromSession")',
+            method: 'POST',
+            async: false,
+            data: { name: name },
+            success: function (data) {
+                result = data.val;
+            }
+        });
+        return result;
+    }
+
+    function getFilterValues() {
+        var num = getHashQueryStringValue('num');//$('#numFilter').val();
+        var client = getHashQueryStringValue('cli');//$('#clientFilter').val();
+        var clSdNum = getHashQueryStringValue('csdn');//$('#clientSdNumFilter').val();
+        var devName = getHashQueryStringValue('dev');//$('#deviceFilter').val();
+        var serial = getHashQueryStringValue('snum');//$('#serialNumFilter').val();
+        var topRows = getHashQueryStringValue('top');//$('[name="pageSize"].selected').attr('value');
+        var selPage = getHashQueryStringValue('page');//1;
+        if (!topRows || topRows <= 30) topRows = 30;
+        if (!selPage || selPage <= 1) selPage = 1;
+        var address = getHashQueryStringValue('addr');//$('#addressFilter').val();
+        var idState = getHashQueryStringValue('st');
+        var dateCreate = getHashQueryStringValue('dc');
+        var curSpec = getHashQueryStringValue('spec');
+        var grst = getHashQueryStringValue('grst');
+        var grState = [];
+        if (grst) {
+            grState = grst.split(',');
+        }
+
+        var filter = { num: num, client: client, clSdNum: clSdNum, devName: devName, serial: serial, address: address, topRows: topRows, selPage: selPage, grpState: grState, idState: idState, dateCreate: dateCreate, curSpec: curSpec };
+        add2Session('filter', JSON.stringify(filter));
+
+        $('#numFilter').val(num);
+        $('#clientFilter').val(client);
+        $('#clientSdNumFilter').val(clSdNum);
+        $('#deviceFilter').val(devName);
+        $('#serialNumFilter').val(serial);
+        $('#addressFilter').val(address);
+        $('[name="page"].active').removeClass('active');
+        $('[name="page"][value="' + selPage + '"]').addClass('active');
+        $('[name="pageSize"].selected').removeClass('selected');
+        $('[name="pageSize"][value="' + topRows + '"]').addClass('selected');
+        $('#state').val(idState);
+        $('#dateCreate').val(dateCreate);
+        $('#curSpec').val(curSpec);
+
         return filter;
     }
 
     function loadClaimList(reloadStateGroupFilter) {
-        //var num = $('#numFilter').val();
-        //var idClient = $('#clientFilter').val();
-        //var clSdNum = $('#clientSdNumFilter').val();
-        //var devName = $('#deviceFilter').val();
-        //var serial = $('#serialNumFilter').val();
-        //var topRows = $('[name="pageSize"].selected').attr('value');
-        //var selPage = 1;
-
-        //if ($('[name="page"].active a').length > 0) {
-        //    selPage = $('[name="page"].active a').attr('value');
-        //}
-
-        //var $grpStateElem = $('[name="stateGroupFilterItem"].selected');
-        //var grpState = [];
-        //if ($grpStateElem.length > 0) {
-        //    for (var i = 0; i < $grpStateElem.length; i++) {
-        //        var val = $($grpStateElem[i]).attr('value');
-        //        grpState.push(val);
-        //    }
-        //}
-        //var address = $('#addressFilter').val();
-
         var filter = getFilterValues();
-
         $.ajax({
             url: '@Url.Action("GetClaimList")',
             method: 'POST',
-            data: { idClient: filter.idClient, claimId: filter.num, clientSdNum: filter.clSdNum, deviceName: filter.devName, serialNum: filter.serial, topRows: filter.topRows, pageNum: filter.selPage, groupStateList: filter.grpState, address: filter.address },
+            data: { client: filter.client, claimId: filter.num, clientSdNum: filter.clSdNum, deviceName: filter.devName, serialNum: filter.serial, topRows: filter.topRows, pageNum: filter.selPage, groupStateList: filter.grpState, address: filter.address, idState: filter.idState, dateCreate: filter.dateCreate, curSpec: filter.curSpec },
             success: function (data) {
                 fillClaimList(data);
                 writeLastupdateTime();
@@ -340,23 +397,89 @@
                 fillPager(filter.topRows, data.TotalCount, filter.selPage);
             }
         });
-
-        if (reloadStateGroupFilter == true) loadStateGroupFilter();
+        loadStateGroupFilter();
     }
+
+    function getHashQueryStringValue(param) {
+        var lochash = location.hash.substr(1),
+        mylocation = lochash.substr(lochash.indexOf(param))
+                      .split('&')[0]
+                      .split('=')[1];
+        if (mylocation) return mylocation;
+        else return null;
+    }
+
+    //function setHashQueryStringValue(param, value) {
+    //    var lochash = location.hash.substr(1);
+    //    var locInd = lochash.indexOf(param);
+
+    //    if (locInd >= 0) {
+    //        alert(locInd + param.length);
+    //        var mylocation = lochash.substr(lochash.indexOf(param)).split('&')[0].split('=')[1];
+
+    //        alert(mylocation);
+    //    } else {
+    //        location.hash = lochash + '&' + param + '=' + value;
+    //    }
+    //}
+
+
+    //dlnk.hashchange(function () {
+    //    alert(1);
+    //    loadClaimList(true);
+    //});
+    //var goto = function (e, data) {
+    //    var hash = data.hash;
+    //    var map = data.map;
+
+    //    alert(hash);
+    //    alert(map);
+    //};
+
+    //$(dlnk).bind("deeplink", goto);
 
     function fillPager(topRows, totalCount, selPage) {
         var pages = Math.floor(totalCount / topRows);
         if ((totalCount % topRows) > 0) pages++;
         $('.pagination.pages li').remove();
+
+        var btnPrev = '<li name="page-prev"><a class="cursor-pointer" value="' + (selPage <= 1 ? 1 : selPage - 1) + '"><</a></li>';
+        $('.pagination.pages').append(btnPrev);
         for (var i = 0; i < pages; i++) {
-            var btn = '<li name="page" value="' + (i + 1) + '" class="' + (selPage == i + 1 ? 'active' : '') + '"><a value="' + (i + 1) + '" href="#!">' + (i + 1) + '</a></li>';
+            var btn = '<li name="page" value="' + (i + 1) + '" class="' + (selPage == i + 1 ? 'active' : '') + '"><a class="cursor-pointer" value="' + (i + 1) + '">' + (i + 1) + '</a></li>';
             $('.pagination.pages').append(btn);
+
+            if (i > 2) {
+                btn = '<li name="page" value="' + (i + 2) + '" class="' + (selPage == i + 2 ? 'active' : '') + '"><a class="cursor-pointer" value="' + (i + 2) + '">...</a></li>';
+                $('.pagination.pages').append(btn);
+                break;
+            }
         }
-        $('[name="page"] a').click(function () {
-            $('[name="page"].active').removeClass('active');
-            $('[name="page"][value="' + $(this).attr('value') + '"]').addClass('active');
-            removeRowsAndShowSpinnerOnTable();
-            loadClaimList();
+        var btnNext = '<li name="page-next"><a class="cursor-pointer" value="' + (selPage >= pages ? pages : selPage + 1) + '">></a></li>';
+        $('.pagination.pages').append(btnNext);
+
+        $('[name="page"]:not(.disabled) a').click(function () {
+            var pg = parseInt($(this).attr('value'), 10);
+            dlnk.hashupdate({ 'page': pg });
+            //$('[name="page"].active').removeClass('active');
+            //$('[name="page"][value="' + $(this).attr('value') + '"]').addClass('active');
+            //removeRowsAndShowSpinnerOnTable();
+            //loadClaimList();
+        });
+
+        $('[name="page-next"] a').click(function () {
+            var pg = parseInt(getHashQueryStringValue('page'), 10);
+            var nextPage = pg >= pages ? pages : pg + 1;
+            dlnk.hashupdate({ 'page': nextPage });
+            //$('[name="page"].active').removeClass('active');
+            //$('[name="page"][value="' + nextPage + '"]').addClass('active');
+        });
+        $('[name="page-prev"] a').click(function () {
+            var pg = parseInt(getHashQueryStringValue('page'), 10);
+            var prevPage = pg <= 1 ? 1 : pg - 1;
+            dlnk.hashupdate({ 'page': prevPage });
+            //$('[name="page"].active').removeClass('active');
+            //$('[name="page"][value="' + prevPage + '"]').addClass('active');
         });
     }
 
@@ -386,7 +509,7 @@
         $.ajax({
             url: '@Url.Action("GetStateGroupFilterList")',
             method: 'POST',
-            data: { idClient: filter.idClient, claimId: filter.num, clientSdNum: filter.clSdNum, deviceName: filter.devName, serialNum: filter.serial, topRows: filter.topRows, pageNum: filter.selPage, groupStateList: filter.grpState, address: filter.address },
+            data: { client: filter.client, claimId: filter.num, clientSdNum: filter.clSdNum, deviceName: filter.devName, serialNum: filter.serial, topRows: filter.topRows, pageNum: filter.selPage, groupStateList: filter.grpState, address: filter.address, idState: filter.idState, dateCreate: filter.dateCreate, curSpec: filter.curSpec },
             success: function(data) {
                 var $cont = $('#stateGroupFilter');
                 $cont.find('ul').remove();
@@ -401,64 +524,92 @@
                     $cont.append($ul);
                     $('[name="stateGroupFilterItem"]').click(function () {
                         $(this).toggleClass('selected');
-                        removeRowsAndShowSpinnerOnTable();
-                        loadClaimList();
+                        var $grpStateElem = $('[name="stateGroupFilterItem"].selected');
+                        var grpState = '';
+                        if ($grpStateElem.length > 0) {
+                            for (var i = 0; i < $grpStateElem.length; i++) {
+                                var val = $($grpStateElem[i]).attr('value');
+                                if (grpState > 0) grpState = grpState + ',';
+                                grpState = grpState + val;
+                            }
+                        }
+
+                        //if (!grst || grst.length <= 0) grst = [];
+                        dlnk.hashupdate({ 'grst': grpState, 'page': 1 });
+                        //removeRowsAndShowSpinnerOnTable();
+                        //loadClaimList();
                     });
+                }
+
+                var grst = filter.grpState;
+                for (var i = 0; i < grst.length; i++) {
+                    var gr = grst[i];
+                    $('[name="stateGroupFilterItem"][value="' + gr + '"]').addClass('selected');
                 }
             }
         });
     }
 
-    $(function () {
-        loadClientFilter();
-        loadStateGroupFilter();
-    });
+    //$(function () {
+    //    loadClientFilter();
+    //    loadStateGroupFilter();
+    //});
 
     $(document).ready(function () {
-        var $cont = $('#claimContainer');
-        $cont.find('tr').remove();
-        showSpinnerAppend($('#claimContainer'));
-        loadClaimList();
+        //var $cont = $('#claimContainer');
+        //$cont.find('tr').remove();
+        //showSpinnerAppend($('#claimContainer'));
+        //loadClaimList();
         //window.location.hash = 'claimList';
-        $('#clientFilter').change(function () {
-            removeRowsAndShowSpinnerOnTable();
-            loadClaimList(true);
+        $('#state').change(function (e) {
+            dlnk.hashupdate({ 'st': $(this).val(), 'page': 1 });
+        });
+        $('#dateCreate').keypress(function (e) {
+            if (e.keyCode == 13) {
+                dlnk.hashupdate({ 'dc': $(this).val(), 'page': 1 });
+            }
+        });
+        $('#curSpec').keypress(function (e) {
+            if (e.keyCode == 13) {
+                dlnk.hashupdate({ 'spec': $(this).val(), 'page': 1 });
+            }
+        });
+        $('#clientFilter').keypress(function (e) {
+            if (e.keyCode == 13) {
+                dlnk.hashupdate({ 'cli': $(this).val(), 'page': 1 });
+            }
         });
         $('#numFilter').keypress(function (e) {
             if (e.keyCode == 13) {
-                removeRowsAndShowSpinnerOnTable();
-                loadClaimList(true);
+                dlnk.hashupdate({ 'num': $(this).val(), 'page': 1 });
             }
         });
         $('#clientSdNumFilter').keypress(function (e) {
             if (e.keyCode == 13) {
-                removeRowsAndShowSpinnerOnTable();
-                loadClaimList(true);
+                dlnk.hashupdate({ 'csdn': $(this).val(), 'page': 1 });
             }
         });
         $('#deviceFilter').keypress(function (e) {
             if (e.keyCode == 13) {
-                removeRowsAndShowSpinnerOnTable();
-                loadClaimList(true);
+                dlnk.hashupdate({ 'dev': $(this).val(), 'page': 1 });
             }
         });
         $('#serialNumFilter').keypress(function (e) {
             if (e.keyCode == 13) {
-                removeRowsAndShowSpinnerOnTable();
-                loadClaimList(true);
+                dlnk.hashupdate({ 'snum': $(this).val(), 'page': 1 });
             }
         });
         $('#addressFilter').keypress(function (e) {
             if (e.keyCode == 13) {
-                removeRowsAndShowSpinnerOnTable();
-                loadClaimList(true);
+                dlnk.hashupdate({ 'addr': $(this).val(), 'page': 1 });
             }
-        }); 
+        });
         $('[name="pageSize"]').click(function () {
-            $('[name="pageSize"].selected').removeClass('selected');
-            $('[name="pageSize"][value="' + $(this).attr('value') + '"]').addClass('selected');
-            removeRowsAndShowSpinnerOnTable();
-            loadClaimList(true);
+            //$('[name="pageSize"].selected').removeClass('selected');
+            var top = $(this).attr('value');
+
+            //$('[name="pageSize"][value="' + top + '"]').addClass('selected');
+            dlnk.hashupdate({ 'top': top, 'page': 1 });
         });
         setInterval(function () { loadClaimList(); }, 30000);
         //setInterval(lastUpdateTimer, 1000);
