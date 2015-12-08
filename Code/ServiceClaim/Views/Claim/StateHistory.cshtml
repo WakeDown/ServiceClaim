@@ -4,7 +4,7 @@
 
 @foreach (var state in Model)
 {
-    <div style="background-color: #@state.State.BackgroundColor; color: #@state.State.ForegroundColor; border-color: #@state.State.BorderColor" class="padding-sm history-state-block" id="@state.State.SysName@state.Id">
+    <div style="background-color: #@state.State.BackgroundColor; color: #37474F; border-color: #@state.State.BorderColor" class="padding-sm history-state-block" id="@state.State.SysName@state.Id">
         <strong>@state.State.Name</strong><br/>
         @state.DateCreate.ToString("g") - @state.Creator.DisplayName<br/>
         <small>@state.Creator.PositionName</small>

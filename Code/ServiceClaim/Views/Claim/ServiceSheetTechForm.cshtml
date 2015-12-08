@@ -42,7 +42,7 @@
     <div class="row" id="commentContainer">
         <label class="col-lg-4 text-right" id="commentLabel">Комментарий</label>
         <div class="col-lg-6">
-            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new {id = "comment", @class = "form-control required-mark", required = "required"})
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new {id = "comment", @class = "form-control required-mark", required = "required", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
     </div>
@@ -63,7 +63,7 @@
     <div class="row" id="commentCounterContainer">
         <label class="col-lg-4 text-right">Комментарий</label>
         <div class="col-lg-6">
-            @Html.TextAreaFor(m => m.ServiceSheet4Save.CounterDescr, new { id = "counterComment", @class = "form-control required-mark", required = "required", placeholder = "Что случилось со счетчиком" })
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.CounterDescr, new { id = "counterComment", @class = "form-control required-mark", required = "required", placeholder = "Что случилось со счетчиком", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
     </div>
@@ -74,11 +74,11 @@
             <span class="help-block with-errors"></span>
         </div>*@
         <div class="col-lg-4">
-            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control required-mark", placeholder = "Черно/Белый" })
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control required-mark", placeholder = "Черно/Белый", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
         <div class="col-lg-4">
-            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control", placeholder = "Цветной" })
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control", placeholder = "Цветной", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
     </div>

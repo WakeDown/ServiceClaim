@@ -35,7 +35,7 @@
                                     <div class="form-group">
                                         <div class="input-group" style="width: 100%">
                                             <div class="input-group-addon group-addon-input" style="width: 100px">
-                                                <input type="text" id="deviceModelSearch" class="form-control input-xs" placeholder="поиск модели" />
+                                                <input type="text" id="deviceModelSearch" class="form-control input-xs" placeholder="поиск модели" autocomplete="off" />
                                             </div>
                                             <select id="realDeviceModel" class="form-control" name="ServiceSheet4Save.RealDeviceModel">
                                                 @*<option value="">введите чтобы найти</option>*@
@@ -93,7 +93,7 @@
     <div class="row" id="commentContainer">
         <label class="col-lg-4 text-right">Комментарий</label>
         <div class="col-lg-6">
-            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new { id = "comment", @class = "form-control required-mark", required = "required" })
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new { id = "comment", @class = "form-control required-mark", required = "required", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
     </div>
@@ -114,7 +114,7 @@
     <div class="row" id="commentCounterContainer">
         <label class="col-lg-4 text-right">Комментарий</label>
         <div class="col-lg-6">
-            @Html.TextAreaFor(m => m.ServiceSheet4Save.CounterDescr, new { id = "counterComment", @class = "form-control required-mark", required = "required", placeholder = "Что случилось со счетчиком" })
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.CounterDescr, new { id = "counterComment", @class = "form-control required-mark", required = "required", placeholder = "Что случилось со счетчиком", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
     </div>
@@ -125,11 +125,11 @@
                 <span class="help-block with-errors"></span>
             </div>*@
         <div class="col-lg-4">
-            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control required-mark", placeholder = "Черно/Белый" })
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control required-mark", placeholder = "Черно/Белый", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
         <div class="col-lg-4">
-            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control", placeholder = "Цветной" })
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control", placeholder = "Цветной", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
     </div>
@@ -333,8 +333,9 @@
             var $form = $(e.target);
             var deviceHasNoNumber = @(deviceHasNoNumber?"true":"false");
             if (deviceHasNoNumber) {
-                e.preventDefault();
+                
                 if (!forceSubmit){
+                    e.preventDefault();
                     var bv = $form.data('bootstrapValidator');
                     showRetrySerialNum();
                 }

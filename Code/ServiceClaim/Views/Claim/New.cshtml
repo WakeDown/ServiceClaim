@@ -1,5 +1,5 @@
 ﻿@using ServiceClaim.Objects
-
+@model ServiceClaim.Models.Claim
 @{
     ViewBag.Title = "Новая заявка";
     Layout = "~/Views/Shared/_Editor.cshtml";
@@ -39,7 +39,7 @@
                                 <label class="col-lg-2 col-md-2 control-label" for="ctrFind">Клиент</label>
                                 <div class="col-lg-3 col-md-3">
                                     <div class="input-group">
-                                        <input id="ctrFind" type="text" placeholder="поиск клиента" class="form-control"/>
+                                        <input id="ctrFind" type="text" placeholder="поиск клиента" class="form-control" autocomplete="off" />
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" id="ctrSearch"><i class="fa fa-search"></i></button>
                                         </span>
@@ -62,7 +62,7 @@
                                 <label class="col-lg-2 col-md-2 control-label" for="addrFind">Адрес</label>
                                 <div class="col-lg-3 col-md-3">
                                     <div class="input-group">
-                                        <input id="addrFind" type="text" placeholder="поиск адреса" class="form-control" />
+                                        <input id="addrFind" type="text" placeholder="поиск адреса" class="form-control" autocomplete="off" />
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" id="addrSearch"><i class="fa fa-search"></i></button>
                                         </span>
@@ -84,7 +84,7 @@
                                 <label class="col-lg-2 col-md-2 control-label" for="contFind">Договор</label>
                                 <div class="col-lg-3 col-md-3">
                                     <div class="input-group">
-                                        <input id="contFind" type="text" placeholder="поиск договора" class="form-control"/>
+                                        <input id="contFind" type="text" placeholder="поиск договора" class="form-control" autocomplete="off" />
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" id="contSearch"><i class="fa fa-search"></i></button>
                                         </span>
@@ -109,7 +109,7 @@
                                 <div class="col-lg-3 col-md-3">
                                     <p class="no-marg-bot">
                                         <div class="input-group">
-                                            <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control" />
+                                            <input id="devFind" type="text" placeholder="поиск аппарата" class="form-control" autocomplete="off" />
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default" type="button" id="devSearch"><i class="fa fa-search"></i></button>
                                             </span>
@@ -146,7 +146,7 @@
                                 <label class="col-lg-2 col-md-2 control-label" for="devClientSdFind">№ SD клиента</label>
                                 <div class="col-lg-3 col-md-3">
                                     <div class="input-group">
-                                        <input id="devClientSdFind" name="client_sd_num" type="text" placeholder="№ SD клиента" class="form-control" />
+                                        <input id="devClientSdFind" name="client_sd_num" type="text" placeholder="№ SD клиента" class="form-control" autocomplete="off" />
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" id="clientSdsearch"><i class="fa fa-search"></i></button>
                                         </span>
@@ -163,9 +163,9 @@
                             <div class="form-group">
                                 <label class="col-lg-2 col-md-2 control-label" for="descr"></label>
                                 <div class="col-lg-10 col-md-10">
-                                    <input id="contactName" name="contactName" type="text" placeholder="Контактное лицо" class="form-control required-mark" required="required"/>
-                                    <input id="contactPhone" name="contactPhone" type="text" placeholder="Контактный номер телефона" class="form-control required-mark" required="required"/>
-                                    <textarea id="descr" name="descr" type="text" placeholder="Что случилось?" class="form-control required-mark" required="required" rows="2" data-error="Введите описание заявки"></textarea>
+                                    <input id="contactName" name="contactName" type="text" placeholder="Контактное лицо" class="form-control required-mark" required="required" autocomplete="off" />
+                                    <input id="contactPhone" name="contactPhone" type="text" placeholder="Контактный номер телефона" class="form-control required-mark" required="required" autocomplete="off" />
+                                    <textarea id="descr" name="descr" type="text" placeholder="Что случилось?" class="form-control required-mark" required="required" rows="2" data-error="Введите описание заявки" autocomplete="off"></textarea>
                                 </div>
                                 @*<div class="col-lg-1"><span class="help-block with-errors"></span></div>*@
                             </div>

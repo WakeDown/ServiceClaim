@@ -12,9 +12,10 @@ namespace ServiceClaim.Models
         public int CityId { get; set; }
         public string CityName { get; set; }
         public string AddressName { get; set; }
+        public string ObjectName { get; set; }
 
-        public string Id => $"{CityId}[|]{AddressName}";
-        public string Name => $"{CityName} {AddressName}";
+        public string Id => $"{CityId}[|]{AddressName}[|]{ObjectName}";
+        public string Name => $"{CityName} {AddressName} {ObjectName}";
 
         public Address()
         {

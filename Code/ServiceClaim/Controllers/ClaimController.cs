@@ -36,6 +36,13 @@ namespace ServiceClaim.Controllers
             return Json(new { val= value });
         }
 
+        [HttpPost]
+        public JsonResult RemoveFromSession(string name)
+        {
+            Session.Remove(name);
+            return Json(new {});
+        }
+
         [HttpGet]
         public ActionResult Index(int? id)
         {
@@ -220,10 +227,11 @@ namespace ServiceClaim.Controllers
         [HttpGet]
         public ActionResult New()
         {
-            return View();
+            return View(new Claim());
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult New(Claim model)
         {
             //if (!CurUser.UserCanCreateClaim()) return RedirectToAction("AccessDenied", "Error");
@@ -231,8 +239,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                model.DeviceUnknown = Request.Form.AllKeys.Contains("DeviceUnknown");
-                model.ContractUnknown = Request.Form["Device"] == "ContractUnknown";
+                model.DeviceUnknown = Request.Form["Device"] == "DeviceUnknown";
+                model.ContractUnknown = Request.Form.AllKeys.Contains("ContractUnknown");
                 model.ClaimTypeSysName = Request.Form["ClaimTypeSysName"];
                 model.Contractor = new Contractor() { Id = MainHelper.GetValueInt(Request.Form["ctrList"]) };
                 if (!model.ContractUnknown) model.Contract = new Contract() { Id = MainHelper.GetValueInt(Request.Form["contList"]) };
@@ -562,6 +570,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
+
         public ActionResult ServiceSheetForm(Claim model)
         {
             try

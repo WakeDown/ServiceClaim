@@ -53,11 +53,14 @@ namespace ServiceClaim.Models
         public int? IdCity { get; set; }
         public string CityName { get; set; }
         public string Address { get; set; }
+        public string ObjectName { get; set; }
         public string ContactName { get; set; }
         public string ContactPhone { get; set; }
         public bool DeviceCollective { get; set; }
         public string CurClientManagerSid { get; set; }
         public EmployeeSm ClientManager { get; set; }
+
+
 
         public string StateChangeDateDiffStr
         {

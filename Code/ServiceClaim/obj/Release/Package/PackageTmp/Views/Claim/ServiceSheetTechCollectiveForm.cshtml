@@ -42,7 +42,7 @@
     <div class="row" id="commentContainer">
         <label class="col-lg-4 text-right" id="commentLabel">Комментарий</label>
         <div class="col-lg-6">
-            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new { id = "comment", @class = "form-control required-mark", required = "required" })
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new { id = "comment", @class = "form-control required-mark", required = "required", autocomplete = "off" })
             <span class="help-block with-errors"></span>
         </div>
     </div>
