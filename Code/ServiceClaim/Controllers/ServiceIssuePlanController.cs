@@ -41,7 +41,7 @@ namespace ServiceClaim.Controllers
             string serviceEngeneerSidIds = serviceEngeneerSid != null
                 ? String.Join(",", serviceEngeneerSid)
                 : String.Empty;
-            var list = ServiceIssue.GetPlaningCityList(date.Value, serviceEngeneerSidIds, planed: planed, clientId: clientId, seted: seted);
+            var list = ServiceIssue.GetPlaningCityList(date.Value, CurUser, serviceEngeneerSidIds, planed: planed, clientId: clientId, seted: seted);
             return Json(list);
         }
 
@@ -53,7 +53,7 @@ namespace ServiceClaim.Controllers
             string serviceEngeneerSidIds = serviceEngeneerSid != null
                 ? String.Join(",", serviceEngeneerSid)
                 : String.Empty;
-            var list = ServiceIssue.GetPlaningAddressList(date.Value, idCity.Value, serviceEngeneerSidIds, planed:planed, clientId: clientId, seted: seted);
+            var list = ServiceIssue.GetPlaningAddressList(date.Value, idCity.Value, CurUser, serviceEngeneerSidIds, planed:planed, clientId: clientId, seted: seted);
             return Json(list);
         }
 
@@ -65,7 +65,7 @@ namespace ServiceClaim.Controllers
             string serviceEngeneerSidIds = serviceEngeneerSid != null
                 ? String.Join(",", serviceEngeneerSid)
                 : String.Empty;
-            var list = ServiceIssue.GetPlaningClientList(date.Value, serviceEngeneerSid: serviceEngeneerSidIds, idCity: idCity, address: address, planed: planed, seted: seted);
+            var list = ServiceIssue.GetPlaningClientList(date.Value, CurUser, serviceEngeneerSid: serviceEngeneerSidIds, idCity: idCity, address: address, planed: planed, seted: seted);
             return Json(list);
         }
 
@@ -77,7 +77,7 @@ namespace ServiceClaim.Controllers
             string serviceEngeneerSidIds = serviceEngeneerSid != null
                 ? String.Join(",", serviceEngeneerSid)
                 : String.Empty;
-            var list = ServiceIssue.GetPlaningEngeneerList(date.Value, serviceEngeneerSid: serviceEngeneerSidIds, planed: planed, seted: seted);
+            var list = ServiceIssue.GetPlaningEngeneerList(date.Value, CurUser, serviceEngeneerSid: serviceEngeneerSidIds, planed: planed, seted: seted);
             return Json(list);
         }
 
@@ -90,7 +90,7 @@ namespace ServiceClaim.Controllers
             string serviceEngeneerSidIds = serviceEngeneerSid != null
                 ? String.Join(",", serviceEngeneerSid)
                 : String.Empty;
-            var list = ServiceIssue.GetPlaningDeviceIssueList(date.Value, idCity.Value, address, idClient, planed: planed, serviceEngeneerSid: serviceEngeneerSidIds, seted: seted);
+            var list = ServiceIssue.GetPlaningDeviceIssueList(date.Value, idCity.Value, address, CurUser, idClient, planed: planed, serviceEngeneerSid: serviceEngeneerSidIds, seted: seted);
             return Json(list);
         }
 
@@ -108,7 +108,7 @@ namespace ServiceClaim.Controllers
                 serviceEngeneerSidIds = String.Join(",", serviceEngeneerSid);
             }
             
-            var model = ServiceIssue.GetTotal(date.Value, serviceEngeneerSid: serviceEngeneerSidIds);
+            var model = ServiceIssue.GetTotal(date.Value, CurUser, serviceEngeneerSid: serviceEngeneerSidIds);
             return Json(model);
         }
 

@@ -55,7 +55,7 @@ namespace ServiceClaim.Controllers
             Claim model = new Claim();
             try
             {
-                model = Claim.Get(id.Value);
+                model = new Claim(id.Value);
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace ServiceClaim.Controllers
         //    return View();
         //}
 
-        public async Task<JsonResult> ClaimSave(int? id, string descr)
+        public JsonResult ClaimSave(int? id, string descr)
         {
             //try
             //{
@@ -81,7 +81,7 @@ namespace ServiceClaim.Controllers
             var model = new Claim();
             model.Id = id.Value;
             model.Descr = descr;
-            await model.SaveAsync();
+            model.Save(CurUser.Sid);
             //bool complete = model.Save(out responseMessage);
             //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             //}
@@ -111,7 +111,7 @@ namespace ServiceClaim.Controllers
         //    return Json(new { });
         //}
 
-        public async Task<JsonResult> ClaimContinue(int? id, string descr)
+        public JsonResult ClaimContinue(int? id, string descr)
         {
             //try
             //{
@@ -120,7 +120,7 @@ namespace ServiceClaim.Controllers
             var model = new Claim();
             model.Id = id.Value;
             model.Descr = descr;
-            await model.SaveAsync();
+            model.Save(CurUser.Sid);
             //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             //}
             //catch (Exception ex)
@@ -166,7 +166,7 @@ namespace ServiceClaim.Controllers
         //    }
         //    return Json(new { });
         //}
-        public ActionResult List(int? state, int? client, int? topRows)
+        public async Task<ActionResult> List(int? state, int? client, int? topRows)
         {
             //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
             //        AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
@@ -180,7 +180,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetClaimList(int? idDevice = null, string client = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null, int? idState = null, string dateCreate = null, string curSpec = null)
+        public JsonResult GetClaimList(int? idDevice = null, string client = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null, int? idState = null, string dateCreate = null, string curSpec = null)
         {
             //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
             //        AdGroup.ServiceEngeneer, AdGroup.ServiceManager, AdGroup.ServiceOperator))
@@ -200,7 +200,9 @@ namespace ServiceClaim.Controllers
             if (CurUser.Is(AdGroup.ServiceTech)) techSid = CurUser.Sid;
 
             //var result = Claim.GetList();
-            ListResult<Claim> result = await new Claim().GetListAsync(servAdminSid: servAdminSid, servEngeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid,  client: client, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice, idState: idState, dateCreate: dateCreate, curSpec: curSpec);
+            string groupStates = null;
+            if (groupStateList != null && groupStateList.Any()) groupStates=String.Join(",", groupStateList);
+            ListResult<Claim> result = Claim.GetList(GetCurUser(), adminSid: servAdminSid, engeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid,  client: client, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStates: groupStates, address: address, idDevice: idDevice, idState: idState, dateCreate: dateCreate, curSpec: curSpec);
             return Json(result);
         }
 
@@ -208,7 +210,7 @@ namespace ServiceClaim.Controllers
         public PartialViewResult GetListItem(int? claimId)
         {
             if (!claimId.HasValue) return null;
-            var claim = Claim.Get(claimId.Value);
+            var claim = new Claim(claimId.Value);
             ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
             return PartialView("ListItem", claim);
         }
@@ -251,10 +253,11 @@ namespace ServiceClaim.Controllers
                 model.ContactName = Request.Form["contactName"];
                 model.ContactPhone = Request.Form["contactPhone"];
                 model.DeviceCollective = Request.Form["Device"]== "DeviceCollective";
-                bool result = model.Save(out responseMessage);
+                model.Save(CurUser.Sid);
+                //bool result = model.Save(out responseMessage);
                 //var response = DbModel.DeserializeResponse(result);
-                if (!result) throw new Exception(responseMessage.ErrorMessage);
-                return RedirectToAction("Index", new { id = responseMessage.Id });
+                //if (!result) throw new Exception(responseMessage.ErrorMessage);
+                return RedirectToAction("Index", new { id = model.Id });
             }
             catch (Exception ex)
             {
@@ -322,13 +325,14 @@ namespace ServiceClaim.Controllers
 
 
         [HttpPost]
-        public ActionResult SetWorkType(Claim model)
+        public async Task<ActionResult> SetWorkType(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+               await model.Go(CurUser);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
                 //return View("WindowClose");
                 if (!String.IsNullOrEmpty(Request.Form["AddNew"]))
@@ -348,7 +352,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult EngeneerSelect(Claim model)
+        public async Task<ActionResult> EngeneerSelect(Claim model)
         {
             try
             {
@@ -356,9 +360,9 @@ namespace ServiceClaim.Controllers
                 //model.ServiceIssue4Save.Descr = model.Descr;
                 //model.ServiceIssue4Save.IdClaim = model.Id;
                 //model.SpecialistSid = model.SpecialistSid;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+               await model.Go(GetCurUser());
                 //return View("WindowClose");
 
                 return RedirectToAction("List");
@@ -371,7 +375,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult SpecialistSelect(Claim model)
+        public async Task<ActionResult> SpecialistSelect(Claim model)
         {
             try
             {
@@ -379,13 +383,13 @@ namespace ServiceClaim.Controllers
                 //model.ServiceIssue4Save.Descr = model.Descr;
                 //model.ServiceIssue4Save.IdClaim = model.Id;
                 //model.SpecialistSid = model.SpecialistSid;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+               await model.Go(GetCurUser());
                 //return View("WindowClose");
 
-                
-                    return RedirectToAction("List");
+
+                return RedirectToAction("List");
                 
             }
             catch (Exception ex)
@@ -396,26 +400,26 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult TechConfirmWork(Claim model)
+        public async Task<ActionResult> TechConfirmWork(Claim model)
         {
             try
             {
                 if (!String.IsNullOrEmpty(Request.Form["ClaimWorkConfirm"]))
                 {
                     ResponseMessage responseMessage;
-                    bool complete = model.Go(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
-                    return RedirectToAction("Index", new { id = responseMessage.Id });
+                    //bool complete = model.Go(out responseMessage);
+                    //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                    await model.Go(GetCurUser());
+                    return RedirectToAction("Index", new { id = model.Id });
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["ClaimWorkCancel"]))
                 {
                     ResponseMessage responseMessage;
                     //model.Descr = Request.Form["ClaimWorkCancelDescr"];
-                    bool complete = model.GoBack(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
-                    return RedirectToAction("Index", new { id = responseMessage.Id });
+                    //bool complete = model.GoBack(out responseMessage);
+                    //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                    await model.Go(GetCurUser(), false);
+                    return RedirectToAction("Index", new { id = model.Id });
                 }
             }
             catch (Exception ex)
@@ -429,25 +433,25 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConfirmWork(Claim model)
+        public async Task<ActionResult> ConfirmWork(Claim model)
         {
             try
             {
                 if (!String.IsNullOrEmpty(Request.Form["ClaimWorkConfirm"]))
                 {
                     ResponseMessage responseMessage;
-                    bool complete = model.Go(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
-                    return RedirectToAction("Index", new { id = responseMessage.Id });
+                    //bool complete = model.Go(out responseMessage);
+                    //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                    await model.Go(GetCurUser());
+                    return RedirectToAction("Index", new { id = model.Id });
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["ClaimWorkCancel"]))
                 {
                     ResponseMessage responseMessage;
                     //model.Descr = Request.Form["ClaimWorkCancelDescr"];
-                    bool complete = model.GoBack(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                    //bool complete = model.GoBack(out responseMessage);
+                    //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                    await model.Go(GetCurUser(), false);
                     //return RedirectToAction("Index", new { id = responseMessage.Id });
                 }
             }
@@ -462,7 +466,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ServiceSheetTechForm(Claim model)
+        public async Task<ActionResult> ServiceSheetTechForm(Claim model)
         {
             try
             {
@@ -470,12 +474,13 @@ namespace ServiceClaim.Controllers
                 bool complete = false;
                 if (!String.IsNullOrEmpty(Request.Form["ServiceSheetSave"]))
                 {
-                    complete = model.Go(out responseMessage);
-
+                    //complete = model.Go(out responseMessage);
+                    await model.Go(GetCurUser());
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["ServiceSheetCancel"]))
                 {
-                    complete = model.GoBack(out responseMessage);
+                    //complete = model.GoBack(out responseMessage);
+                    await model.Go(GetCurUser(),false);
                     return RedirectToAction("List");
                 }
 
@@ -492,7 +497,7 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ServiceSheetTechCollectiveForm(Claim model)
+        public async Task<ActionResult> ServiceSheetTechCollectiveForm(Claim model)
         {
             try
             {
@@ -500,12 +505,13 @@ namespace ServiceClaim.Controllers
                 bool complete = false;
                 if (!String.IsNullOrEmpty(Request.Form["ServiceSheetSave"]))
                 {
-                    complete = model.Go(out responseMessage);
-
+                    //complete = model.Go(out responseMessage);
+                    await model.Go(GetCurUser());
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["ServiceSheetCancel"]))
                 {
-                    complete = model.GoBack(out responseMessage);
+                    await model.Go(GetCurUser(),false);
+                    //complete = model.GoBack(out responseMessage);
                     return RedirectToAction("List");
                 }
 
@@ -522,13 +528,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult StateServadmSetWait(Claim model)
+        public async Task<ActionResult> StateServadmSetWait(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
             }
             catch (Exception ex)
             {
@@ -541,13 +548,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult StateEngOutWait(Claim model)
+        public async Task<ActionResult> StateEngOutWait(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
             }
             catch (Exception ex)
             {
@@ -560,24 +568,25 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult StateEngOutWaitAsync(int claimId)
+        public async Task<JsonResult> StateEngOutWaitAsync(int claimId)
         {
             ResponseMessage responseMessage;
-            bool complete = (new Claim() { Id = claimId }).Go(out responseMessage);
-            if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+            //bool complete = (new Claim() { Id = claimId }).Go(out responseMessage);
+            //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            await (new Claim() { Id = claimId }).Go(GetCurUser());
             return Json(new { });
         }
 
         [HttpPost]
 
-        public ActionResult ServiceSheetForm(Claim model)
+        public async Task<ActionResult> ServiceSheetForm(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
             }
             catch (Exception ex)
             {
@@ -598,13 +607,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ServiceSheetFormCollective(Claim model)
+        public async Task<ActionResult> ServiceSheetFormCollective(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
             }
             catch (Exception ex)
             {
@@ -625,13 +635,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult StateDone(Claim model)
+        public async Task<ActionResult> StateDone(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
             }
             catch (Exception ex)
             {
@@ -644,13 +655,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult SetServEngOnWork(Claim model)
+        public async Task<ActionResult> SetServEngOnWork(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
             }
             catch (Exception ex)
             {
@@ -663,13 +675,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult SetServEngOnWorkAsync(int claimId)
+        public async Task<JsonResult> SetServEngOnWorkAsync(int claimId)
         {
             //try
             //{
             ResponseMessage responseMessage;
-            bool complete = (new Claim() { Id = claimId }).Go(out responseMessage);
-            if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            //bool complete = (new Claim() { Id = claimId }).Go(out responseMessage);
+            //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+            await (new Claim() { Id = claimId }).Go(GetCurUser());
             //}
             //catch (Exception ex)
             //{
@@ -680,13 +693,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ZipGetOnCheck(Claim model)
+        public async Task<ActionResult> ZipGetOnCheck(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
                 return RedirectToAction("Index", new { id = model.Id });
             }
             catch (Exception ex)
@@ -700,14 +714,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ZipOrder(Claim model)
+        public async Task<ActionResult> ZipOrder(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
                 //var claim = Claim.Get(model.Id);
                 //ServiceSheet lastServSheet = claim.GetLastServiceSheet();
                 //var zipList = lastServSheet.GetOrderedZipItemList();
@@ -735,25 +749,25 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ZipConfirm(Claim model)
+        public async Task<ActionResult> ZipConfirm(Claim model)
         {
             try
             {
                 if (!String.IsNullOrEmpty(Request.Form["Confirm"]))
                 {
                     ResponseMessage responseMessage;
-                    bool complete = model.Go(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
-                    return RedirectToAction("Index", new { id = responseMessage.Id });
+                    //bool complete = model.Go(out responseMessage);
+                    //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                    await model.Go(GetCurUser());
+                    return RedirectToAction("Index", new { id = model.Id });
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["Cancel"]))
                 {
                     ResponseMessage responseMessage;
                     //model.Descr = Request.Form["ClaimWorkCancelDescr"];
-                    bool complete = model.GoBack(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                    //bool complete = model.GoBack(out responseMessage);
+                    //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                    await model.Go(GetCurUser(),false);
                     //return RedirectToAction("Index", new { id = responseMessage.Id });
                 }
             }
@@ -768,13 +782,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ContractChoice(Claim model)
+        public async Task<ActionResult> ContractChoice(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
             }
             catch (Exception ex)
             {
@@ -787,13 +802,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ZipOrdered(Claim model)
+        public async Task<ActionResult> ZipOrdered(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
             }
             catch (Exception ex)
             {
@@ -807,25 +823,25 @@ namespace ServiceClaim.Controllers
 
 
         [HttpPost]
-        public ActionResult ZipOrderConfirm(Claim model)
+        public async Task<ActionResult> ZipOrderConfirm(Claim model)
         {
             try
             {
                 if (!String.IsNullOrEmpty(Request.Form["ZipOrderConfirm"]))
                 {
                     ResponseMessage responseMessage;
-                    bool complete = model.Go(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
-                    return RedirectToAction("Index", new { id = responseMessage.Id });
+                    //bool complete = model.Go(out responseMessage);
+                    //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                    await model.Go(GetCurUser());
+                    return RedirectToAction("Index", new { id = model.Id });
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["ZipOrderCancel"]))
                 {
                     ResponseMessage responseMessage;
                     //model.Descr = Request.Form["ClaimWorkCancelDescr"];
-                    bool complete = model.GoBack(out responseMessage);
-                    if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                    //bool complete = model.GoBack(out responseMessage);
+                    //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                    await model.Go(GetCurUser(),false);
                     //return RedirectToAction("Index", new { id = responseMessage.Id });
                 }
             }
@@ -849,7 +865,7 @@ namespace ServiceClaim.Controllers
         public ActionResult ServiceSheet(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
-            var model = Models.ServiceSheet.Get(id.Value);
+            var model = new ServiceSheet(id.Value);
             return View(model);
         }
 
@@ -886,9 +902,9 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.IssuedSave(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-                return Json(new { id = responseMessage.Id });
+                model.IssuedSave(CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                return Json(new { id = model.Id });
             }
             catch (Exception ex)
             {
@@ -904,9 +920,9 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.ClientGivenInstalledSave(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-                return Json(new { id = responseMessage.Id });
+                model.ClientGivenInstalledSave(CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                return Json(new { id = model.Id });
             }
             catch (Exception ex)
             {
@@ -922,8 +938,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ServiceSheetZipItem.IssuedDelete(id, out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                ServiceSheetZipItem.IssuedDelete(id, CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -938,9 +954,9 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.OrderedSave(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-                return Json(new { id = responseMessage.Id });
+                model.OrderedSave(CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                return Json(new { id = model.Id });
             }
             catch (Exception ex)
             {
@@ -956,8 +972,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ServiceSheetZipItem.OrderedDelete(id, out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                 ServiceSheetZipItem.OrderedDelete(id, CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -967,14 +983,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult ZipIssue(Claim model)
+        public async Task<ActionResult> ZipIssue(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
                 //return View("WindowClose");
                 return RedirectToAction("List");
                 //return RedirectToAction("Index", new { id = responseMessage.Id });
@@ -990,14 +1006,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult CartridgeList(Claim model)
+        public async Task<ActionResult> CartridgeList(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
                 //return View("WindowClose");
                 return RedirectToAction("List");
                 //return RedirectToAction("Index", new { id = responseMessage.Id });
@@ -1013,14 +1029,14 @@ namespace ServiceClaim.Controllers
         }
 
         [HttpPost]
-        public ActionResult CartridgeRefill(Claim model)
+        public async Task<ActionResult> CartridgeRefill(Claim model)
         {
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Go(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
                 //return View("WindowClose");
                 return RedirectToAction("List");
                 //return RedirectToAction("Index", new { id = responseMessage.Id });
@@ -1042,8 +1058,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ServiceSheetZipItem.SetInstalled(id, idServiceSheet, out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                ServiceSheetZipItem.SetInstalled(id, idServiceSheet, CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -1058,8 +1074,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ServiceSheetZipItem.SetInstalled(id, idServiceSheet, out responseMessage, false);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                ServiceSheetZipItem.SetInstalled(id, idServiceSheet, CurUser.Sid, false);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -1074,8 +1090,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ServiceSheetZipItem.ClientGivenInstalledDelete(id, out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+               ServiceSheetZipItem.ClientGivenInstalledDelete(id, CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -1090,8 +1106,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = (new ServiceSheet() {Id=id, NotInstalledComment = comment}).SaveNotInstalledComment(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+               (new ServiceSheet() {Id=id, NotInstalledComment = comment}).SaveNotInstalledComment();
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -1105,8 +1121,8 @@ namespace ServiceClaim.Controllers
             //try
             //{
                 ResponseMessage responseMessage;
-                bool complete = (new ServiceSheet() { Id = serviceSheetId, IsPayed = true }).SavePayed(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                 (new ServiceSheet() { Id = serviceSheetId, IsPayed = true }).SavePayed(CurUser);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             //}
             //catch (Exception ex)
             //{
@@ -1120,8 +1136,8 @@ namespace ServiceClaim.Controllers
             //try
             //{
                 ResponseMessage responseMessage;
-                bool complete = (new ServiceSheet() {Id=serviceSheetId, IsPayed = false,NotPayedComment = comment}).SavePayed(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                (new ServiceSheet() {Id=serviceSheetId, IsPayed = false,NotPayedComment = comment}).SavePayed(CurUser);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             //}
             //catch (Exception ex)
             //{
@@ -1202,6 +1218,21 @@ namespace ServiceClaim.Controllers
         {
             var list = Device.GetModelSelectionList(model);
              return Json(list);
+        }
+
+        [HttpPost]
+        public ActionResult ClaimCancel(Claim model)
+        {
+            if (CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimCancelClaim))
+            {
+                model.Cancel(CurUser.Sid);
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+
+            return RedirectToAction("List");
         }
     }
 }

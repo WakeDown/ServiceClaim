@@ -12,18 +12,64 @@ namespace ServiceClaim.Models
         public string Name { get; set; }
         public int IssuesCount { get; set; }
         public string ShortName { get; set; }
+        /// <summary>
+        /// Вохдящие в группировку идентификаторы заявок
+        /// </summary>
         public string IssuesIdList { get; set; }
+        /// <summary>
+        /// Вохдящие в группировку идентификаторы плана
+        /// </summary>
         public string PlanIdList { get; set; }
+        /// <summary>
+        /// Количество закрытых актом выездов
+        /// </summary>
         public int? CamesCount { get; set; }
+        /// <summary>
+        /// Количество не закрытых актом выездов
+        /// </summary>
         public int? NoCamesCount { get; set; }
 
-
-        public ServiceIssuePlaningItem(int id, string name, int issuesCount, string shortName)
+        public ServiceIssuePlaningItem(int id, string name, int issuesCount, string shortName = null, string issuesIdList = null, string planIdList = null, int? camesCount = null, int? noCamesCount = null)
         {
             Id = id;
             Name = name;
             IssuesCount = issuesCount;
             ShortName = shortName;
+            IssuesIdList = issuesIdList;
+            PlanIdList = planIdList;
+            CamesCount = camesCount;
+            NoCamesCount = noCamesCount;
         }
+
+        public ServiceIssuePlaningItem(string sid, string name, int issuesCount, string shortName = null, string issuesIdList = null, string planIdList = null, int? camesCount = null, int? noCamesCount = null)
+        {
+            Sid = sid;
+            Name = name;
+            IssuesCount = issuesCount;
+            ShortName = shortName;
+            IssuesIdList = issuesIdList;
+            PlanIdList = planIdList;
+            CamesCount = camesCount;
+            NoCamesCount = noCamesCount;
+        }
+
+        //////public string Sid { get; set; }
+        //////public int Id { get; set; }
+        //////public string Name { get; set; }
+        //////public int IssuesCount { get; set; }
+        //////public string ShortName { get; set; }
+        //////public string IssuesIdList { get; set; }
+        //////public string PlanIdList { get; set; }
+        //////public int? CamesCount { get; set; }
+        //////public int? NoCamesCount { get; set; }
+
+
+        //////public ServiceIssuePlaningItem(int id, string name, int issuesCount, string shortName)
+        //////{
+        //////    Id = id;
+        //////    Name = name;
+        //////    IssuesCount = issuesCount;
+        //////    ShortName = shortName;
+        //////}
     }
 }

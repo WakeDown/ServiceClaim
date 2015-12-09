@@ -14,6 +14,7 @@ namespace ServiceClaim.Objects
 {
     public class DbModel
     {
+        //public string CurUserAdSid { get; set; }
         public static string OdataServiceUri = ConfigurationManager.AppSettings["OdataServiceUri"];
 
         public static HttpClient GetApiClientAsync(string contentType = "application/json")

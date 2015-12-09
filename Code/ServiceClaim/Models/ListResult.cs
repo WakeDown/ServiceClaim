@@ -9,5 +9,11 @@ namespace ServiceClaim.Models
     {
         public IEnumerable<T> List { get; set; }
         public int TotalCount { get; set; }
+
+        public ListResult(IEnumerable<T> list, int totalCount)
+        {
+            List = list;
+            TotalCount = totalCount;
+        }
     }
 }

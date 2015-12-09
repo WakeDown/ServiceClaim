@@ -4,6 +4,7 @@
 @using ServiceClaim.Objects
 @model ServiceClaim.Models.Claim
 
+
 @{
     ViewBag.Title = "Карточка заяки";
     Layout = "~/Views/Shared/_Editor.cshtml";
@@ -16,6 +17,19 @@
 @section PanelHead
 {
     Карточка заявки @(Model.Id > 0 ? " №" + Model.Id.ToString() : "")
+    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimCancelClaim))
+    {
+        <div class="pull-right">
+            @if (!Model.State.SysName.Equals("CANCEL"))
+            {
+                using (Html.BeginForm("ClaimCancel", "Claim", FormMethod.Post, new {@id = "ClaimCancel"}))
+                 {
+                     @Html.HiddenFor(m => m.Id)
+                     <button id="claimCancel" class="btn btn-danger btn-xs" type="submit">Отклонить заявку</button>
+                 }
+            }
+        </div>
+    }
 }
 
 @section PanelBody
@@ -275,8 +289,6 @@
             });
         }
 
-
-
         function loadBtnGetServiceSheetList() {
             //showSpinnerAppend($('#btnGetPaperServiceSheetContainer'));
             $.ajax({
@@ -310,8 +322,7 @@
                 }
             });
         }*@
-
-
+        
         function claimSave() {
             var id = @Model.Id;
             var descr = $('#descr').val();

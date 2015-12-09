@@ -140,13 +140,21 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AdHelper.cs" />
+    <Compile Include="Helpers\DbHelper.cs" />
+    <Compile Include="Helpers\Db\Db.Eprice.cs" />
+    <Compile Include="Helpers\Db\Db.Service.cs" />
+    <Compile Include="Helpers\Db\Db.SpeCalc.cs" />
+    <Compile Include="Helpers\Db\Db.Stuff.cs" />
+    <Compile Include="Helpers\Db\Db.UnitProg.cs" />
     <Compile Include="Helpers\HtmlExtensions.cs" />
     <Compile Include="Helpers\MainHelper.cs" />
+    <Compile Include="Helpers\MessageHelper.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Claim.cs" />
     <Compile Include="Models\Claim2ClaimState.cs" />
     <Compile Include="Models\ClaimState.cs" />
     <Compile Include="Models\ClaimStateGroup.cs" />
+    <Compile Include="Models\ClaimType.cs" />
     <Compile Include="Models\Classifier.cs" />
     <Compile Include="Models\ClassifierAttributes.cs" />
     <Compile Include="Models\ClassifierCaterory.cs" />
@@ -161,6 +169,7 @@
     <Compile Include="Models\EmployeeSm.cs" />
     <Compile Include="Controllers\ServiceIssuePlanController.cs" />
     <Compile Include="Models\ListResult.cs" />
+    <Compile Include="Models\PlanServiceCame.cs" />
     <Compile Include="Models\PlanServiceIssue.cs" />
     <Compile Include="Models\ServiceIssue.cs" />
     <Compile Include="Models\ServiceIssuePeriodItem.cs" />
@@ -172,15 +181,19 @@
     <Compile Include="Models\ServiceSheet.cs" />
     <Compile Include="Models\ServiceSheetZipItem.cs" />
     <Compile Include="Models\UserList.cs" />
+    <Compile Include="Models\UserUnitProg.cs" />
     <Compile Include="Models\WorkType.cs" />
     <Compile Include="Models\ZipClaim.cs" />
+    <Compile Include="Objects\AccessDenyException.cs" />
     <Compile Include="Objects\AdGroup.cs" />
     <Compile Include="Objects\AdUser.cs" />
     <Compile Include="Objects\AdUserGroup.cs" />
+    <Compile Include="Objects\AttachmentFile.cs" />
     <Compile Include="Objects\BaseController.cs" />
     <Compile Include="Objects\CompressAttribute.cs" />
     <Compile Include="Objects\DbList.cs" />
     <Compile Include="Objects\DbModel.cs" />
+    <Compile Include="Objects\ItemExistsException.cs" />
     <Compile Include="Objects\MultipleButtonAttribute.cs" />
     <Compile Include="Objects\RequestMethod.cs" />
     <Compile Include="Objects\ResponseMessage.cs" />
@@ -247,6 +260,7 @@
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />

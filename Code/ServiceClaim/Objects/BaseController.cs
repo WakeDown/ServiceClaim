@@ -45,6 +45,7 @@ namespace ServiceClaim.Objects
             }
 
             AdUser user = new AdUser();
+            user.User = base.User;
             try
             {
 

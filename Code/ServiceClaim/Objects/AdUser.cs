@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Web;
 using ServiceClaim.Helpers;
@@ -9,6 +10,7 @@ namespace ServiceClaim.Objects
 {
     public class AdUser
     {
+        public IPrincipal User { get; set; }
         public string Sid { get; set; }
         public string Login { get; set; }
         public string FullName { get; set; }

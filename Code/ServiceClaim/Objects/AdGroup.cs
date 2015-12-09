@@ -23,6 +23,7 @@ namespace ServiceClaim.Objects
         AddNewClaim,
         ServiceClaimView,
         ServiceCenterManager,
+        ServiceClaimCancelClaim,
         //---доступы
         ServiceClaimClassifier,
         ServiceClaimClientAccess
