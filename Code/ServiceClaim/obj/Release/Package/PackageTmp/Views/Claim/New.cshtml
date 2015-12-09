@@ -132,8 +132,16 @@
                                         <select id="devList" name="devList" class="form-control required-mark" required="required" data-error="Выберите Аппарат"></select>
                                         <input id="devListData" type="hidden" value=""/>
                                         <div class="input-group-addon" style="width: 100px">
-                                            <input id="devUnknown" value="DeviceUnknown" type="radio" name="Device" @(Model.DeviceUnknown? "checked": "") />&nbsp; неизвестен
-                                            <input id="devCollective" value="DeviceCollective" type="radio" name="Device" @(Model.DeviceCollective? "checked": "") />&nbsp; массовая
+                                            <input id="devUnknown" value="DeviceUnknown" type="radio" name="Device" @(Model.DeviceUnknown ? "checked" : "")/>&nbsp; неизвестен
+                                            <input id="devCollective" value="DeviceCollective" type="radio" name="Device" @(Model.DeviceCollective ? "checked" : "")/>&nbsp; массовая
+                                        </div>
+                                    </div>
+                                    <div id="devCount4ClaimContainer" style="display: none">
+                                        <div class="pull-right">
+                                            <div class="text-nowrap">
+                                                <input id="devCount4Claim" name="devCount4Claim" type="text" class="form-control" value="1" style="width: 110px"/>
+                                                <span>Количество устройств</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <p>
@@ -282,7 +290,15 @@
             //    devUnknownClick();
             //    updateLists(true, true, true);
             //});
-
+            
+            //////$("input[name=Device]:radio").change(function () {
+            //////    if ($('#devCollective').is(':checked')) {
+            //////        $('#devCount4ClaimContainer').show();
+            //////        $('#devCount4Claim').select();
+            //////    } else {
+            //////        $('#devCount4ClaimContainer').hide();
+            //////    }
+            //////});
             $('#tabIncident').click(function() {
                 //$('.nav-tabs a[href="#incident"]').tab('show');
                 var $cont = $('#incidentForm');
@@ -306,7 +322,7 @@
                 $('#ClaimTypeSysName').val('COLLECTIVE');
             });
 
-           
+
         });
 
 
@@ -831,9 +847,9 @@
             var contUnknown = $('#contUnknown').is(':checked');
             if (contUnknown == undefined) contUnknown = false;
             if (contUnknown) contId = null;
-            
+
             if ((devId == null || contId == null) && ctrName == '') {
-                setTimeout(function () { displayCtrs(false); }, 500);
+                setTimeout(function() { displayCtrs(false); }, 500);
                 return;
             }
 

@@ -134,9 +134,12 @@
 
 <script type="text/javascript">
     var dlnk = new Deeplink();
+    var updated = 0;
     $(window).on('hashchange', function () {
+        updated = 1;
         removeRowsAndShowSpinnerOnTable();
         loadClaimList(true);
+       
     });
     $(function() {
         loadStateFilter();
@@ -148,7 +151,14 @@
                 removeRowsAndShowSpinnerOnTable();
                 loadClaimList(true);
             }
-    });
+
+        setTimeout(function() {
+            if (updated == 0) {
+                removeRowsAndShowSpinnerOnTable();
+                loadClaimList(true);
+            }
+        },100);
+        });
 
     function getEmptyIfNull(val) {
         if (!val || val == null) return '';
@@ -213,7 +223,7 @@
             for (var i = 0; i < data.List.length; i++) {
                 var item = data.List[i];
                 var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="row-mark" style="background-color: #' + (item.State != null ? item.State.BorderColor : '') + '"></th><th class="valign-middle text-center"></div>' + item.Id + '</th><th class="valign-middle hidden-sm hidden-xs text-center">' + (item.ClientSdNum != null ? item.ClientSdNum : '') + '</th><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="hidden-sm hidden-xs">' + (item != null ? (item.CityName != null ? item.CityName : '') + (item.Address != null ? '<br />' + item.Address : '') : '') + (item.ContactName != null ? '<br /><b>Контакт:</b> ' + item.ContactName : '') + (item.ContactPhone != null ? '<br /><b>Телефон:</b> ' + item.ContactPhone : '') + '</td><td class="valign-middle">'
-                    + (item.DeviceCollective != null && item.DeviceCollective == true ? 'массовая заявка' : (item.DeviceUnknown != null && item.DeviceUnknown == true ? 'аппарат неизвестен' : (item.Device != null && item.Device.FullName != null ? item.Device.FullName : '')))
+                    + (item.DeviceCollective != null && item.DeviceCollective == true ? '<span class="text-danger">массовая заявка</span>' : (item.DeviceUnknown != null && item.DeviceUnknown == true ? '<span class="text-primary">аппарат неизвестен</span>' : (item.Device != null && item.Device.FullName != null ? item.Device.FullName : '')))
                     + (item.Descr != null ? '<br /><b>Описание:</b> ' + item.Descr : '') + '</td><td class="valign-middle">' + (item.Device != null && item.Device.SerialNum != null ? item.Device.SerialNum : '') + '</td><td class="hidden-sm hidden-xs">' +
                     '<div class="text-nowrap">' +
                         '<span class="small" style="color: #ac2925">' +

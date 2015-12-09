@@ -253,11 +253,35 @@ namespace ServiceClaim.Controllers
                 model.ContactName = Request.Form["contactName"];
                 model.ContactPhone = Request.Form["contactPhone"];
                 model.DeviceCollective = Request.Form["Device"]== "DeviceCollective";
-                model.Save(CurUser.Sid);
+                string devCountStr = Request.Form["devCount4Claim"];
+                int devCount;
+                int.TryParse(devCountStr, out devCount);
+                if (devCount <= 0) devCount = 1;
+                int id = 0;
+                if (devCount > 1)
+                {
+                    for (int i = 1; i <= devCount; i++)
+                    {
+                        model.DeviceUnknown = true;
+                        model.DeviceCollective = false;
+                        model.Save(CurUser.Sid);
+                        if (id <= 0)
+                        {
+                            id = model.Id;
+                        }
+                        //Сбрасываем id чтобы сохранить еще раз
+                        model.Id = 0;
+                    }
+                }
+                else
+                {
+                    model.Save(CurUser.Sid);
+                    id = model.Id;
+                }
                 //bool result = model.Save(out responseMessage);
                 //var response = DbModel.DeserializeResponse(result);
                 //if (!result) throw new Exception(responseMessage.ErrorMessage);
-                return RedirectToAction("Index", new { id = model.Id });
+                return RedirectToAction("Index", new { id = id });
             }
             catch (Exception ex)
             {
