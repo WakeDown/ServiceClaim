@@ -1,0 +1,502 @@
+﻿@using ServiceClaim.Models
+@model ServiceClaim.Models.Claim
+
+@{
+    bool deviceHasNoNumber = (Model.Device.FakeSerialNum.HasValue && Model.Device.FakeSerialNum.Value) || Model.DeviceUnknown;
+}
+
+@using (Html.BeginForm("ServiceSheetFormCollective", "Claim", FormMethod.Post, new { @id = "ServiceSheetForm", @class = "form-horizontal", role = "form" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    <div class="row">
+        <div class="col-lg-push-4 col-lg-8">
+            <blockquote class="alert-warning">Сохраните чтобы заказать или отметить установку ЗИП.</blockquote>
+        </div>
+    </div>
+    if (deviceHasNoNumber)
+    {
+        <div class="row">
+            <div class="col-lg-push-4 col-lg-8">
+                <blockquote class="alert-danger">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            Укажите серийный номер и модель оборудования
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(m => m.ServiceSheet4Save.RealSerialNum, new { id = "realSerialNum", @class = "form-control input-sm", required = "required", style = "text-transform: uppercase", placeholder = "серийный номер" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <div class="input-group" style="width: 100%">
+                                            <div class="input-group-addon group-addon-input" style="width: 100px">
+                                                <input type="text" id="deviceModelSearch" class="form-control input-xs" placeholder="поиск модели" />
+                                            </div>
+                                            <select id="realDeviceModel" class="form-control" name="ServiceSheet4Save.RealDeviceModel">
+                                                @*<option value="">введите чтобы найти</option>*@
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*@Html.TextBoxFor(m => m.ServiceSheet4Save.RealDeviceModel, new {id = "realDeviceModel", @class = "form-control ", required = "required", placeholder = "Модель"})*@
+                            </div>
+                            @*@Html.HiddenFor(m => m.ServiceSheet4Save.RealDeviceModel, new {id = "realDeviceModelHidden"})*@
+                            @Html.HiddenFor(m => m.ServiceSheet4Save.RealSerialNum, new { id = "realSerialNumHidden" })
+                            @Html.HiddenFor(m => m.ServiceSheet4Save.ForceSaveRealSerialNum, new { id = "forceSerialNumSave" })
+                            @*<input type="text" class="form-control " required="required" style="text-transform: uppercase" placeholder="серийный номер"/>*@
+                        </div>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <label class="col-lg-4 text-right">Тип работ</label>
+        <div class="col-lg-4">
+            @Html.DropDownListFor(m => m.ServiceSheet4Save.WorkTypeId, WorkType.GetSelectionList(), "--выберите тип работ--", new { @class = "form-control required-mark", required = "required", data_error = "Выберите Тип работ", multicol = "true" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-4 text-right">Функциональность оборудования восстановлена</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-4 text-right">Оборудование полностью восстановлено</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.DeviceEnabled, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.DeviceEnabled, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-4 text-right">Установлен ЗИП от клиента</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClientGivenInstall, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClientGivenInstall, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="zipClaimNeedContainer">
+        <label class="col-lg-4 text-right">Необходим заказ ЗИП</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClaim, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ZipClaim, false) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="commentContainer">
+        <label class="col-lg-4 text-right">Комментарий</label>
+        <div class="col-lg-6">
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new { id = "comment", @class = "form-control required-mark", required = "required", autocomplete = "off" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    @*<div class="row" id="noCounterContainer">
+        <label class="col-lg-4 text-right">Счетчик предусмотрен</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.NoCounter, false, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.NoCounter, true) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="counterUnavailableContainer">
+        <label class="col-lg-4 text-right">Счетчик доступен</label>
+        <div class="col-lg-2">
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.CounterUnavailable, false, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.CounterUnavailable, true) нет
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="commentCounterContainer">
+        <label class="col-lg-4 text-right">Комментарий</label>
+        <div class="col-lg-6">
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.CounterDescr, new { id = "counterComment", @class = "form-control required-mark", required = "required", placeholder = "Что случилось со счетчиком" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="countersContainer">
+        <label class="col-lg-4 text-right">Счетчик</label>
+        <div class="col-lg-4">
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control required-mark", placeholder = "Черно/Белый" })
+            <span class="help-block with-errors"></span>
+        </div>
+        <div class="col-lg-4">
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control", placeholder = "Цветной" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>*@
+    <div class="row">
+        <div class="col-lg-push-4 col-lg-8">
+            <div class="pull-right">
+                <button id="save" type="submit" class="btn btn-success" value="ServiceSheetSave" name="ServiceSheetSave">Сохранить</button>
+                @*<a class="btn btn-success" id="save">Сохранить</a>*@
+            </div>
+        </div>
+    </div>
+    if (TempData["error"] != null)
+    {
+        <div class="row">
+            <div class="col-lg-push-4 col-lg-8">
+                <blockquote class="alert-danger">
+                    @TempData["error"]
+                </blockquote>
+            </div>
+        </div>
+    }
+}
+
+@*<div id="modalNotPayedComment" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Комментарий</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea id="notPayedComment" rows="3" class="form-control required-mark" placeholder="Почему не оплачено?"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <a type="button" id="notpay" class="btn btn-primary">Сохранить</a>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*Подобная форма ServiceSheetTech*@
+<script type="text/javascript">
+    var procEnab;
+    var procDisab;
+    var devEnab;
+    var devDisab;
+    var zipEnab;
+    var zipDisab;
+    var countAvail;
+    var countNotAvail;
+    var countHas;
+    var countNotHas;
+
+    function setVars() {
+        procEnab = $('[name="ServiceSheet4Save.ProcessEnabled"]:checked').attr('value') === 'True';
+        procDisab = $('[name="ServiceSheet4Save.ProcessEnabled"]:checked').attr('value') === 'False';
+        devEnab = $('[name="ServiceSheet4Save.DeviceEnabled"]:checked').attr('value') === 'True';
+        devDisab = $('[name="ServiceSheet4Save.DeviceEnabled"]:checked').attr('value') === 'False';
+        zipEnab = $('[name="ServiceSheet4Save.ZipClaim"]:checked').attr('value') === 'True';
+        zipDisab = $('[name="ServiceSheet4Save.ZipClaim"]:checked').attr('value') === 'False';
+        //Здесь специально доступность поменяна местами так как название в БД противоположное
+        countAvail = $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').attr('value') === 'False';
+        countNotAvail = $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').attr('value') === 'True';
+        //Здесь специально отуствие поменяно местами так как название в БД противоположное
+        countHas = $('[name="ServiceSheet4Save.NoCounter"]:checked').attr('value') === 'False';
+        countNotHas = $('[name="ServiceSheet4Save.NoCounter"]:checked').attr('value') === 'True';
+    }
+
+    function displayElements() {
+        setVars();
+
+
+        if (procEnab && devEnab) {
+            $('#zipClaimNeedContainer').hide();
+            $('[name="ServiceSheet4Save.ZipClaim"]:checked').prop('checked', false);
+            $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', false);
+            //$('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            //$('#counterUnavailableContainer').hide();
+            //$('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
+        } else {
+            if (procEnab) {
+                $('[name="ServiceSheet4Save.DeviceEnabled"][value="True"]').prop('disabled', false);
+            } else if (procDisab) {
+                $('[name="ServiceSheet4Save.DeviceEnabled"][value="False"]').prop('checked', true);
+                $('[name="ServiceSheet4Save.DeviceEnabled"][value="True"]').prop('disabled', true);
+            }
+            setVars();
+            if (devDisab) {
+                $('#zipClaimNeedContainer').show();
+                $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', true);
+                $('#counterUnavailableContainer').show();
+                $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', true);
+            }
+
+            if (devEnab || !devDisab) { //Nothin select
+                $('#zipClaimNeedContainer').hide();
+                $('[name="ServiceSheet4Save.ZipClaim"]:checked').prop('checked', false);
+                $('[name="ServiceSheet4Save.ZipClaim"]').prop('required', false);
+            }
+        }
+
+        setVars();
+        if (zipEnab) { //Необходим заказ ЗИП
+            $('#commentContainer').hide();
+            $('#commentContainer').prop('required', false);
+            $('#commentLabel').innerText = 'Комментарий';
+            $('#comment').attr('placeholder', '');
+            $('#comment').prop('required', false);
+            $('#comment').removeClass('required-mark');
+            //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
+        } else if (zipDisab && ((devDisab && procDisab) || (devDisab && procEnab))) { //НЕ необходим заказ ЗИП
+            $('#commentContainer').show();
+            $('#commentContainer').prop('required', true);
+            $('#commentLabel').innerText = 'Что случилось?';
+            $('#comment').attr('placeholder', 'Укажите что случилось');
+            $('#comment').prop('required', true);
+            $('#comment').addClass('required-mark');
+            //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', true);
+        } else { //ничего не выбрано
+            $('#commentContainer').hide();
+            $('#commentContainer').prop('required', false);
+            $('#comment').attr('placeholder', '');
+            $('#comment').prop('required', false);
+            $('#comment').removeClass('required-mark');
+            //$('[name="ServiceSheet4Save.DeviceEnabled"]').prop('required', false);
+        }
+
+        setVars();
+
+        if (countHas) { //Счетчик предусмотрен
+            $('#counterUnavailableContainer').show();
+            $('#countersContainer').show();
+            $('#counterMono').prop('required', true);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', true);
+        } else if (countNotHas) { //Счетчик НЕ предусмотрен
+            $('#countersContainer').hide();
+            $('#counterMono').prop('required', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            $('#counterUnavailableContainer').hide();
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
+        } else { //ничего не выбрано
+            $('#countersContainer').hide();
+            $('#counterMono').prop('required', false);
+            $('[name="ServiceSheet4Save.CounterUnavailable"]:checked').prop('checked', false);
+            $('#counterUnavailableContainer').hide();
+            $('[name="ServiceSheet4Save.CounterUnavailable"]').prop('required', false);
+        }
+
+        setVars();
+
+        if (countAvail) { //Счетчик доступен
+            $('#countersContainer').show();
+            $('#counterMono').prop('required', true);
+            $('#commentCounterContainer').hide();
+            $('#counterComment').prop('required', false);
+        } else if (countNotAvail) { //Счетчик НЕ доступен
+            $('#countersContainer').hide();
+            $('#counterMono').prop('required', false);
+            $('#commentCounterContainer').show();
+            $('#counterComment').prop('required', true);
+        } else { //ничего не выбрано
+            $('#countersContainer').hide();
+            $('#counterMono').prop('required', false);
+            $('#commentCounterContainer').hide();
+            $('#counterComment').prop('required', false);
+        }
+    }
+
+    $(function() {
+        //$('#save').click(function() {
+        //    $('#ServiceSheetForm').bootstrapValidator('validate');
+        //    var formIsValid = $('#ServiceSheetForm').hasClass('has-success');
+
+        //    alert(formIsValid);
+        //});
+
+        $('#ServiceSheetForm').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                "ServiceSheet4Save.RealSerialNum": {
+                    validators: {
+                        notEmpty: {
+                            message: 'Укажите серийный номер'
+                        }
+                    }
+                },
+                "ServiceSheet4Save.RealDeviceModel": {
+                    validators: {
+                        notEmpty: {
+                            message: 'Укажите модель'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.bv', function(e) {
+            var $form = $(e.target);
+            var deviceHasNoNumber = @(deviceHasNoNumber?"true":"false");
+            if (deviceHasNoNumber) {
+                e.preventDefault();
+                if (!forceSubmit){
+                    var bv = $form.data('bootstrapValidator');
+                    showRetrySerialNum();
+                }
+            } else {
+
+                //$.post($form.attr('action'), $form.serialize(), function(result) {
+                //    console.log(result);
+                //}, 'json');
+            }
+        }).on('error.form.bv', function(e) {
+            e.preventDefault();
+            var $form = $(e.target);
+            var bv = $form.data('bootstrapValidator');
+            // Use Ajax to submit form data
+
+            setTimeout(function() {
+                var $btnSave = $('#save');
+                hideSpinner($btnSave);
+                $btnSave.prop('disabled', false);
+            }, 200);
+
+        });
+
+        $('[name="ServiceSheet4Save.ProcessEnabled"]').change(displayElements);
+        $('[name="ServiceSheet4Save.DeviceEnabled"]').change(displayElements);
+        $('[name="ServiceSheet4Save.ZipClaim"]').change(displayElements);
+        $('[name="ServiceSheet4Save.CounterUnavailable"]').change(displayElements);
+        $('[name="ServiceSheet4Save.NoCounter"]').change(displayElements);
+        displayElements();
+
+        $('#realSerialNum').on('input', checkDeviceIsExists); //.keypress(checkDeviceIsExists);
+        //$('#realSerialNum').blur(checkDeviceIsExists);
+        $('#deviceModelSearch').on('input', findDeviceModel);
+    });
+    var forceSubmit = false;
+    function showRetrySerialNum() {
+        var deviceHasNoNumber = @(deviceHasNoNumber? "true" : "false");
+        if (deviceHasNoNumber) {
+            BootstrapDialog.show({
+                type: 'type-danger',
+                title: 'Ввыедите повторно серийный номер',
+                message: $('<input id="realSerialNumRetry" class="form-control" placeholder="серийный номер" style="text-transform: uppercase" required="required" />'),
+                buttons: [{
+                    label: 'Отмена',
+                    cssClass: 'btn-danger',
+                    action: function(dialog) {
+                        dialog.close();
+                        var $btnSave = $('#save');
+                        hideSpinner($btnSave);
+                        $btnSave.prop('disabled', false);
+                    }
+                },{
+                    label: 'Сохранить',
+                    cssClass: 'btn-success',
+                    action: function(dialog) {
+                        var $elem = $('#realSerialNumRetry');
+                        var serial = $('#realSerialNum').val();
+                        var serialRetry = $elem.val();
+                        if (serialRetry != '' && serial != '')
+                        {
+                            if (serialRetry == serial) {
+                                forceSubmit = true;
+                                $('#ServiceSheetForm').submit();
+                                //document.getElementById("realSerialNumRetry").setCustomValidity("Заполните это поле.");
+                            }else if (serialRetry != serial){
+                                BootstrapDialog.show({
+                                    type: 'type-warning',
+                                    title: 'Внимание!',
+                                    message: 'Введенный ранее серийный номер не совпадает с текущим!',
+                                    buttons: [{
+                                        label: 'OK',
+                                        cssClass: 'btn-primary',
+                                        action: function(dialog) {
+                                            dialog.close();
+                                        }
+                                    }]
+                                });
+                            }
+                        }
+                    }
+                }]
+            });
+        }
+    }
+
+
+    function findDeviceModel() {
+        var $elem = $('#deviceModelSearch');
+        var model = $elem.val();
+        var $sel = $('#realDeviceModel');
+        $sel.find('option').remove();
+
+        if (model.length >= 3) {
+            $.ajax({
+                url: '@Url.Action("GetModelSelectionList")',
+                method: 'POST',
+                data: { model: model },
+                success: function(data) {
+
+
+                    if (data.length > 0) {
+                        $sel.append('<option value="">выберите модель</option>');
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var opt = '<option value="' + item.Key + '">' + item.Value + '</option>';
+                            $sel.append(opt);
+                        }
+
+                    } else {
+                        $sel.append('<option value="">ничего не найдено</option>');
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    BootstrapDialog.show({
+                        type: 'type-danger',
+                        title: 'Ошибка!',
+                        message: xhr.responseText
+                    });
+                }
+            });
+        }
+        //setTimeout(function() { $('#ServiceSheetForm').bootstrapValidator('validate'); }, 200);
+        //$('#ServiceSheetForm').bootstrapValidator('revalidateField', 'ServiceSheet4Save.RealDeviceModel');
+
+    }
+
+    function checkDeviceIsExists(e) {
+
+        var $elem = $(this);
+        var serialNum = $elem.val();
+        $('#realSerialNumHidden').val(serialNum);
+        if (serialNum.length > 5) {
+            $.ajax({
+                url: '@Url.Action("CheckDeviceIsExists")',
+                method: 'POST',
+                data: { serialNum: serialNum, idClaim:@Model.Id},
+                success:function(data) {
+                    if (data.exists == true) {
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Оборудование уже существует в списке оборудования!',
+                            message: 'Оборудование уже существует в списке! Вы уверены что хотите привязать заявку к существующему оборудованию?',
+                            buttons: [{
+                                label: 'Да',
+                                cssClass: 'btn-success btn-lg pull-left',
+                                action: function(dialog) {
+                                    dialog.close();
+                                    $elem.prop('disabled', true);
+                                    $('#forceSerialNumSave').val('True');
+                                }}, {
+                                    label: 'Нет',
+                                    cssClass: 'btn-danger btn-lg',
+                                    action: function(dialog) {
+                                        $elem.prop('disabled', true);
+                                        $elem.val('');
+                                        $elem.focus();
+                                        $('#forceSerialNumSave').val('False');
+                                    }
+                                }]
+                        });
+
+                    } else {
+
+                    }
+                }
+            });
+        }
+    }
+</script>

@@ -34,6 +34,16 @@ namespace ServiceClaim.Models
         public string ListValue;
         public string IdValue;
 
+        public ServiceIssuePeriodItem()
+        {
+        }
+
+        public ServiceIssuePeriodItem(DateTime startDate, DateTime endDate)
+        {
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+
         private void FillLabels()
         {
             DaysDiff = Math.Abs(Convert.ToInt32((StartDate - EndDate).TotalDays)) + 1;

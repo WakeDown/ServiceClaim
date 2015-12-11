@@ -593,17 +593,17 @@ namespace ServiceClaim.Models
             Db.Service.ExecuteQueryStoredProcedure("claim_change_contract_id", pIdClaim, pIdContract);
         }
 
-        public static void RemoteStateChange(int idClaim, string stateSysName, string creatorSid, string descr = null, int? idZipClaim = null)
+        public static bool RemoteStateChange(int idClaim, string stateSysName, string creatorSid, string descr = null, int? idZipClaim = null)
         {
             var claim = new Claim(idClaim);
-            //bool goNext = false;
+            bool goNext = true;
             if (claim.Id > 0)
             {
                 var state = new ClaimState(stateSysName);
                 bool saveClaimCurrentState = true;
 
                 //Если текущий статус совпадает с переданным или передают что заявка удалена или статус опаздывает (мы уже назначили кого-то а нам приходит статус по заказу ЗИП)
-                if (claim.State.SysName.Equals(stateSysName) || stateSysName.Equals("ZIPCL-CLOSED") || !claim.State.SysName.StartsWith("ZIPCL"))
+                if (claim.State.SysName.Equals(stateSysName) || !claim.State.SysName.StartsWith("ZIPCL"))
                 {
                     saveClaimCurrentState = false;
                 }
@@ -629,7 +629,9 @@ namespace ServiceClaim.Models
 
             }
 
-            //return goNext;
+            if (claim.State.SysName.Equals("ZIPORDERED"))
+                goNext = false;
+            return goNext;
         }
 
         public void SaveStateStep(int stateId, string creatorSid, string descr = null, bool saveStateInfo = true, int? idZipClaim = null, bool saveClaimCurrentState = true)

@@ -21,8 +21,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = attrs.Save(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                attrs.Save();
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@ namespace ServiceClaim.Controllers
 
                         //var doc = new Document() { Data = fileData, Name = file.FileName };
                         ResponseMessage responseMessage;
-                        Classifier.SaveFromExcel(fileData, out responseMessage);
+                        Classifier.SaveFromExcel(fileData, CurUser.Sid);
                         //bool complete = doc.Save(out responseMessage);
                         //if (!complete) throw new Exception(responseMessage.ErrorMessage);
                         //TempData["noPdf"] = noPdf;

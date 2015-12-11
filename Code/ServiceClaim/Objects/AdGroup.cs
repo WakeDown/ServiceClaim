@@ -24,6 +24,7 @@ namespace ServiceClaim.Objects
         ServiceClaimView,
         ServiceCenterManager,
         ServiceClaimCancelClaim,
+        ZipClaimAddressChange,
         //---доступы
         ServiceClaimClassifier,
         ServiceClaimClientAccess

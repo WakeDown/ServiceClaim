@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
@@ -1202,8 +1203,16 @@ namespace ServiceClaim.Controllers
             if (CurUser.Is(AdGroup.ServiceCenterManager)) servManagerSid = CurUser.Sid;
             if (CurUser.Is(AdGroup.ServiceManager)) managerSid = CurUser.Sid;
             if (CurUser.Is(AdGroup.ServiceTech)) techSid = CurUser.Sid;
+            string groupStates = null;
+            if (groupStateList != null && groupStateList.Any()) groupStates = String.Join(",", groupStateList);
 
-            return Json(ClaimStateGroup.GetFilterList(servAdminSid: servAdminSid, servEngeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid, client: client, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStateList: groupStateList, address: address, idDevice: idDevice, idState: idState, dateCreate: dateCreate, curSpec: curSpec));
+            var list = ClaimStateGroup.GetFilterList(CurUser, adminSid: servAdminSid, engeneerSid: servEngeneerSid,
+                managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid, client: client,
+                claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum,
+                topRows: topRows, pageNum: pageNum, groupStates: groupStates, address: address, idDevice: idDevice,
+                idState: idState, dateCreate: dateCreate, curSpec: curSpec);
+
+            return Json(list);
         }
 
         [HttpPost]
@@ -1258,5 +1267,22 @@ namespace ServiceClaim.Controllers
 
             return RedirectToAction("List");
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> RemoteStateChange(int? idClaim, string stateSysName, string creatorSid, string descr = null, int? idZipClaim = null)
+        {
+            if (!idClaim.HasValue || String.IsNullOrEmpty(stateSysName)) return HttpNotFound();
+
+            bool goNext = Claim.RemoteStateChange(idClaim.Value, stateSysName, creatorSid, descr, idZipClaim);
+
+            if (goNext)
+            {
+                var claim = new Claim(idClaim.Value);
+                await claim.Go(GetCurUser());
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
     }
 }

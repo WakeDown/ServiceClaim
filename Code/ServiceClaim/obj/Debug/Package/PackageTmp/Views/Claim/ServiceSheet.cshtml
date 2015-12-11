@@ -93,6 +93,39 @@
                         <td>Тип работ</td>
                         <td>@Model.WorkType.ListName</td>
                     </tr>
+                    @if (Model.ProcessEnabled.HasValue)
+                    {
+                        <tr>
+                            <td>Функциональность оборудования восстановлена</td>
+                            <td>@(@Model.ProcessEnabled.Value ? "да" : "нет")</td>
+                        </tr>
+                    }
+                    @if (Model.DeviceEnabled.HasValue)
+                    {
+                        <tr>
+                            <td>Оборудование полностью восстановлено</td>
+                            <td>@(@Model.DeviceEnabled.Value ? "да" : "нет")</td>
+                        </tr>
+                    }
+
+                <tr>
+                    <td>Установлен ЗИП от клиента</td>
+                    <td>@(@Model.ZipClientGivenInstall ? "да" : "нет")</td>
+                </tr>
+@if (Model.NoCounter.HasValue)
+{
+    <tr>
+        <td>Счетчик предусмотрен</td>
+        <td>@(Model.NoCounter.Value ? "нет" : "да")</td>
+    </tr>
+}
+@if (Model.CounterUnavailable.HasValue)
+{
+    <tr>
+        <td>Счетчик предусмотрен</td>
+        <td>@(Model.CounterUnavailable.Value ? "нет" : "да")</td>
+    </tr>
+}
                     <tr>
                         <td>Счетчик</td>
                         <td>@Model.CounterMono</td>

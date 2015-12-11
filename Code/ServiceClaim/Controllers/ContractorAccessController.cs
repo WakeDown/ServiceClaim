@@ -36,8 +36,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Save(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                model.Save(CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
                 return RedirectToAction("List");
             }
@@ -82,8 +82,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ContractorAccess.Delete(id, out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                ContractorAccess.Close(id, CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {

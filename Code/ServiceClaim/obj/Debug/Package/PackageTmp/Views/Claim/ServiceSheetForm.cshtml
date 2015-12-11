@@ -333,7 +333,7 @@
             var $form = $(e.target);
             var deviceHasNoNumber = @(deviceHasNoNumber?"true":"false");
             if (deviceHasNoNumber) {
-                
+
                 if (!forceSubmit){
                     e.preventDefault();
                     var bv = $form.data('bootstrapValidator');
@@ -350,7 +350,7 @@
             var $form = $(e.target);
             var bv = $form.data('bootstrapValidator');
             // Use Ajax to submit form data
-            
+
             setTimeout(function() {
                 var $btnSave = $('#save');
                 hideSpinner($btnSave);
@@ -366,7 +366,7 @@
         $('[name="ServiceSheet4Save.NoCounter"]').change(displayElements);
         displayElements();
 
-        $('#realSerialNum').on('input', checkDeviceIsExists); //.keypress(checkDeviceIsExists);
+        //$('#realSerialNum').on('input', checkDeviceIsExists); //.keypress(checkDeviceIsExists);
         //$('#realSerialNum').blur(checkDeviceIsExists);
         $('#deviceModelSearch').on('input', findDeviceModel);
     });
@@ -462,7 +462,7 @@
 
     }
 
-    function checkDeviceIsExists(e) {
+    @*function checkDeviceIsExists(e) {
 
         var $elem = $(this);
         var serialNum = $elem.val();
@@ -503,5 +503,5 @@
                 }
             });
         }
-    }
+    }*@
 </script>

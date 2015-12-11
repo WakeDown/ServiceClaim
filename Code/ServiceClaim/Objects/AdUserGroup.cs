@@ -24,7 +24,6 @@ namespace ServiceClaim.Objects
             list.Add(new AdUserGroup(AdGroup.ZipClaimClient, "S-1-5-21-1970802976-3466419101-4042325969-3639", "zipclaim-client"));
             list.Add(new AdUserGroup(AdGroup.ZipClaimClientCounterView, "S-1-5-21-1970802976-3466419101-4042325969-4219", "zipclaim-client-counter-view"));
             list.Add(new AdUserGroup(AdGroup.ZipClaimClientZipView, "S-1-5-21-1970802976-3466419101-4042325969-4218", "zipclaim-client-zip-view"));
-            list.Add(new AdUserGroup(AdGroup.SuperAdmin, "S-1-5-21-1970802976-3466419101-4042325969-4031", "SuperAdmin"));//Суперадмин
             list.Add(new AdUserGroup(AdGroup.ServiceAdmin, "S-1-5-21-1970802976-3466419101-4042325969-2566", "ServiceAdmin"));
             list.Add(new AdUserGroup(AdGroup.ServiceManager, "S-1-5-21-1970802976-3466419101-4042325969-2567", "ServiceManager"));
             list.Add(new AdUserGroup(AdGroup.ServiceEngeneer, "S-1-5-21-1970802976-3466419101-4042325969-2558", "ServiceEngeneer"));
@@ -32,11 +31,12 @@ namespace ServiceClaim.Objects
             list.Add(new AdUserGroup(AdGroup.ServiceControler, "S-1-5-21-1970802976-3466419101-4042325969-4066", "ServiceControler"));
             list.Add(new AdUserGroup(AdGroup.ServiceTech, "S-1-5-21-1970802976-3466419101-4042325969-4079", "ServiceTech"));
             list.Add(new AdUserGroup(AdGroup.ServiceClaimContractorAccess, "S-1-5-21-1970802976-3466419101-4042325969-4092", "ServiceClaimContractorAccess"));
+            list.Add(new AdUserGroup(AdGroup.ZipClaimAddressChange, "S-1-5-21-1970802976-3466419101-4042325969-3633", "zipclaim-address-change"));
+            //list.Add(new AdUserGroup(AdGroup.ServiceMobileUser, "S-1-5-21-1970802976-3466419101-4042325969-6605", "ServiceMobileUser"));
             list.Add(new AdUserGroup(AdGroup.ServiceZipClaimConfirm, "S-1-5-21-1970802976-3466419101-4042325969-6625", "ServiceZipClaimConfirm"));
             list.Add(new AdUserGroup(AdGroup.AddNewClaim, "S-1-5-21-1970802976-3466419101-4042325969-6645", "AddNewClaim"));
             list.Add(new AdUserGroup(AdGroup.ServiceClaimView, "S-1-5-21-1970802976-3466419101-4042325969-6677", "ServiceClaimView"));
             list.Add(new AdUserGroup(AdGroup.ServiceCenterManager, "S-1-5-21-1970802976-3466419101-4042325969-6687", "ServiceCenterManager"));
-            list.Add(new AdUserGroup(AdGroup.ServiceClaimCancelClaim, "S-1-5-21-1970802976-3466419101-4042325969-7650", "ServiceClaimCancelClaim")); 
             //---
             list.Add(new AdUserGroup(AdGroup.ServiceClaimClassifier, "S-1-5-21-1970802976-3466419101-4042325969-4081", "ServiceClaimClassifier"));
             list.Add(new AdUserGroup(AdGroup.ServiceClaimClientAccess, "S-1-5-21-1970802976-3466419101-4042325969-4082", "ServiceClaimClientAccess"));

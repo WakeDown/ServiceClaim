@@ -40,8 +40,8 @@ namespace ServiceClaim.Controllers
                 int idClientEtalon;
                 int.TryParse(ctrIdStr, out idClientEtalon);
                 model.IdClientEtalon = idClientEtalon;
-                bool complete = model.SaveNew(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                model.Save(CurUser.Sid, isUpdate: false);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
                 return RedirectToAction("List");
             }
@@ -59,8 +59,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = model.Update(out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                model.Save(CurUser.Sid, isUpdate: true);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
 
                 return RedirectToAction("List");
             }
@@ -113,8 +113,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool complete = ClientAccess.Delete(id, out responseMessage);
-                if (!complete) throw new Exception(responseMessage.ErrorMessage);
+               ClientAccess.Close(id, CurUser.Sid);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {

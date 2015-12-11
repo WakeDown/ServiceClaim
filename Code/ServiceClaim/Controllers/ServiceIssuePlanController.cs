@@ -131,9 +131,9 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool result = ServiceIssuePlan.SaveList(planIssueList, out responseMessage);
-                if (!result) throw new Exception(responseMessage.ErrorMessage);
-                string idList = responseMessage.IdArr;
+                string idList = ServiceIssuePlan.SaveList(CurUser.Sid, planIssueList);
+                //if (!result) throw new Exception(responseMessage.ErrorMessage);
+                //string idList = responseMessage.IdArr;
                 //ResponseMessage responseMessage;
                 //bool result = plan.Save(out responseMessage);
                 //if (!result) throw new Exception(responseMessage.ErrorMessage);
@@ -160,7 +160,7 @@ namespace ServiceClaim.Controllers
         public ActionResult GetServiceIssuePlanItem(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
-            var issue = ServiceIssuePlan.Get(id.Value);
+            var issue = new ServiceIssuePlan(id.Value);
             return PartialView("ServiceIssuePlanItem", issue);
         }
 
@@ -264,8 +264,8 @@ namespace ServiceClaim.Controllers
             try
             {
                 ResponseMessage responseMessage;
-                bool result = ServiceIssuePlan.DeleteIssueItem(idList, out responseMessage);
-                if (!result) throw new Exception(responseMessage.ErrorMessage);
+               ServiceIssuePlan.DeleteIssueItem(idList, CurUser.Sid);
+                //if (!result) throw new Exception(responseMessage.ErrorMessage);
             }
             catch (Exception ex)
             {

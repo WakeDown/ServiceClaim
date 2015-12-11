@@ -83,3 +83,6 @@ C:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\Newtonsoft.
 C:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\obj\Release\ServiceClaim.csprojResolveAssemblyReference.cache
 C:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\obj\Release\ServiceClaim.dll
 C:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\obj\Release\ServiceClaim.pdb
+C:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\ClosedXML.dll
+C:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\DocumentFormat.OpenXml.dll
+C:\GoogleDrive\Dev\GitHub\Service\ServiceClaim\Code\ServiceClaim\bin\ClosedXML.xml
