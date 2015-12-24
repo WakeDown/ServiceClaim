@@ -21,6 +21,7 @@ namespace ServiceClaim.Objects
         public static IEnumerable<AdUserGroup> GetList()
         {
             var list = new List<AdUserGroup>();
+            list.Add(new AdUserGroup(AdGroup.SuperAdmin, "S-1-5-21-1970802976-3466419101-4042325969-4031", "SuperAdmin"));//Суперадмин
             list.Add(new AdUserGroup(AdGroup.ZipClaimClient, "S-1-5-21-1970802976-3466419101-4042325969-3639", "zipclaim-client"));
             list.Add(new AdUserGroup(AdGroup.ZipClaimClientCounterView, "S-1-5-21-1970802976-3466419101-4042325969-4219", "zipclaim-client-counter-view"));
             list.Add(new AdUserGroup(AdGroup.ZipClaimClientZipView, "S-1-5-21-1970802976-3466419101-4042325969-4218", "zipclaim-client-zip-view"));

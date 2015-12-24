@@ -66,6 +66,29 @@ namespace ServiceClaim.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public JsonResult SaveClaimChanges(int idClaim, string adminSid, string engeneerSid, string clientSdNum)
+        {
+            if (!CurUser.HasAccess(AdGroup.ServiceControler)) return Json(new { });
+
+            Claim.SaveChanges(CurUser.Sid, idClaim, adminSid, engeneerSid, clientSdNum);
+
+            return Json(new {});
+        }
+
+        [HttpPost]
+        public JsonResult GetAdminList()
+        {
+            var list = AdHelper.GetUserListByAdGroup(AdGroup.ServiceAdmin).ToList();
+            return Json(list);
+        }
+        [HttpPost]
+        public JsonResult GetEngeneerList()
+        {
+            var list = AdHelper.GetUserListByAdGroup(AdGroup.ServiceEngeneer).ToList();
+            return Json(list);
+        }
+
         //[HttpPost]
         //public ActionResult Index(Claim model)
         //{
@@ -189,21 +212,47 @@ namespace ServiceClaim.Controllers
 
             //ViewBag.userIsEngeneer = ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer);
 
-            string servAdminSid = null;
-            string servEngeneerSid = null;
+            string adminSid = null;
+            string engeneerSid = null;
             string managerSid = null;
             string techSid = null;
             string servManagerSid = null;
-            if (CurUser.Is(AdGroup.ServiceAdmin)) servAdminSid = CurUser.Sid;
-            if (CurUser.Is(AdGroup.ServiceEngeneer)) servEngeneerSid = CurUser.Sid;
-            if (CurUser.Is(AdGroup.ServiceCenterManager)) servManagerSid = CurUser.Sid;
-            if (CurUser.Is(AdGroup.ServiceManager)) managerSid = CurUser.Sid;
-            if (CurUser.Is(AdGroup.ServiceTech)) techSid = CurUser.Sid;
+            //if (CurUser.Is(AdGroup.ServiceAdmin)) servAdminSid = CurUser.Sid;
+            //if (CurUser.Is(AdGroup.ServiceEngeneer)) servEngeneerSid = CurUser.Sid;
+            //if (CurUser.Is(AdGroup.ServiceCenterManager)) servManagerSid = CurUser.Sid;
+            //if (CurUser.Is(AdGroup.ServiceManager)) managerSid = CurUser.Sid;
+            //if (CurUser.Is(AdGroup.ServiceTech)) techSid = CurUser.Sid;
+            string userGroupSid = String.Empty;
+            if (CurUser.Is(AdGroup.ServiceAdmin))
+            {
+                adminSid = CurUser.Sid;
+                userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceAdmin);
+            }
+            if (CurUser.Is(AdGroup.ServiceEngeneer))
+            {
+                engeneerSid = CurUser.Sid;
+                userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceEngeneer);
+            }
+            if (CurUser.Is(AdGroup.ServiceCenterManager))
+            {
+                servManagerSid = CurUser.Sid;
+                userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceCenterManager);
+            }
+            if (CurUser.Is(AdGroup.ServiceManager))
+            {
+                managerSid = CurUser.Sid;
+                userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceManager);
+            }
+            if (CurUser.Is(AdGroup.ServiceTech))
+            {
+                techSid = CurUser.Sid;
+                userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceTech);
+            }
 
             //var result = Claim.GetList();
             string groupStates = null;
             if (groupStateList != null && groupStateList.Any()) groupStates=String.Join(",", groupStateList);
-            ListResult<Claim> result = Claim.GetList(GetCurUser(), adminSid: servAdminSid, engeneerSid: servEngeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid,  client: client, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStates: groupStates, address: address, idDevice: idDevice, idState: idState, dateCreate: dateCreate, curSpec: curSpec);
+            ListResult<Claim> result = Claim.GetList(GetCurUser(), adminSid: adminSid, engeneerSid: engeneerSid, managerSid: managerSid, techSid: techSid, servManagerSid: servManagerSid,  client: client, claimId: claimId, clientSdNum: clientSdNum, deviceName: deviceName, serialNum: serialNum, topRows: topRows, pageNum: pageNum, groupStates: groupStates, address: address, idDevice: idDevice, idState: idState, dateCreate: dateCreate, curSpec: curSpec, userGroupSid: userGroupSid);
             return Json(result);
         }
 
@@ -657,6 +706,26 @@ namespace ServiceClaim.Controllers
             }
             //return View("WindowClose");
             //return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EndClaim(Claim model)
+        {
+            try
+            {
+                ResponseMessage responseMessage;
+                //bool complete = model.Go(out responseMessage);
+                //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+                await model.Go(GetCurUser());
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return RedirectToAction("Index", new { id = model.Id });
+            }
+
+            //return View("WindowClose");
+            return RedirectToAction("List");
         }
 
         [HttpPost]

@@ -22,7 +22,9 @@
         </div>
         <div class="col-lg-8 col-sm-12 col-xs-12">
             <div id="stateGroupFilter"></div>
-
+            <div class="text-center">
+                <span id="filterIsEnabled" style="display: none; padding: 5px 0 5px 5px" class="text-center alert alert-danger">Внимание! Используется фильтр. <button id="filterDisable" class="bt btn-link btn-xs">снять фильтр</button></span>
+            </div>
         </div>
         <div class="col-sm-6 col-xs-6 hidden-md hidden-lg">
             <div class="pull-left">
@@ -139,7 +141,7 @@
         updated = 1;
         removeRowsAndShowSpinnerOnTable();
         loadClaimList(true);
-       
+
     });
     $(function() {
         loadStateFilter();
@@ -170,10 +172,13 @@
             url: '@Url.Action("RemoveFromSession")',
             method: 'POST',
             async: false,
-            data: { name: 'filter' }
+            data: { name: 'filter' },
+            success: function() {
+                window.location = '@Url.Action("List")';
+            }
         });
 
-        window.location = '@Url.Action("List")';
+
     }
 
     function loadStateFilter() {
@@ -224,7 +229,7 @@
                 var item = data.List[i];
                 var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="row-mark" style="background-color: #' + (item.State != null ? item.State.BorderColor : '') + '"></th><th class="valign-middle text-center"></div>' + item.Id + '</th><th class="valign-middle hidden-sm hidden-xs text-center">' + (item.ClientSdNum != null ? item.ClientSdNum : '') + '</th><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="hidden-sm hidden-xs">' + (item != null ? (item.CityName != null ? item.CityName : '') + (item.Address != null ? '<br />' + item.Address : '') : '') + (item.ContactName != null ? '<br /><b>Контакт:</b> ' + item.ContactName : '') + (item.ContactPhone != null ? '<br /><b>Телефон:</b> ' + item.ContactPhone : '') + '</td><td class="valign-middle">'
                     + (item.DeviceCollective != null && item.DeviceCollective == true ? '<span class="text-danger">массовая заявка</span>' : (item.DeviceUnknown != null && item.DeviceUnknown == true ? '<span class="text-primary">аппарат неизвестен</span>' : (item.Device != null && item.Device.FullName != null ? item.Device.FullName : '')))
-                    + (item.Descr != null ? '<br /><b>Описание:</b> ' + item.Descr : '') + '</td><td class="valign-middle">' + (item.Device != null && item.Device.SerialNum != null ? item.Device.SerialNum : '') + '</td><td class="hidden-sm hidden-xs">' +
+                    + (item.Descr != null ? '<br /><strong>Тип работ:</strong> ' + (item.WorkType != null ? item.WorkType.SysName : 'не указан') + '<br /><strong>Описание:</strong> ' + item.Descr : '') + '</td><td class="valign-middle">' + (item.Device != null && item.Device.SerialNum != null ? item.Device.SerialNum : '') + '</td><td class="hidden-sm hidden-xs">' +
                     '<div class="text-nowrap">' +
                         '<span class="small" style="color: #ac2925">' +
                         '<span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span>' +
@@ -283,6 +288,9 @@
         if ($container == null) {
             $('tr[claimid]', $('#claimList')).click(function () {
                 window.location = '@Url.Action("Index")/' + $(this).attr('claimid');
+            });
+            $('tr[claimid]', $('#claimList')).on('contextmenu', function () {                
+                window.open('@Url.Action("Index")/' + $(this).attr('claimid'));
             });
             $container = $('#claimList');
         } else {
@@ -386,7 +394,10 @@
             grState = grst.split(',');
         }
 
-        var filter = { num: num, client: client, clSdNum: clSdNum, devName: devName, serial: serial, address: address, topRows: topRows, selPage: selPage, grpState: grState, idState: idState, dateCreate: dateCreate, curSpec: curSpec };
+        var filterEnabled = num != null || client != null || clSdNum != null || devName != null || serial != null || topRows != 30 || selPage != 1 || address != null || idState != null || dateCreate != null ||
+            curSpec != null || grst != null;
+
+        var filter = { num: num, client: client, clSdNum: clSdNum, devName: devName, serial: serial, address: address, topRows: topRows, selPage: selPage, grpState: grState, idState: idState, dateCreate: dateCreate, curSpec: curSpec, filterEnabled: filterEnabled };
         add2Session('filter', JSON.stringify(filter));
 
         $('#numFilter').val(num);
@@ -402,12 +413,13 @@
         $('#state').val(idState);
         $('#dateCreate').val(dateCreate);
         $('#curSpec').val(curSpec);
-        
+
         return filter;
     }
 
     function loadClaimList(reloadStateGroupFilter) {
         var filter = getFilterValues();
+        
         $.ajax({
             url: '@Url.Action("GetClaimList")',
             method: 'POST',
@@ -417,12 +429,12 @@
                 writeLastupdateTime();
                 //$('#lastUpdateTime').attr('t', 0);
                 fillPager(filter.topRows, data.TotalCount, filter.selPage);
-                
+
                 loadStateGroupFilter(data.TotalCount);
             }
         });
-        
-        
+
+
     }
 
     function getHashQueryStringValue(param) {
@@ -531,7 +543,11 @@
 
     function loadStateGroupFilter(totalCount) {
         var filter = getFilterValues();
-
+        if (filter.filterEnabled == true) {
+            $('#filterIsEnabled').show();
+        } else {
+            $('#filterIsEnabled').hide();
+        }
         $.ajax({
             url: '@Url.Action("GetStateGroupFilterList")',
             method: 'POST',
@@ -568,6 +584,7 @@
                         dlnk.hashupdate({ 'grst': grpState, 'page': 1 });
                     });
                     $('[name="stateGroupFilterItemAll"]').click(clearSesFilterAndReload);
+                    $('#filterDisable').click(clearSesFilterAndReload);
                 }
 
                 var grst = filter.grpState;

@@ -579,6 +579,41 @@ namespace ServiceClaim.Models
             return Id;
         }
 
+        public static void SaveChanges(string creatorSid, int idClaim, string adminSid, string engeneerSid, string clientSdNum)
+        {
+            var cl = new Claim(idClaim);
+            bool hasChanges = false;
+            string descr = "Внесены изменения:";
+            if (!String.IsNullOrEmpty(adminSid) && cl.CurAdminSid != adminSid)
+            {
+                hasChanges = true;
+                descr += $"\r\nСА: {cl.Admin.DisplayName} -> {AdHelper.GetUserBySid(adminSid).DisplayName}";
+            }
+
+            if (!String.IsNullOrEmpty(engeneerSid) && cl.CurEngeneerSid != engeneerSid)
+            {
+                hasChanges = true;
+                descr += $"\r\nСИ: {cl.Engeneer.DisplayName} -> {AdHelper.GetUserBySid(engeneerSid).DisplayName}";
+            }
+
+            if (cl.ClientSdNum != clientSdNum)
+            {
+                hasChanges = true;
+                descr += $"\r\n№ SD клиента: {cl.ClientSdNum} -> {clientSdNum}";
+            }
+
+            if (hasChanges)
+            {
+                SqlParameter pIdClaim = new SqlParameter(){ParameterName = "id_claim",SqlValue = idClaim,SqlDbType = SqlDbType.Int};
+                SqlParameter pAdminSid = new SqlParameter(){ParameterName = "cur_admin_sid",SqlValue = adminSid,SqlDbType = SqlDbType.VarChar};
+                SqlParameter pEngeneerSid = new SqlParameter(){ParameterName = "cur_engeneer_sid",SqlValue = engeneerSid,SqlDbType = SqlDbType.VarChar};
+                SqlParameter pClientSdNum = new SqlParameter() { ParameterName = "client_sd_num", SqlValue = clientSdNum, SqlDbType = SqlDbType.NVarChar };
+                Db.Service.ExecuteQueryStoredProcedure("claim_save_changes", pIdClaim, pAdminSid, pEngeneerSid, pClientSdNum);
+                var newCl = new Claim(idClaim);
+                newCl.SaveStateStep(newCl.IdState, creatorSid, descr);
+            }
+        }
+
         public static void ChangeDeviceId(int claimId, int deviceid)
         {
             SqlParameter pIdClaim = new SqlParameter() { ParameterName = "id_claim", SqlValue = claimId, SqlDbType = SqlDbType.Int };
@@ -806,7 +841,7 @@ namespace ServiceClaim.Models
                 if (confirm)
                 {
                     nextState = new ClaimState("TECHWORK");
-                    CurTechSid = user.Sid;
+                    //CurTechSid = user.Sid;
                     SpecialistSid = user.Sid;
                 }
                 else
@@ -837,7 +872,7 @@ namespace ServiceClaim.Models
                     var cl = new Claim(Id);
                     ////if (!ServiceSheet4Save.NoTechWork)
                     ////{
-                    ServiceSheet4Save.EngeneerSid = user.Sid;
+                    ServiceSheet4Save.EngeneerSid = cl.CurEngeneerSid;//user.Sid;
                     ServiceSheet4Save.IdServiceIssue = -999;
                     ServiceSheet4Save.Save("TECHWORK", user.Sid);
                     if (ServiceSheet4Save.ProcessEnabled.HasValue && ServiceSheet4Save.ProcessEnabled.Value && ServiceSheet4Save.DeviceEnabled.HasValue && ServiceSheet4Save.DeviceEnabled.Value)
@@ -924,7 +959,7 @@ namespace ServiceClaim.Models
                 if (confirm)
                 {
                     nextState = new ClaimState("SRVADMWORK");
-                    CurAdminSid = user.Sid;
+                    //CurAdminSid = user.Sid;
                     SpecialistSid = user.Sid;
                 }
                 else
@@ -979,7 +1014,7 @@ namespace ServiceClaim.Models
                     //SaveStateStep(nextState.Id);
                     saveStateInfo = false;
                     //nextState = new ClaimState("SERVENGOUTWAIT");
-                    CurEngeneerSid = user.Sid;
+                    //CurEngeneerSid = user.Sid;
                     SpecialistSid = user.Sid;
                 }
                 else
@@ -1036,6 +1071,8 @@ namespace ServiceClaim.Models
                 goNext = true;
                 saveClaim = true;
                 nextState = new ClaimState("DONE");
+                //SaveStateStep(nextState.Id, user.Sid, descr);
+                //nextState = new ClaimState("END");
             }
             else if (currState.SysName.ToUpper().Equals("SRVENGWORK"))
             {
@@ -1684,14 +1721,44 @@ namespace ServiceClaim.Models
             }
         }
 
-        public static ListResult<Claim> GetList(AdUser user, string adminSid = null, string engeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool? activeClaimsOnly = false, int? idClaimState = null, int? clientId = null, string clientSdNum = null, int? claimId = null, string deviceName = null, int? pageNum = null, string groupStates = null, string address = null, string servManagerSid = null, string client = null, int? idState = null, string dateCreate = null, string curSpec = null)
+        public static ListResult<Claim> GetList(AdUser curUser, string adminSid = null, string engeneerSid = null, DateTime? dateStart = null, DateTime? dateEnd = null, int? topRows = null, string managerSid = null, string techSid = null, string serialNum = null, int? idDevice = null, bool? activeClaimsOnly = false, int? idClaimState = null, int? clientId = null, string clientSdNum = null, int? claimId = null, string deviceName = null, int? pageNum = null, string groupStates = null, string address = null, string servManagerSid = null, string client = null, int? idState = null, string dateCreate = null, string curSpec = null, string userGroupSid = null)
         {
             //if (user.Is(AdGroup.ServiceAdmin)) { adminSid = user.Sid; }
             //if (user.Is(AdGroup.ServiceEngeneer)) engeneerSid = user.Sid;
             //if (user.Is(AdGroup.ServiceCenterManager)) servManagerSid = user.Sid;
             //if (user.Is(AdGroup.ServiceManager)) managerSid = user.Sid;
             //if (user.Is(AdGroup.ServiceTech)) techSid = user.Sid;
-
+            //string servAdminSid = null;
+            //string servEngeneerSid = null;
+            //string managerSid = null;
+            //string techSid = null;
+            //string servManagerSid = null;
+            //string userGroupSid = String.Empty;
+            //if (curUser.Is(AdGroup.ServiceAdmin))
+            //{
+            //    adminSid = curUser.Sid;
+            //    userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceAdmin);
+            //}
+            //if (curUser.Is(AdGroup.ServiceEngeneer))
+            //{
+            //    engeneerSid = curUser.Sid;
+            //    userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceEngeneer);
+            //}
+            //if (curUser.Is(AdGroup.ServiceCenterManager))
+            //{
+            //    servManagerSid = curUser.Sid;
+            //    userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceCenterManager);
+            //}
+            //if (curUser.Is(AdGroup.ServiceManager))
+            //{
+            //    managerSid = curUser.Sid;
+            //    userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceManager);
+            //}
+            //if (curUser.Is(AdGroup.ServiceTech))
+            //{
+            //    techSid = curUser.Sid;
+            //    userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceTech);
+            //}
 
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
@@ -1720,6 +1787,7 @@ namespace ServiceClaim.Models
             SqlParameter pIdState = new SqlParameter() { ParameterName = "id_state", SqlValue = idState, SqlDbType = SqlDbType.Int };
             SqlParameter pDateCreate = new SqlParameter() { ParameterName = "date_create_str", SqlValue = dateCreate, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pCurSpec = new SqlParameter() { ParameterName = "cur_spec", SqlValue = curSpec, SqlDbType = SqlDbType.NVarChar };
+            //SqlParameter pUserGroupSid = new SqlParameter() { ParameterName = "user_group_sid", SqlValue = userGroupSid, SqlDbType = SqlDbType.VarChar };
             var dt = Db.Service.ExecuteQueryStoredProcedure("get_claim_list", pServAdminSid, pServEngeneerSid, pDateStart, pDateEnd, pTopRows, pManagerSid, pTechSid, pSerialNum, pIdDevice, pActiveClaimsOnly, pIdClaimState, pClientId, pClientSdNum, pclaimId, pDeviceName, pPageNum, pGroupStates, pAddress, pServManagerSid, pClient, pIdState, pDateCreate, pCurSpec);
 
             int cnt = 0;

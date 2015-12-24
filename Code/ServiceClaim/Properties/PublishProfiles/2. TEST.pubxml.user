@@ -21,6 +21,12 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/App_global.asax.dll">
       <publishTime>09/09/2015 13:15:56</publishTime>
     </File>
+    <File Include="bin/ClosedXML.dll">
+      <publishTime>11/12/2015 11:30:34</publishTime>
+    </File>
+    <File Include="bin/DocumentFormat.OpenXml.dll">
+      <publishTime>11/12/2015 11:30:34</publishTime>
+    </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>10/20/2015 13:24:19</publishTime>
     </File>
@@ -73,16 +79,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:28</publishTime>
     </File>
     <File Include="bin/ServiceClaim.dll">
-      <publishTime>12/11/2015 09:44:26</publishTime>
+      <publishTime>12/24/2015 15:37:52</publishTime>
     </File>
     <File Include="bin/ServiceClaim.pdb">
-      <publishTime>12/11/2015 09:44:26</publishTime>
+      <publishTime>12/24/2015 15:37:52</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>11/12/2015 11:30:34</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>11/11/2015 09:56:35</publishTime>
     </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>11/12/2015 11:30:34</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>11/12/2015 11:30:34</publishTime>
+    </File>
     <File Include="bin/System.Web.Mvc.dll">
-      <publishTime>11/11/2015 09:52:26</publishTime>
+      <publishTime>11/12/2015 12:51:25</publishTime>
     </File>
     <File Include="bin/System.Web.Optimization.dll">
       <publishTime>09/17/2015 13:37:46</publishTime>
@@ -154,7 +169,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/12/2015 10:13:33</publishTime>
     </File>
     <File Include="Content/Site.css">
-      <publishTime>10/12/2015 16:37:16</publishTime>
+      <publishTime>11/12/2015 11:30:35</publishTime>
     </File>
     <File Include="favicon.ico">
       <publishTime>09/17/2015 13:34:31</publishTime>
@@ -163,7 +178,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:31</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>11/11/2015 10:01:46</publishTime>
+      <publishTime>11/12/2015 12:51:26</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
       <publishTime>09/09/2015 13:15:53</publishTime>
@@ -270,32 +285,35 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Claim/ContractChoice.cshtml">
       <publishTime>11/18/2015 17:24:25</publishTime>
     </File>
+    <File Include="Views/Claim/EndClaim.cshtml">
+      <publishTime>12/24/2015 13:59:51</publishTime>
+    </File>
     <File Include="Views/Claim/EngeneerSelect.cshtml">
       <publishTime>03/12/2015 10:59:11</publishTime>
     </File>
     <File Include="Views/Claim/Index.cshtml">
-      <publishTime>09/12/2015 17:59:19</publishTime>
+      <publishTime>12/24/2015 13:56:59</publishTime>
     </File>
     <File Include="Views/Claim/Index2.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Views/Claim/List.cshtml">
-      <publishTime>09/12/2015 20:08:37</publishTime>
+      <publishTime>12/24/2015 14:19:23</publishTime>
     </File>
     <File Include="Views/Claim/ListItem.cshtml">
       <publishTime>11/02/2015 09:29:23</publishTime>
     </File>
     <File Include="Views/Claim/ListOld.cshtml">
-      <publishTime>10/28/2015 16:57:37</publishTime>
+      <publishTime>11/12/2015 12:47:32</publishTime>
     </File>
     <File Include="Views/Claim/New.cshtml">
-      <publishTime>12/11/2015 08:40:21</publishTime>
+      <publishTime>11/12/2015 11:30:36</publishTime>
     </File>
     <File Include="Views/Claim/ServiceSheet.cshtml">
-      <publishTime>10/12/2015 16:20:39</publishTime>
+      <publishTime>11/12/2015 11:30:36</publishTime>
     </File>
     <File Include="Views/Claim/ServiceSheetForm.cshtml">
-      <publishTime>09/12/2015 17:20:58</publishTime>
+      <publishTime>11/12/2015 11:30:36</publishTime>
     </File>
     <File Include="Views/Claim/ServiceSheetFormCollective.cshtml">
       <publishTime>12/08/2015 14:31:22</publishTime>
@@ -355,7 +373,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/26/2015 14:05:04</publishTime>
     </File>
     <File Include="Views/Claim/ZipIssue.cshtml">
-      <publishTime>10/12/2015 17:08:27</publishTime>
+      <publishTime>11/12/2015 11:30:36</publishTime>
     </File>
     <File Include="Views/Claim/ZipIssueOld.cshtml">
       <publishTime>10/27/2015 14:12:25</publishTime>
@@ -391,7 +409,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Views/ContractorAccess/AccessSheet.cshtml">
-      <publishTime>04/12/2015 09:57:24</publishTime>
+      <publishTime>12/16/2015 14:05:47</publishTime>
     </File>
     <File Include="Views/ContractorAccess/List.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -442,7 +460,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>12/11/2015 09:44:28</publishTime>
+      <publishTime>12/24/2015 15:08:52</publishTime>
     </File>
   </ItemGroup>
 </Project>

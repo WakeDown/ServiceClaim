@@ -175,7 +175,7 @@ namespace ServiceClaim.Helpers
             //        nc))
             //{
             var wi = (WindowsIdentity)identity;
-            //var context = new PrincipalContext(ContextType.Domain);
+            var context = new PrincipalContext(ContextType.Domain);
 
 
             if (identity != null && wi.User != null && user != null)
@@ -184,6 +184,8 @@ namespace ServiceClaim.Helpers
                 user.AdGroups = new List<AdGroup>();
 
                 var wp = new WindowsPrincipal(wi);
+                var gr = wi.Groups;
+
                 foreach (AdUserGroup grp in AdUserGroup.GetList())
                 {
                     var grpSid = new SecurityIdentifier(grp.Sid);
