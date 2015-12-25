@@ -97,8 +97,9 @@ namespace ServiceClaim.Models
             return lst;
         }
 
-        public static string GetCurrentClientManagerSid(int clientId)
+        public static string GetCurrentClientManagerSid(int clientId, int contractId)
         {
+            SqlParameter pContractId = new SqlParameter() { ParameterName = "contract_id", SqlValue = contractId, SqlDbType = SqlDbType.Int };
             SqlParameter pClientId = new SqlParameter() { ParameterName = "client_id", SqlValue = clientId, SqlDbType = SqlDbType.Int };
             var dt = Db.Service.ExecuteQueryStoredProcedure("client_get_client_manager", pClientId);
             string sid = String.Empty;

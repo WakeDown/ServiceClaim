@@ -499,7 +499,7 @@ namespace ServiceClaim.Models
                     }
                 }
 
-                CurClientManagerSid = Contractor.GetCurrentClientManagerSid(IdContractor);
+                CurClientManagerSid = Contractor.GetCurrentClientManagerSid(IdContractor, IdContract);
             }
 
             SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = Id, SqlDbType = SqlDbType.Int };
