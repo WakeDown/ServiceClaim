@@ -23,7 +23,7 @@
         <div class="col-lg-8 col-sm-12 col-xs-12">
             <div id="stateGroupFilter"></div>
             <div class="text-center">
-                <span id="filterIsEnabled" style="display: none; padding: 5px 0 5px 5px" class="text-center alert alert-danger">Внимание! Используется фильтр. <button id="filterDisable" class="bt btn-link btn-xs">снять фильтр</button></span>
+                <span id="filterIsEnabled" style="display: none; padding: 5px 0 5px 5px" class="text-center alert alert-danger">Внимание! Используется фильтр. <button id="filterDisable" class="bt btn-link btn-xs">очистить фильтр</button></span>
             </div>
         </div>
         <div class="col-sm-6 col-xs-6 hidden-md hidden-lg">
@@ -148,7 +148,7 @@
             var sesFilter = getFromSession('filter');
             if (sesFilter) {
                 sesFilter = JSON.parse(sesFilter);
-                dlnk.hashupdate({ 'num': getEmptyIfNull(sesFilter.num), 'cli': getEmptyIfNull(sesFilter.client), 'csdn': getEmptyIfNull(sesFilter.clSdNum), 'dev': getEmptyIfNull(sesFilter.devName), 'snum': getEmptyIfNull(sesFilter.serial), 'top': getEmptyIfNull(sesFilter.topRows), 'page': getEmptyIfNull(sesFilter.selPage), 'addr': getEmptyIfNull(sesFilter.address), 'grst': getEmptyIfNull(sesFilter.grpState), 'stt': getEmptyIfNull(sesFilter.idState), 'dc': getEmptyIfNull(sesFilter.dateCreate), 'spec': getEmptyIfNull(sesFilter.curSpec) });
+                dlnk.hashupdate({ 'num': getEmptyIfNull(sesFilter.num), 'cli': getEmptyIfNull(sesFilter.client), 'csdn': getEmptyIfNull(sesFilter.clSdNum), 'dev': getEmptyIfNull(sesFilter.devName), 'serial': getEmptyIfNull(sesFilter.serial), 'top': getEmptyIfNull(sesFilter.topRows), 'page': getEmptyIfNull(sesFilter.selPage), 'addr': getEmptyIfNull(sesFilter.address), 'grst': getEmptyIfNull(sesFilter.grpState), 'stt': getEmptyIfNull(sesFilter.idState), 'dc': getEmptyIfNull(sesFilter.dateCreate), 'spec': getEmptyIfNull(sesFilter.curSpec) });
             } else {
                 removeRowsAndShowSpinnerOnTable();
                 loadClaimList(true);
@@ -379,7 +379,7 @@
         var client = getHashQueryStringValue('cli');//$('#clientFilter').val();
         var clSdNum = getHashQueryStringValue('csdn');//$('#clientSdNumFilter').val();
         var devName = getHashQueryStringValue('dev');//$('#deviceFilter').val();
-        var serial = getHashQueryStringValue('snum');//$('#serialNumFilter').val();
+        var serial = getHashQueryStringValue('serial');//$('#serialNumFilter').val();
         var topRows = getHashQueryStringValue('top');//$('[name="pageSize"].selected').attr('value');
         var selPage = getHashQueryStringValue('page');//1;
         if (!topRows || topRows <= 30) topRows = 30;
@@ -642,7 +642,7 @@
         });
         $('#serialNumFilter').keypress(function (e) {
             if (e.keyCode == 13) {
-                dlnk.hashupdate({ 'snum': $(this).val(), 'page': 1 });
+                dlnk.hashupdate({ 'serial': $(this).val(), 'page': 1 });
             }
         });
         $('#addressFilter').keypress(function (e) {
