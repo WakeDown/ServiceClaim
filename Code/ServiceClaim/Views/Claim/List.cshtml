@@ -150,6 +150,7 @@
                 sesFilter = JSON.parse(sesFilter);
                 dlnk.hashupdate({ 'num': getEmptyIfNull(sesFilter.num), 'cli': getEmptyIfNull(sesFilter.client), 'csdn': getEmptyIfNull(sesFilter.clSdNum), 'dev': getEmptyIfNull(sesFilter.devName), 'serial': getEmptyIfNull(sesFilter.serial), 'top': getEmptyIfNull(sesFilter.topRows), 'page': getEmptyIfNull(sesFilter.selPage), 'addr': getEmptyIfNull(sesFilter.address), 'grst': getEmptyIfNull(sesFilter.grpState), 'stt': getEmptyIfNull(sesFilter.idState), 'dc': getEmptyIfNull(sesFilter.dateCreate), 'spec': getEmptyIfNull(sesFilter.curSpec) });
             } else {
+                updated = 1;
                 removeRowsAndShowSpinnerOnTable();
                 loadClaimList(true);
             }
