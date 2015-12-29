@@ -9,8 +9,8 @@ namespace ServiceClaim
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                       "~/Scripts/jquery-{version}.js",
-                       "~/Scripts/jquery-ui.js",
+                       //"~/Scripts/jquery-{version}.js",
+                       //"~/Scripts/jquery-ui.js",
                        "~/Scripts/jquery.unobtrusive-ajax.js",
                        "~/Scripts/jquery.mask.min.js",
                        "~/Scripts/jquery-dateformat.js",
@@ -27,7 +27,7 @@ namespace ServiceClaim
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
+                      //"~/Scripts/bootstrap.js",
                       "~/Scripts/bootstrapValidator.js",
                       "~/Scripts/bootstrap-datepicker.js",
                         "~/Scripts/bootstrap-datepicker.ru.js",
@@ -42,10 +42,10 @@ namespace ServiceClaim
             //            "~/Scripts/site.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/bootstrap-theme.css",
+                      //"~/Content/bootstrap.css",
+                      //"~/Content/bootstrap-theme.css",
                       "~/Content/bootstrapValidator.css",
-                      "~/Content/font-awesome.css",
+                      //"~/Content/font-awesome.css",
                       "~/Content/bootstrap-datepicker3.css",
                       "~/Content/bootstrap-timepicker.min.css",
                       "~/Content/bootstrap-multiselect.min.css",
@@ -54,13 +54,13 @@ namespace ServiceClaim
                       "~/Content/site.css",
                       "~/Content/animation.css"));
 
-            bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/bootstrap-theme.css",
-                      "~/Content/font-awesome.css",
-                      "~/Content/bootstrap-datepicker3.css",
-                      "~/Content/bootstrap-timepicker.min.css",
-                      "~/Content/bootstrap-multiselect.min.css"));
+            //bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include(
+            //          "~/Content/bootstrap.css",
+            //          "~/Content/bootstrap-theme.css",
+            //          "~/Content/font-awesome.css",
+            //          "~/Content/bootstrap-datepicker3.css",
+            //          "~/Content/bootstrap-timepicker.min.css",
+            //          "~/Content/bootstrap-multiselect.min.css"));
             BundleTable.EnableOptimizations = true;
         }
     }

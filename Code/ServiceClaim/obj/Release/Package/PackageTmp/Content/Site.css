@@ -5,6 +5,9 @@
     font-size: 8pt;
 }
 
+.container {
+    width: 100% !important;
+  }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {

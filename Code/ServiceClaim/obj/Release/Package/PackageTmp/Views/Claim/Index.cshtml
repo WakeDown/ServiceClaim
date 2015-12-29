@@ -228,7 +228,7 @@
                 {
                     @Html.Partial("ZipOrderConfirm", Model)
                 }
-                @if (Model.State.SysName.ToUpper().Equals("DONE") && Model.DeviceCollective && !Model.GetClaimServiceSheetList().Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
+                @if (Model.State.SysName.ToUpper().Equals("DONE") && Model.DeviceCollective && !Model.GetClaimServiceSheetList().Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
                 {
                     @Html.Partial("EndClaim", Model)
                 }
