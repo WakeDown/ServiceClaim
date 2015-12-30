@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Caching;
 using Newtonsoft.Json;
 using ServiceClaim.Helpers;
 using ServiceClaim.Objects;

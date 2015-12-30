@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.UI;
 using Newtonsoft.Json;
 using ServiceClaim.Helpers;
 using ServiceClaim.Models;
@@ -75,13 +76,14 @@ namespace ServiceClaim.Controllers
 
             return Json(new {});
         }
-
+        [OutputCache(Duration = 3600)]
         [HttpPost]
         public JsonResult GetAdminList()
         {
             var list = AdHelper.GetUserListByAdGroup(AdGroup.ServiceAdmin).ToList();
             return Json(list);
         }
+        [OutputCache(Duration = 3600)]
         [HttpPost]
         public JsonResult GetEngeneerList()
         {
@@ -1253,12 +1255,14 @@ namespace ServiceClaim.Controllers
            return Json(Contractor.GetServiceClaimFilterList());
         }
 
+        [OutputCache(Duration = 3600,Location=OutputCacheLocation.Server)]
         [HttpPost]
         public JsonResult GetStateFilterList()
         {
             return Json(ClaimState.GetFilterList());
         }
 
+        //[OutputCache(Duration = 120, VaryByCustom = "User")]
         [HttpPost]
         public JsonResult GetStateGroupFilterList(int? idDevice = null, string client = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null, int? idState = null, string dateCreate = null, string curSpec = null)
         {

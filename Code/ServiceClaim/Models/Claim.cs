@@ -10,6 +10,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.Services.Description;
 using Newtonsoft.Json;
@@ -533,6 +534,7 @@ namespace ServiceClaim.Models
             SqlParameter pContactPhone = new SqlParameter() { ParameterName = "contact_phone", SqlValue = ContactPhone, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pDeviceCollective = new SqlParameter() { ParameterName = "device_collective", SqlValue = DeviceCollective, SqlDbType = SqlDbType.Bit };
             SqlParameter pObjectName = new SqlParameter() { ParameterName = "object_name", SqlValue = ObjectName, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pDescr = new SqlParameter() { ParameterName = "descr", SqlValue = Descr, SqlDbType = SqlDbType.NVarChar };
             DataTable dt = new DataTable();
             //using (var conn = Db.Service.connection)
             //{
@@ -544,7 +546,7 @@ namespace ServiceClaim.Models
 
             //Если заявка уже сохранена то основная информаци не будет перезаписана
             dt = Db.Service.ExecuteQueryStoredProcedure("save_claim", pId, pIdContractor, pIdContract, pIdDevice,
-                pContractorName, pContractName, pDeviceName, /*pIdAdmin, pIdEngeneer,*/ pCreatorAdSid, pIdWorkType, pSpecialistSid, pClientSdNum, pEngeneerSid, pAdminSid, pTechSid, pManagerSid, pSerialNum, pCurServiceIssueId, pIdServiceCame, pDeviceUnknown, pContractUnknown, pIdCity, pAddress, pContactName, pContactPhone, pDeviceCollective, pClientManagerSid, pObjectName);
+                pContractorName, pContractName, pDeviceName, /*pIdAdmin, pIdEngeneer,*/ pCreatorAdSid, pIdWorkType, pSpecialistSid, pClientSdNum, pEngeneerSid, pAdminSid, pTechSid, pManagerSid, pSerialNum, pCurServiceIssueId, pIdServiceCame, pDeviceUnknown, pContractUnknown, pIdCity, pAddress, pContactName, pContactPhone, pDeviceCollective, pClientManagerSid, pObjectName, pDescr);
 
             int id = 0;
             if (dt.Rows.Count > 0)
@@ -1759,7 +1761,7 @@ namespace ServiceClaim.Models
             //    techSid = curUser.Sid;
             //    userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceTech);
             //}
-
+            
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
 
