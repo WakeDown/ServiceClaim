@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using ServiceClaim.Helpers;
@@ -229,7 +230,7 @@ namespace ServiceClaim.Models
             var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_update", pNotInstalledComment, pId);
         }
 
-        public void SavePayed(AdUser user)
+        public async Task SavePayed(AdUser user)
         {
             SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = Id, SqlDbType = SqlDbType.Int };
             SqlParameter pIsPayed = new SqlParameter() { ParameterName = "is_payed", SqlValue = IsPayed, SqlDbType = SqlDbType.Bit };
@@ -238,7 +239,7 @@ namespace ServiceClaim.Models
             var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_update", pId, pIsPayed, pNotPayedComment, pIsPayedCreatorSid);
 
             //Отправка уведомления инженеру
-            Claim.ServiceSheetIsPayWraped(user, Id);
+            await Claim.ServiceSheetIsPayWraped(user, Id);
         }
 
 

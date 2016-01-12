@@ -1212,12 +1212,12 @@ namespace ServiceClaim.Controllers
             return null;
         }
         [HttpPost]
-        public JsonResult SaveServiceSheetIsPayed(int serviceSheetId)
+        public async Task<JsonResult> SaveServiceSheetIsPayed(int serviceSheetId)
         {
             //try
             //{
                 ResponseMessage responseMessage;
-                 (new ServiceSheet() { Id = serviceSheetId, IsPayed = true }).SavePayed(CurUser);
+                await (new ServiceSheet() { Id = serviceSheetId, IsPayed = true }).SavePayed(CurUser);
                 //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             //}
             //catch (Exception ex)
@@ -1227,12 +1227,12 @@ namespace ServiceClaim.Controllers
             return null;
         }
         [HttpPost]
-        public JsonResult SaveServiceSheetIsNotPayed(int serviceSheetId, string comment)
+        public async Task<JsonResult> SaveServiceSheetIsNotPayed(int serviceSheetId, string comment)
         {
             //try
             //{
                 ResponseMessage responseMessage;
-                (new ServiceSheet() {Id=serviceSheetId, IsPayed = false,NotPayedComment = comment}).SavePayed(CurUser);
+               await (new ServiceSheet() {Id=serviceSheetId, IsPayed = false,NotPayedComment = comment}).SavePayed(CurUser);
                 //if (!complete) throw new Exception(responseMessage.ErrorMessage);
             //}
             //catch (Exception ex)

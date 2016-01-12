@@ -556,7 +556,7 @@
             success: function(data) {
                 var $cont = $('#stateGroupFilter');
                 $cont.find('ul').remove();
-                var $ul = $('<ul class="list-inline"></div>');
+                var $ul = $('<ul class="list-inline"></ul>');
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
