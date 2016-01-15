@@ -22,6 +22,9 @@ namespace ServiceClaim.Models
         public string BorderColor { get; set; }
         public int ClaimCount { get; set; }
 
+        public string GroupSysName { get; set; }
+        public bool IsZipClaim { get; set; }
+
         public ClaimState() { }
 
         public ClaimState(int id)

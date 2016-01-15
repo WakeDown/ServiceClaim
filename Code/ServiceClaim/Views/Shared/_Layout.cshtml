@@ -1,4 +1,5 @@
 ﻿@using System.Configuration
+@using System.Data.SqlClient
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,9 +64,19 @@
 <div class="container body-content">
     @if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["Environment"]))
     {
-        <blockquote class="bg-warning">
+        <blockquote class="bg-warning text-sm">
             @ConfigurationManager.AppSettings["Environment"]<br/>
-            <small>@ConfigurationManager.AppSettings["OdataServiceUri"]</small>
+            @ConfigurationManager.AppSettings["OdataServiceUri"]
+            @foreach (ConnectionStringSettings cs in ConfigurationManager.ConnectionStrings)
+            {
+                
+                    var conn = new SqlConnection(cs.ConnectionString);
+                     @(conn.DataSource.Contains("usql-1") ? "text-danger text-lg bold" : String.Empty)
+                     bool isProduction = conn.DataSource.Contains("usql-1");
+                 
+
+                <div class="@(isProduction ? "text-danger text-lg bold" : String.Empty)"><i class="@(isProduction ? "fa fa-warning text-danger" : String.Empty)"></i>@conn.DataSource - @conn.Database</div>
+            }
         </blockquote>
     }
     @RenderBody()

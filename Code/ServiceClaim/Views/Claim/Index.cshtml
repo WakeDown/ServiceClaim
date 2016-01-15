@@ -20,23 +20,40 @@
 
     @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimCancelClaim))
     {
-        <div class="pull-right">
+        <div class="pull-right" style="padding-right: 5px;">
 
             @if (!Model.State.SysName.Equals("CANCEL"))
             {
-                using (Html.BeginForm("ClaimCancel", "Claim", FormMethod.Post, new { @id = "ClaimCancel" }))
+                using (Html.BeginForm("ClaimCancel", "Claim", FormMethod.Post, new {@id = "ClaimCancel"}))
                 {
                     @Html.HiddenFor(m => m.Id)
-                    <button id="claimCancel" class="btn btn-danger btn-xs" type="submit">Закрыть заявку</button>
+                    <button id="claimCancel" class="btn btn-danger btn-xs" type="submit">Удалить заявку</button>
                 }
             }
+
         </div>
+
+        
     }
-    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler))
+    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
     {
-        <div class="pull-right">
-            <a id="claimChange" class="btn btn-warning btn-xs">Изменить</a>
-        </div>
+        if (!Model.State.SysName.Equals("END"))
+        {
+            if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
+            {
+                <div class="pull-right" style="padding-right: 5px;">
+                    @using (Html.BeginForm("ClaimEnd", "Claim", FormMethod.Post, new { @id = "ClaimEnd" }))
+                    {
+                    @Html.HiddenFor(m => m.Id)
+                    <button id="claimEnd" class="btn btn-primary btn-xs" type="submit">Завершить заявку</button>
+                    }
+                </div>
+            }
+
+            <div class="pull-right" style="padding-right: 5px;">
+                <a id="claimChange" class="btn btn-warning btn-xs">Изменить</a>
+            </div>
+        }
     }
 }
 
@@ -224,8 +241,10 @@
                 {
                     @Html.Partial("ZipOrdered", Model)
                 }*@
-            @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceControler))
-                {
+            @if (Model.State != null && Model.State.IsZipClaim && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)
+                //Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)
+                )
+            {
                     @Html.Partial("ZipOrderConfirm", Model)
                 }
                 @if (Model.State.SysName.ToUpper().Equals("DONE") && Model.DeviceCollective && !Model.GetClaimServiceSheetList().Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
@@ -322,9 +341,10 @@
         function showEngeneerSelect() {
             var $curEngeneer = $('#curEngeneer');
             var curEngeneerSid = '@Model.CurEngeneerSid';
-            if ($curEngeneer.text() !== '') {
+            //if ($curEngeneer.text() !== '') {
                 var $select = $('<select id="selEngeneer"></select>');
                 $curEngeneer.html($select);
+            showSpinner($select, true);
                 $.ajax({
                     url: '@Url.Action("GetEngeneerList")',
                     method: 'POST',
@@ -338,20 +358,25 @@
                             }
                             $select.val(curEngeneerSid);
                         }
+                        hideSpinner($select);
+                    },
+                    error:function() {
+                        hideSpinner($select);
                     }
                 });
 
 
-            }
+            //}
         }
 
         function showAdminSelect() {
             var $curAdmin = $('#curAdmin');
             var curAdminSid = '@Model.CurAdminSid';
 
-            if ($curAdmin.text() !== '') {
+            //if ($curAdmin.text() !== '') {
                 var $select = $('<select id="selAdmin"></select>');
                 $curAdmin.html($select);
+                showSpinner($select, true);
                 $.ajax({
                     url: '@Url.Action("GetAdminList")',
                     method: 'POST',
@@ -365,12 +390,16 @@
                             }
                             $select.val(curAdminSid);
                         }
+                        hideSpinner($select);
+                    },
+                    error:function() {
+                        hideSpinner($select);
                     }
                 });
 
 
 
-            }
+            //}
         }
 
 

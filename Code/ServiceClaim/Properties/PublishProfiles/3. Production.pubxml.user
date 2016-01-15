@@ -70,7 +70,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:28</publishTime>
     </File>
     <File Include="bin/ServiceClaim.dll">
-      <publishTime>01/12/2016 11:46:21</publishTime>
+      <publishTime>01/13/2016 17:19:07</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>11/12/2015 11:30:34</publishTime>
@@ -283,7 +283,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/12/2015 10:59:11</publishTime>
     </File>
     <File Include="Views/Claim/Index.cshtml">
-      <publishTime>12/29/2015 11:06:24</publishTime>
+      <publishTime>01/13/2016 17:21:06</publishTime>
     </File>
     <File Include="Views/Claim/Index2.cshtml">
       <publishTime>09/17/2015 13:34:36</publishTime>
@@ -301,7 +301,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/12/2015 11:30:36</publishTime>
     </File>
     <File Include="Views/Claim/ServiceSheet.cshtml">
-      <publishTime>12/29/2015 09:51:22</publishTime>
+      <publishTime>01/13/2016 13:22:07</publishTime>
     </File>
     <File Include="Views/Claim/ServiceSheetForm.cshtml">
       <publishTime>11/12/2015 11:30:36</publishTime>
@@ -457,7 +457,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/17/2015 13:34:36</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>12/30/2015 10:57:51</publishTime>
+      <publishTime>01/13/2016 09:08:23</publishTime>
     </File>
   </ItemGroup>
 </Project>

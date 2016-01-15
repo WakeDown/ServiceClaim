@@ -931,14 +931,27 @@ namespace ServiceClaim.Controllers
                     await model.Go(GetCurUser());
                     return RedirectToAction("Index", new { id = model.Id });
                 }
+                else if (!String.IsNullOrEmpty(Request.Form["ZipEngeneerGet"]))
+                {
+                    await model.SetStateAndGoNext(CurUser, "ZIPCL-ETSHIP-GET", "Отметка в ручном режиме");
+                    return RedirectToAction("Index", new { id = model.Id });
+                }
+                else if (!String.IsNullOrEmpty(Request.Form["ZipClientDelivery"]))
+                {
+                    await model.SetStateAndGoNext(CurUser, "ZIPCL-DELIV", "Отметка в ручном режиме");
+                    return RedirectToAction("Index", new { id = model.Id });
+                }
                 else if (!String.IsNullOrEmpty(Request.Form["ZipOrderCancel"]))
                 {
                     ResponseMessage responseMessage;
                     //model.Descr = Request.Form["ClaimWorkCancelDescr"];
                     //bool complete = model.GoBack(out responseMessage);
                     //if (!complete) throw new Exception(responseMessage.ErrorMessage);
-                    await model.Go(GetCurUser(),false);
+                    //await model.Go(GetCurUser(), false);
                     //return RedirectToAction("Index", new { id = responseMessage.Id });
+
+                    await model.SetStateAndGoNext(CurUser, "ZIPCL-CANCELED", "Отметка в ручном режиме");
+                    return RedirectToAction("List");
                 }
             }
             catch (Exception ex)
@@ -1340,6 +1353,22 @@ namespace ServiceClaim.Controllers
 
             return RedirectToAction("List");
         }
+
+        [HttpPost]
+        public ActionResult ClaimEnd(Claim model)
+        {
+            if (CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
+            {
+                model.End(CurUser.Sid);
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+
+            return RedirectToAction("List");
+        }
+        
 
         [AllowAnonymous]
         [HttpGet]

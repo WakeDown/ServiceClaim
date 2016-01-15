@@ -38,6 +38,7 @@ namespace ServiceClaim.Objects
             list.Add(new AdUserGroup(AdGroup.AddNewClaim, "S-1-5-21-1970802976-3466419101-4042325969-6645", "AddNewClaim"));
             list.Add(new AdUserGroup(AdGroup.ServiceClaimView, "S-1-5-21-1970802976-3466419101-4042325969-6677", "ServiceClaimView"));
             list.Add(new AdUserGroup(AdGroup.ServiceCenterManager, "S-1-5-21-1970802976-3466419101-4042325969-6687", "ServiceCenterManager"));
+            list.Add(new AdUserGroup(AdGroup.ServiceClaimEndClaim, "S-1-5-21-1970802976-3466419101-4042325969-6736", "ServiceClaimEndClaim"));
             //---
             list.Add(new AdUserGroup(AdGroup.ServiceClaimClassifier, "S-1-5-21-1970802976-3466419101-4042325969-4081", "ServiceClaimClassifier"));
             list.Add(new AdUserGroup(AdGroup.ServiceClaimClientAccess, "S-1-5-21-1970802976-3466419101-4042325969-4082", "ServiceClaimClientAccess"));

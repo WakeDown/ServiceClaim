@@ -95,7 +95,7 @@ namespace ServiceClaim.Models
                 //}
                 //else
                 //{
-                    result = String.Format("{0}ч. {1}м", hrs, mns);
+                    result = String.Format("{0}ч. {1}м.", hrs, mns);
                 //}
                 return result;
             }
@@ -266,6 +266,7 @@ namespace ServiceClaim.Models
             DeviceCollective = Db.DbHelper.GetValueBool(row, "device_collective");
             CurClientManagerSid = Db.DbHelper.GetValueString(row, "cur_client_manager_sid");
             ObjectName = Db.DbHelper.GetValueString(row, "object_name");
+            
 
             Contractor = new Contractor() { Id = Db.DbHelper.GetValueIntOrDefault(row, "id_contractor"), Name = Db.DbHelper.GetValueString(row, "contractor_name"), FullName = Db.DbHelper.GetValueString(row, "contractor_full_name") };
             if (ContractUnknown && IdContract <= 0)
@@ -323,11 +324,12 @@ namespace ServiceClaim.Models
             Specialist = new EmployeeSm() { AdSid = SpecialistSid, DisplayName = Db.DbHelper.GetValueString(row, "specialist_name") };
             Changer = new EmployeeSm() { AdSid = ChangerSid, DisplayName = Db.DbHelper.GetValueString(row, "changer_name") };
             ClientManager = new EmployeeSm() { AdSid = CurClientManagerSid, DisplayName = Db.DbHelper.GetValueString(row, "client_manager_name") };
-
+            
             if (IdWorkType.HasValue && IdWorkType.Value > 0)
                 WorkType = new WorkType() { Id = IdWorkType.Value, Name = Db.DbHelper.GetValueString(row, "work_type_name"), SysName = Db.DbHelper.GetValueString(row, "work_type_sys_name"), ZipInstall = Db.DbHelper.GetValueBool(row, "work_type_zip_install"), ZipOrder = Db.DbHelper.GetValueBool(row, "work_type_zip_order") };
 
-            State = new ClaimState() { Id = IdState, Name = Db.DbHelper.GetValueString(row, "claim_state_name"), SysName = Db.DbHelper.GetValueString(row, "claim_state_sys_name"), BackgroundColor = Db.DbHelper.GetValueString(row, "claim_state_background_color"), ForegroundColor = Db.DbHelper.GetValueString(row, "claim_state_foreground_color"), BorderColor = Db.DbHelper.GetValueString(row, "claim_state_border_color") };
+            State = new ClaimState() { Id = IdState, Name = Db.DbHelper.GetValueString(row, "claim_state_name"), SysName = Db.DbHelper.GetValueString(row, "claim_state_sys_name"), BackgroundColor = Db.DbHelper.GetValueString(row, "claim_state_background_color"), ForegroundColor = Db.DbHelper.GetValueString(row, "claim_state_foreground_color"), BorderColor = Db.DbHelper.GetValueString(row, "claim_state_border_color"), GroupSysName = Db.DbHelper.GetValueString(row, "st_group_sys_name"), IsZipClaim = Db.DbHelper.GetValueBool(row, "state_is_zip_claim")
+        };
 
             if (loadObj)
             {
@@ -335,7 +337,7 @@ namespace ServiceClaim.Models
                 if (!ContractUnknown) Contract = new Contract(Contract.Id);
                 if (!DeviceUnknown) Device = new Device(Device.Id, Contract.Id);
                 if (IdWorkType.HasValue && IdWorkType.Value > 0) WorkType = new WorkType(IdWorkType.Value);
-                State = new ClaimState(Db.DbHelper.GetValueIntOrDefault(row, "id_claim_state"));
+                //State = new ClaimState(Db.DbHelper.GetValueIntOrDefault(row, "id_claim_state"));
             }
 
             if (loadNames)
@@ -2254,6 +2256,24 @@ namespace ServiceClaim.Models
         {
             var cancelState = new ClaimState("CANCEL");
             SaveStateStep(cancelState.Id, creatorSid, String.Empty, true);
+        }
+
+        public void End(string creatorSid)
+        {
+            var cancelState = new ClaimState("END");
+            SaveStateStep(cancelState.Id, creatorSid, String.Empty, true);
+        }
+
+        public void SetState(string creatorSid, string stateSysName, string descr = null)
+        {
+            var cancelState = new ClaimState(stateSysName);
+            SaveStateStep(cancelState.Id, creatorSid, descr, true);
+        }
+
+        public async Task SetStateAndGoNext(AdUser creator, string stateSysName, string descr = null)
+        {
+            SetState(creator.Sid, stateSysName, descr);
+            await Go(creator);
         }
     }
 }

@@ -45,8 +45,7 @@
                         if (Model.IsPayed.Value)
                         {
                             <tr>
-                                <td></td>
-                                <td>
+                                <td colspan="2">
                                     <blockquote class="alert-success">ПРИНЯТ</blockquote>
                                 </td>
                             </tr>
@@ -122,7 +121,7 @@
 @if (Model.CounterUnavailable.HasValue)
 {
     <tr>
-        <td>Счетчик предусмотрен</td>
+        <td>Счетчик недоступен</td>
         <td>@(Model.CounterUnavailable.Value ? "нет" : "да")</td>
     </tr>
 }
