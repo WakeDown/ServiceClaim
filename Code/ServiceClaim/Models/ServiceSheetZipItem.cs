@@ -38,6 +38,8 @@ namespace ServiceClaim.Models
         public string NomenclatureClaimNum { get; set; }
         public bool NoNomenclatureNum { get; set; }
         public int? IdSupplyMan { get; set; }
+        public int IdCause { get; set; }
+        public string CauseName { get; set; }
 
         public ServiceSheetZipItem() { }
 
@@ -73,6 +75,7 @@ namespace ServiceClaim.Models
             InstalledServiceSheetId = Db.DbHelper.GetValueIntOrDefault(row, "installed_id_service_sheet");
             DateInstalled = Db.DbHelper.GetValueDateTimeOrNull(row, "date_install");
             ClientGiven = Db.DbHelper.GetValueBool(row, "client_given");
+            CauseName = Db.DbHelper.GetValueString(row, "cause_name");
         }
 
         public void SaveUnitProg(string creatorSid, bool fromTop = false)
@@ -112,8 +115,9 @@ namespace ServiceClaim.Models
             //SqlParameter pZipClaimUnitId = new SqlParameter() { ParameterName = "id_zip_claim_unit", SqlValue = ZipClaimUnitId, SqlDbType = SqlDbType.Int };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pCLientGiven = new SqlParameter() { ParameterName = "client_given", SqlValue = ClientGiven, SqlDbType = SqlDbType.Bit };
+            SqlParameter pCause = new SqlParameter() { ParameterName = "id_cause", SqlValue = IdCause, SqlDbType = SqlDbType.Int };
 
-            var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_issued_zip_item_save", pId, pServiceSheetId, pName, pPartNum, pCount, pCreatorAdSid, pCLientGiven);
+            var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_issued_zip_item_save", pId, pServiceSheetId, pName, pPartNum, pCount, pCreatorAdSid, pCLientGiven, pCause);
             int id = 0;
             if (dt.Rows.Count > 0)
             {
@@ -132,8 +136,9 @@ namespace ServiceClaim.Models
             //SqlParameter pZipClaimUnitId = new SqlParameter() { ParameterName = "id_zip_claim_unit", SqlValue = ZipClaimUnitId, SqlDbType = SqlDbType.Int };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pCLientGiven = new SqlParameter() { ParameterName = "client_given", SqlValue = ClientGiven, SqlDbType = SqlDbType.Bit };
+            SqlParameter pCause = new SqlParameter() { ParameterName = "id_cause", SqlValue = IdCause, SqlDbType = SqlDbType.Int };
 
-            var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_installed_zip_item_save", pServiceSheetId, pName, pPartNum, pCount, pCreatorAdSid, pCLientGiven);
+            var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_installed_zip_item_save", pServiceSheetId, pName, pPartNum, pCount, pCreatorAdSid, pCLientGiven, pCause);
             int id = 0;
             if (dt.Rows.Count > 0)
             {
@@ -145,7 +150,7 @@ namespace ServiceClaim.Models
         public static void NotInstalledSaveList(int[] idOrderedZipItem, int serviceSheetId, string creatorSid)
         {
 
-            SqlParameter pId = new SqlParameter() { ParameterName = "id_ordered_zip_item_list", SqlValue = String.Join(",", idOrderedZipItem), SqlDbType = SqlDbType.Int };
+            SqlParameter pId = new SqlParameter() { ParameterName = "id_ordered_zip_item_list", SqlValue = String.Join(",", idOrderedZipItem), SqlDbType = SqlDbType.NVarChar };
             SqlParameter pServiceSheetId = new SqlParameter() { ParameterName = "id_service_sheet", SqlValue = serviceSheetId, SqlDbType = SqlDbType.Int };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
 
@@ -266,15 +271,16 @@ namespace ServiceClaim.Models
 
         public void OrderedSave(string creatorSid)
         {
-            SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = Id, SqlDbType = SqlDbType.Int };
+            //SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = Id, SqlDbType = SqlDbType.Int };
             SqlParameter pServiceSheetId = new SqlParameter() { ParameterName = "id_service_sheet", SqlValue = ServiceSheetId, SqlDbType = SqlDbType.Int };
             SqlParameter pName = new SqlParameter() { ParameterName = "name", SqlValue = Name, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pPartNum = new SqlParameter() { ParameterName = "part_num", SqlValue = PartNum, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pCount = new SqlParameter() { ParameterName = "count", SqlValue = Count, SqlDbType = SqlDbType.Int };
             //SqlParameter pZipClaimUnitId = new SqlParameter() { ParameterName = "id_zip_claim_unit", SqlValue = ZipClaimUnitId, SqlDbType = SqlDbType.Int };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
+            SqlParameter pCause = new SqlParameter() { ParameterName = "id_cause", SqlValue = IdCause, SqlDbType = SqlDbType.Int };
 
-            var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_ordered_zip_item_save", pId, pServiceSheetId, pName, pPartNum, pCount, pCreatorAdSid);
+            var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_ordered_zip_item_save",  pServiceSheetId, pName, pPartNum, pCount, pCreatorAdSid, pCause);
             int id = 0;
             if (dt.Rows.Count > 0)
             {

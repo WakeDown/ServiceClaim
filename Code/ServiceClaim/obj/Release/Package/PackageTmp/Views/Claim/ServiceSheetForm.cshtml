@@ -91,7 +91,7 @@
         </div>
     </div>
     <div class="row" id="commentContainer">
-        <label class="col-lg-4 text-right">Комментарий</label>
+        <label class="col-lg-4 text-right">Комментарий ЗИП</label>
         <div class="col-lg-6">
             @Html.TextAreaFor(m => m.ServiceSheet4Save.Descr, new { id = "comment", @class = "form-control required-mark", required = "required", autocomplete = "off" })
             <span class="help-block with-errors"></span>
@@ -112,7 +112,7 @@
         </div>
     </div>
     <div class="row" id="commentCounterContainer">
-        <label class="col-lg-4 text-right">Комментарий</label>
+        <label class="col-lg-4 text-right">Комментарий Счетчик</label>
         <div class="col-lg-6">
             @Html.TextAreaFor(m => m.ServiceSheet4Save.CounterDescr, new { id = "counterComment", @class = "form-control required-mark", required = "required", placeholder = "Что случилось со счетчиком", autocomplete = "off" })
             <span class="help-block with-errors"></span>
@@ -125,11 +125,18 @@
                 <span class="help-block with-errors"></span>
             </div>*@
         <div class="col-lg-4">
-            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new { id = "counterMono", @class = "form-control required-mark", placeholder = "Черно/Белый", autocomplete = "off" })
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterMono, new {id = "counterMono", @class = "form-control required-mark", placeholder = "Черно/Белый", autocomplete = "off"})
             <span class="help-block with-errors"></span>
         </div>
         <div class="col-lg-4">
-            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new { @class = "form-control", placeholder = "Цветной", autocomplete = "off" })
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.CounterColor, new {@class = "form-control", placeholder = "Цветной", autocomplete = "off"})
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row" id="commentContainer">
+        <label class="col-lg-4 text-right">Комментарий Общий</label>
+        <div class="col-lg-6">
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.DescrGeneral, new { id = "comment", @class = "form-control", autocomplete = "off", placeholder="Комментарий" })
             <span class="help-block with-errors"></span>
         </div>
     </div>

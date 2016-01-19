@@ -60,6 +60,7 @@ namespace ServiceClaim.Models
         public int? RealDeviceModel { get; set; }
         public int? UnitProgZipClaimId { get; set; }
         public string CreatorSid { get; set; }
+        public string DescrGeneral { get; set; }
 
         public ServiceSheet()
         {
@@ -116,6 +117,7 @@ namespace ServiceClaim.Models
             RealSerialNum = Db.DbHelper.GetValueString(row, "real_serial_num");
             ForceSaveRealSerialNum = Db.DbHelper.GetValueBoolOrNull(row, "force_save_real_serial_num");
             RealDeviceModel = Db.DbHelper.GetValueIntOrNull(row, "real_device_model_id");
+            DescrGeneral = Db.DbHelper.GetValueString(row, "descr_general");
 
             if (fillNames)
             {
@@ -174,8 +176,9 @@ namespace ServiceClaim.Models
             SqlParameter pRealSerialNum = new SqlParameter() { ParameterName = "real_serial_num", SqlValue = RealSerialNum, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pForceSaveRealSerialNum = new SqlParameter() { ParameterName = "force_save_real_serial_num", SqlValue = ForceSaveRealSerialNum, SqlDbType = SqlDbType.Bit };
             SqlParameter pRealDeviceModelId = new SqlParameter() { ParameterName = "real_device_model_id", SqlValue = RealDeviceModel, SqlDbType = SqlDbType.Int };
+            SqlParameter pDescrGeneral = new SqlParameter() { ParameterName = "descr_general", SqlValue = DescrGeneral, SqlDbType = SqlDbType.NVarChar };
 
-            var dt = Db.Service.ExecuteQueryStoredProcedure("save_service_sheet", pId, pProcessEnabled, pDeviceEnabled, pZipClaim, pZipClaimNumber, pCounterMono, pCounterColor, pCounterTotal, pNoCounter, pCounterUnavailable, pDescr, pCreatorAdSid, pCounterDescr, pEngeneerSid, pAdminSid, pIdServiceIssue, pIdClaim, pTimeOnWorkMinutes, pWorkTypeId, pZipClientGivenInstall, pRealSerialNum, pForceSaveRealSerialNum, pRealDeviceModelId);
+            var dt = Db.Service.ExecuteQueryStoredProcedure("save_service_sheet", pId, pProcessEnabled, pDeviceEnabled, pZipClaim, pZipClaimNumber, pCounterMono, pCounterColor, pCounterTotal, pNoCounter, pCounterUnavailable, pDescr, pCreatorAdSid, pCounterDescr, pEngeneerSid, pAdminSid, pIdServiceIssue, pIdClaim, pTimeOnWorkMinutes, pWorkTypeId, pZipClientGivenInstall, pRealSerialNum, pForceSaveRealSerialNum, pRealDeviceModelId, pDescrGeneral);
             int id = 0;
             if (dt.Rows.Count > 0)
             {

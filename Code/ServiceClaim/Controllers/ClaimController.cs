@@ -1344,7 +1344,7 @@ namespace ServiceClaim.Controllers
         {
             if (CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimCancelClaim))
             {
-                model.Cancel(CurUser.Sid);
+                model.SetState(CurUser.Sid, "CANCEL", model.Descr);
             }
             else
             {
@@ -1359,7 +1359,7 @@ namespace ServiceClaim.Controllers
         {
             if (CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
             {
-                model.End(CurUser.Sid);
+                model.SetState(CurUser.Sid, "END", model.Descr);
             }
             else
             {
@@ -1384,6 +1384,14 @@ namespace ServiceClaim.Controllers
                 await claim.Go(GetCurUser());
             }
             return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        public JsonResult SaveNote(int id, string note)
+        {
+            if (!CurUser.HasAccess(AdGroup.ServiceAdmin)) return null;
+            Claim.SaveNote(CurUser.Sid, id, note);
+            return Json(new {});
         }
 
     }

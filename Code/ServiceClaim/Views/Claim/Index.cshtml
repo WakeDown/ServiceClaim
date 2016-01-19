@@ -24,16 +24,34 @@
 
             @if (!Model.State.SysName.Equals("CANCEL"))
             {
-                using (Html.BeginForm("ClaimCancel", "Claim", FormMethod.Post, new {@id = "ClaimCancel"}))
+                <a class="btn btn-danger  btn-xs" data-toggle="modal" data-target="#claimCancelModal">Удалить заявку</a>
+                using (Html.BeginForm("ClaimCancel", "Claim", FormMethod.Post, new { @id = "ClaimCancel" }))
                 {
                     @Html.HiddenFor(m => m.Id)
-                    <button id="claimCancel" class="btn btn-danger btn-xs" type="submit">Удалить заявку</button>
+                    <div id="claimCancelModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Удаление заявки - комментарий</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        @Html.TextAreaFor(m => m.Descr, new { @class = "form-control required-mark", rows = "3", placeholder = "Введите комментарий", required = "required" })
+                                        @*<textarea id="ZipOrderCancelDescr" name="ZipOrderCancelDescr" class="form-control required-mark" rows="3" placeholder="Введите комментарий" required="required"></textarea>*@
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="claimCancel" class="btn btn-success" type="submit">Сохранить и удалить</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">отмена</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 }
             }
-
         </div>
-
-        
     }
     @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
     {
@@ -42,12 +60,34 @@
             if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
             {
                 <div class="pull-right" style="padding-right: 5px;">
+                    <a class="btn btn-primary  btn-xs" data-toggle="modal" data-target="#claimEndModal">Завершить заявку</a>
                     @using (Html.BeginForm("ClaimEnd", "Claim", FormMethod.Post, new { @id = "ClaimEnd" }))
                     {
                     @Html.HiddenFor(m => m.Id)
-                    <button id="claimEnd" class="btn btn-primary btn-xs" type="submit">Завершить заявку</button>
+                    <div id="claimEndModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Завершение заявки - комментарий</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        @Html.TextAreaFor(m => m.Descr, new { @class = "form-control required-mark", rows = "3", placeholder = "Введите комментарий", required = "required" })
+                                        @*<textarea id="ZipOrderCancelDescr" name="ZipOrderCancelDescr" class="form-control required-mark" rows="3" placeholder="Введите комментарий" required="required"></textarea>*@
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="claimEnd" class="btn btn-success" type="submit">Сохранить и завершить</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">отмена</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     }
                 </div>
+                
             }
 
             <div class="pull-right" style="padding-right: 5px;">
@@ -59,6 +99,8 @@
 
 @section PanelBody
 {
+
+
     @*@using(Html.BeginForm("Index", "Claim", FormMethod.Post, new {@class="form-horizontal"}))*@
     <div class="row">
         <div class="col-lg-8">
@@ -119,20 +161,31 @@
                         <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Текущий специалист</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
                     }
                     <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Descr</span></div>
+                    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
+                    {
+                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs text-danger">
+                                @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin) && (Model.CurAdminSid == ViewBag.CurUser.Sid || ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)))
+                                {
+                                    <button id="editNote" class="btn btn-link btn-xs"><i class="fa fa-edit"></i></button>
+                                }
+                                Заметка
+                            </label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs" id="noteContainer">@Model.Note</span>
+                        </div>
+                    }
                 </div>
                 <div class="col-lg-3">
                     <div class="row" style="color: #ac2925">
                         <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">МСЦ</label>
                         <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Manager.DisplayName</span>
                     </div>
-                    <div class="row" style="color: #FF9800">
-                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СТП</label>
-                        <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Tech.DisplayName</span>
-                    </div>
-                    <div class="row" style="color: #2e6da4">
-                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СА</label>
-                        <span id="curAdmin" class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Admin.DisplayName</span>
 
+                    <div class="row" style="color: #2e6da4">
+                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СТП</label>
+                        <span id="curAdmin" class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Tech.DisplayName</span>
+                    </div>
+                    <div class="row" style="color: #FF9800">
+                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СА</label>
+                        <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Admin.DisplayName</span>
                     </div>
                     <div class="row" style="color: #4cae4c">
                         <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СИ</label>
@@ -244,7 +297,7 @@
             @if (Model.State != null && Model.State.IsZipClaim && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)
                 //Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)
                 )
-            {
+                {
                     @Html.Partial("ZipOrderConfirm", Model)
                 }
                 @if (Model.State.SysName.ToUpper().Equals("DONE") && Model.DeviceCollective && !Model.GetClaimServiceSheetList().Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
@@ -307,8 +360,42 @@
             loadServiceSheetList();
             loadZipClaimList();
             $('#claimChange').click(changeViewDisplay);
+            $('#editNote').click(editNote);
         });
 
+        function editNote() {
+            var $this = $(this);
+            var $noteContainer = $('#noteContainer');
+
+            var element = '<textarea id="txtNote" class="form-control" rows="3">' + $noteContainer.val() + '</textarea><button id="cancelNote" class="btn btn-danger btn-xs pull-right">Отмена изменения заметки</button><button id="saveNote" class="btn btn-success btn-xs pull-right">Сохранить заметку</button>';
+            $noteContainer.html(element);
+
+            $('#cancelNote').click(function() {
+                $noteContainer.html('@Model.Note');
+            });
+
+            $('#saveNote').click(function() {
+                showSpinnerAppend($this);
+                var noteText = $('#txtNote').val();
+                $.ajax({
+                    url: "@Url.Action("SaveNote")",
+                    method: 'POST',
+                    data: {id:@Model.Id, note:noteText},
+                    success: function() {
+                        $noteContainer.html(noteText);
+                        hideSpinner($this);
+                    },
+                    error:function(xhr, ajaxOptions, thrownError) {
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Ошибка!',
+                            message: xhr.responseText
+                        });
+                        hideSpinner($this);
+                    }
+                })
+            });
+        }
 
         function changeViewDisplay() {
             $('#claimChange').replaceWith('<a id="saveChanges" class="btn btn-success btn-xs">Сохранить изменения</a>');

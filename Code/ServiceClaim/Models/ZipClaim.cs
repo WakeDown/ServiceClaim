@@ -98,10 +98,14 @@ namespace ServiceClaim.Models
                 zipClaim.Counter = lastServiceSheet.CounterMono;
                 zipClaim.CounterColour = lastServiceSheet.CounterColor;
                 zipClaim.IdContractor = claim.IdContractor;
-                zipClaim.IdServiceEngeneer = UserUnitProg.GetUserId(lastServiceSheet.EngeneerSid);
-                zipClaim.IdEngeneerConclusion = lastServiceSheet.DeviceEnabled.HasValue && lastServiceSheet.DeviceEnabled.Value ? 1 : 2;
+                int idEngeneer = UserUnitProg.GetUserId(lastServiceSheet.EngeneerSid);
+                int idTech = UserUnitProg.GetUserId(claim.CurTechSid);
+                int idAdmin = UserUnitProg.GetUserId(lastServiceSheet.AdminSid);
+                int curAdmin = UserUnitProg.GetUserId(claim.CurAdminSid);
+                zipClaim.IdServiceEngeneer = idEngeneer > 0 ? idEngeneer : idTech;
+                zipClaim.IdEngeneerConclusion = (lastServiceSheet.ProcessEnabled.HasValue && lastServiceSheet.ProcessEnabled.Value)  ? 1 : 2;
                 zipClaim.IdManager = claim.Contract.ManagerIdUnitProg;
-                zipClaim.IdServiceAdmin = UserUnitProg.GetUserId(lastServiceSheet.AdminSid);
+                zipClaim.IdServiceAdmin = idAdmin > 0? idAdmin : curAdmin;
                 zipClaim.ServiceDeskNum = claim.Id.ToString();
                 zipClaim.ObjectName = device.ObjectName;
                 zipClaim.ContractNum = claim.Contract.Number;
@@ -112,8 +116,6 @@ namespace ServiceClaim.Models
 
                 //zipClaim.CurUserAdSid = creatorSid;
                 zipClaim.SaveUnitProg(creatorSid);
-
-
 
                 if (zipItemList != null && zipItemList.Any())
                 {

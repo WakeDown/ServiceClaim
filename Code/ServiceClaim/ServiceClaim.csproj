@@ -208,6 +208,7 @@
     <Compile Include="Models\UserUnitProg.cs" />
     <Compile Include="Models\WorkType.cs" />
     <Compile Include="Models\ZipClaim.cs" />
+    <Compile Include="Models\ZipItemCause.cs" />
     <Compile Include="Objects\AccessDenyException.cs" />
     <Compile Include="Objects\AdGroup.cs" />
     <Compile Include="Objects\AdOrganization.cs" />

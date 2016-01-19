@@ -9,10 +9,12 @@
     @Html.HiddenFor(m => m.Id)
     <div class="row">
         <div class="col-lg-push-2 col-lg-10">
-            <button type="submit" class="btn btn-success" value="ZipOrderConfirm" name="ZipOrderConfirm">ЗИП на складе</button>
+            @*<button type="submit" class="btn btn-success" value="ZipOrderConfirm" name="ZipOrderConfirm">ЗИП на складе</button>*@
+            <button type="submit" class="btn btn-success" value="ZipEngeneerGet" name="ZipEngeneerGet">ЗИП получен инженером</button>
+            <button type="submit" class="btn btn-primary" value="ZipClientDelivery" name="ZipClientDelivery">ЗИП доставлен заказчику</button>
             <a class="btn btn-danger" data-toggle="modal" data-target="#modalZipOrderCancel">Отказано в закупке ЗИП</a>
             <div id="modalZipOrderCancel" class="modal fade" role="dialog">
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -25,7 +27,8 @@
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-default" value="ZipOrderCancel" name="ZipOrderCancel">Сохранить</button>
+                            <button type="submit" class="btn btn-success" value="ZipOrderCancel" name="ZipOrderCancel">Сохранить отказ</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">отмена</button>
                         </div>
                     </div>
                 </div>

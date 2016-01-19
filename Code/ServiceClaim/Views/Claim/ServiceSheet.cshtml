@@ -29,6 +29,7 @@
         .tbl td {
             padding: 5px;
         }
+
         table.zip td, table.zip th {
             padding: 5px;
         }
@@ -36,249 +37,261 @@
 </head>
 <body>
     <p>
-    <div class="row">
-        <div class="col-lg-12 col-sm-12">
-            <div class="center-block sheet">
-                <table class="tbl">
-                    @if (Model.IsPayed.HasValue)
-                    {
-                        if (Model.IsPayed.Value)
+        <div class="row">
+            <div class="col-lg-12 col-sm-12">
+                <div class="center-block sheet">
+                    <table class="tbl">
+                        @if (Model.IsPayed.HasValue)
+                        {
+                            if (Model.IsPayed.Value)
+                            {
+                                <tr>
+                                    <td colspan="2">
+                                        <blockquote class="alert-success">ПРИНЯТ</blockquote>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <blockquote class="alert-danger">НЕ ПРИНЯТ<br />@Model.NotPayedComment</blockquote>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                        <tr>
+                            <td>№ сервисного листа</td>
+                            <td>@Model.Id</td>
+                        </tr>
+                        <tr>
+                            <td>№ заявки</td>
+                            <td>@Model.IdClaim</td>
+                        </tr>
+                        @if (!String.IsNullOrEmpty(Model.ClientSdNum))
                         {
                             <tr>
-                                <td colspan="2">
-                                    <blockquote class="alert-success">ПРИНЯТ</blockquote>
-                                </td>
+                                <td>№ SD клиента</td>
+                                <td>@Model.ClientSdNum</td>
                             </tr>
                         }
-                        else
+                        <tr>
+                            <td>S/N</td>
+                            <td>@Model.Device.SerialNum</td>
+                        </tr>
+                        <tr>
+                            <td>Аппарат</td>
+                            <td>@Model.Device.Vendor @Model.Device.ModelName</td>
+                        </tr>
+                        <tr>
+                            <td>Классификатор</td>
+                            <td>@Model.DeviceClassifierCaterory.ListName</td>
+                        </tr>
+                        <tr>
+                            <td>Тип работ</td>
+                            <td>@Model.WorkType.ListName</td>
+                        </tr>
+                        @if (Model.ProcessEnabled.HasValue)
                         {
                             <tr>
-                                <td></td>
-                                <td>
-                                    <blockquote class="alert-danger">НЕ ПРИНЯТ<br />@Model.NotPayedComment</blockquote>
-                                </td>
+                                <td>Функциональность оборудования восстановлена</td>
+                                <td>@(@Model.ProcessEnabled.Value ? "да" : "нет")</td>
                             </tr>
                         }
-                    }
+                        @if (Model.DeviceEnabled.HasValue)
+                        {
+                            <tr>
+                                <td>Оборудование полностью восстановлено</td>
+                                <td>@(@Model.DeviceEnabled.Value ? "да" : "нет")</td>
+                            </tr>
+                        }
 
-                    <tr>
-                        <td>№ сервисного листа</td>
-                        <td>@Model.Id</td>
-                    </tr>
-                    <tr>
-                        <td>№ заявки</td>
-                        <td>@Model.IdClaim</td>
-                    </tr>
-                    @if (!String.IsNullOrEmpty(Model.ClientSdNum))
-                    {
                         <tr>
-                            <td>№ SD клиента</td>
-                            <td>@Model.ClientSdNum</td>
+                            <td>Установлен ЗИП от клиента</td>
+                            <td>@(@Model.ZipClientGivenInstall ? "да" : "нет")</td>
                         </tr>
-                    }
-                    <tr>
-                        <td>S/N</td>
-                        <td>@Model.Device.SerialNum</td>
-                    </tr>
-                    <tr>
-                        <td>Аппарат</td>
-                        <td>@Model.Device.Vendor @Model.Device.ModelName</td>
-                    </tr>
-                    <tr>
-                        <td>Классификатор</td>
-                        <td>@Model.DeviceClassifierCaterory.ListName</td>
-                    </tr>
-                    <tr>
-                        <td>Тип работ</td>
-                        <td>@Model.WorkType.ListName</td>
-                    </tr>
-                    @if (Model.ProcessEnabled.HasValue)
-                    {
+                        @if (Model.NoCounter.HasValue)
+                        {
+                            <tr>
+                                <td>Счетчик предусмотрен</td>
+                                <td>@(Model.NoCounter.Value ? "нет" : "да")</td>
+                            </tr>
+                        }
+                        @if (Model.CounterUnavailable.HasValue)
+                        {
+                            <tr>
+                                <td>Счетчик недоступен</td>
+                                <td>@(Model.CounterUnavailable.Value ? "нет" : "да")</td>
+                            </tr>
+                        }
                         <tr>
-                            <td>Функциональность оборудования восстановлена</td>
-                            <td>@(@Model.ProcessEnabled.Value ? "да" : "нет")</td>
+                            <td>Счетчик</td>
+                            <td>@Model.CounterMono</td>
                         </tr>
-                    }
-                    @if (Model.DeviceEnabled.HasValue)
-                    {
                         <tr>
-                            <td>Оборудование полностью восстановлено</td>
-                            <td>@(@Model.DeviceEnabled.Value ? "да" : "нет")</td>
+                            <td>Счетчик цветной</td>
+                            <td>@Model.CounterColor</td>
                         </tr>
-                    }
-
-                <tr>
-                    <td>Установлен ЗИП от клиента</td>
-                    <td>@(@Model.ZipClientGivenInstall ? "да" : "нет")</td>
-                </tr>
-@if (Model.NoCounter.HasValue)
-{
-    <tr>
-        <td>Счетчик предусмотрен</td>
-        <td>@(Model.NoCounter.Value ? "нет" : "да")</td>
-    </tr>
-}
-@if (Model.CounterUnavailable.HasValue)
-{
-    <tr>
-        <td>Счетчик недоступен</td>
-        <td>@(Model.CounterUnavailable.Value ? "нет" : "да")</td>
-    </tr>
-}
-                    <tr>
-                        <td>Счетчик</td>
-                        <td>@Model.CounterMono</td>
-                    </tr>
-                    <tr>
-                        <td>Счетчик цветной</td>
-                        <td>@Model.CounterColor</td>
-                    </tr>
-                    @if (!String.IsNullOrEmpty(Model.CounterDescr))
-                    {
+                        @if (!String.IsNullOrEmpty(Model.CounterDescr))
+                        {
+                            <tr>
+                                <td>Комментарий к счетчику</td>
+                                <td>@Html.Nl2Br(Model.CounterDescr)</td>
+                            </tr>
+                        }
                         <tr>
-                            <td>Комментарий к счетчику</td>
-                            <td>@Html.Nl2Br(Model.CounterDescr)</td>
+                            <td>Комментарий ЗИП</td>
+                            <td>@Html.Nl2Br(Model.Descr)</td>
                         </tr>
-                    }
-                    <tr>
-                        <td>Комментарий</td>
-                        <td>@Html.Nl2Br(Model.Descr)</td>
-                    </tr>
-                    <tr>
-                        <td>Инженер</td>
-                        <td>@Model.Engeneer.DisplayName</td>
-                    </tr>
-                    <tr>
-                        <td>Сервисный администратор</td>
-                        <td>@Model.Admin.DisplayName</td>
-                    </tr>
+                        <tr>
+                            <td>Инженер</td>
+                            <td>@Model.Engeneer.DisplayName</td>
+                        </tr>
+                        <tr>
+                            <td>Сервисный администратор</td>
+                            <td>@Model.Admin.DisplayName</td>
+                        </tr>
                     <tr>
                         <td>Время работы</td>
                         <td>@Model.TimeOnWorkMinutes мин</td>
                     </tr>
-                    @if (installedZipItemsList.Any())
-                    {
                         <tr>
-                            <td style="vertical-align: top">ЗИП - установлено</td>
-                            <td>
-                                <table class="zip">
-                                    <tr>
-                                        <th>Парт номер</th>
-                                        <th>Наименование</th>
-                                        <th>Количество</th>
-                                        <th></th>
-                                    </tr>
-                                    @foreach (var item in installedZipItemsList)
-                                    {
-                                        <tr>
-                                            <td>@item.PartNum</td>
-                                            <td>@item.Name</td>
-                                            <td>@item.Count</td>
-                                            <td>
-                                                @(item.ClientGiven ? "предоставлено клиентом" : String.Empty)
-                                            </td>
-                                        </tr>
-                                    }
-                                </table>
-                            </td>
+                            <td>Комментарий Общий</td>
+                            <td>@Html.Nl2Br(Model.DescrGeneral)</td>
                         </tr>
-                    }
-                    @if (notInstalledZipItemsList.Any())
-                    {
-                        <tr>
-                            <td style="vertical-align: top">ЗИП - НЕ установлено</td>
-                            <td>
-                                <table class="zip">
-                                    <tr>
-                                        <th>Парт номер</th>
-                                        <th>Наименование</th>
-                                        <th>Количество</th>
-                                    </tr>
-                                    @foreach (var item in notInstalledZipItemsList)
-                                    {
-                                        <tr>
-                                            <td>@item.PartNum</td>
-                                            <td>@item.Name</td>
-                                            <td>@item.Count</td>
-                                        </tr>
-                                    }
-                                </table>
-                            </td>
-                        </tr>
-                        if (!String.IsNullOrEmpty(Model.NotInstalledComment))
+                        @if (installedZipItemsList.Any())
                         {
                             <tr>
-                                <td style="vertical-align: top">
-                                    Комментарий
-                                </td>
+                                <td style="vertical-align: top">ЗИП - установлено</td>
                                 <td>
-                                    @Model.NotInstalledComment
+                                    <table class="zip">
+                                        <tr>
+                                            <th>Причина</th>
+                                            <th>Парт номер</th>
+                                            <th>Наименование</th>
+                                            <th>Количество</th>
+                                            <th></th>
+                                        </tr>
+                                        @foreach (var item in installedZipItemsList)
+                                        {
+                                            <tr>
+                                                <td>@item.CauseName</td>
+                                                <td>@item.PartNum</td>
+                                                <td>@item.Name</td>
+                                                <td>@item.Count</td>
+                                                <td>
+                                                    @(item.ClientGiven ? "предоставлено клиентом" : String.Empty)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
                                 </td>
                             </tr>
                         }
-                    }
-                    @if (orderedipItemsList.Any())
-                    {
-                        <tr>
-                            <td style="vertical-align: top">ЗИП - заказано</td>
-                            <td>
-                                <table class="zip">
-                                    <tr>
-                                        <th>Парт номер</th>
-                                        <th>Наименование</th>
-                                        <th>Количество</th>
-                                    </tr>
-                                    @foreach (var item in orderedipItemsList)
-                                    {
+                        @if (notInstalledZipItemsList.Any())
+                        {
+                            <tr>
+                                <td style="vertical-align: top">ЗИП - НЕ установлено</td>
+                                <td>
+                                    <table class="zip">
                                         <tr>
-                                            <td>@item.PartNum</td>
-                                            <td>@item.Name</td>
-                                            <td>@item.Count</td>
+                                            <th>Причина</th>
+                                            <th>Парт номер</th>
+                                            <th>Наименование</th>
+                                            <th>Количество</th>
                                         </tr>
-                                    }
-                                </table>
-                            </td>
-                        </tr>
-                    }
-                    @if (engeneerZipItemsList.Any())
-                    {
-                        <tr>
-                            <td style="vertical-align: top">ЗИП - указано Инженером</td>
-                            <td>
-                                <table class="zip">
-                                    <tr>
-                                        <th>Парт номер</th>
-                                        <th>Наименование</th>
-                                        <th>Количество</th>
-                                    </tr>
-                                    @foreach (var item in engeneerZipItemsList)
-                                    {
+                                        @foreach (var item in notInstalledZipItemsList)
+                                        {
+                                            <tr>
+                                                <td>@item.CauseName</td>
+                                                <td>@item.PartNum</td>
+                                                <td>@item.Name</td>
+                                                <td>@item.Count</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                            if (!String.IsNullOrEmpty(Model.NotInstalledComment))
+                            {
+                                <tr>
+                                    <td style="vertical-align: top">
+                                        Комментарий
+                                    </td>
+                                    <td>
+                                        @Model.NotInstalledComment
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        @if (orderedipItemsList.Any())
+                        {
+                            <tr>
+                                <td style="vertical-align: top">ЗИП - заказано</td>
+                                <td>
+                                    <table class="zip">
                                         <tr>
-                                            <td>@item.PartNum</td>
-                                            <td>@item.Name</td>
-                                            <td>@item.Count</td>
+                                            <th>Причина</th>
+                                            <th>Парт номер</th>
+                                            <th>Наименование</th>
+                                            <th>Количество</th>
                                         </tr>
-                                    }
-                                </table>
-                            </td>
-                        </tr>
-                    }
-                </table>
-                @*<div> </div>
-                <div>
-                    ProcessEnabled @Model.ProcessEnabled <br />
-                    DeviceEnabled @Model.DeviceEnabled <br />
-                    ZipClaim @Model.ZipClaim <br />
-                    Descr @Model.Descr <br />
-                    CounterUnavailable @Model.CounterUnavailable <br />
-                    NoCounter @Model.NoCounter <br />
-                    CounterTotal @Model.CounterTotal <br />
-                    CounterMono @Model.CounterMono <br />
-                    CounterColor @Model.CounterColor <br />
-                </div>*@
+                                        @foreach (var item in orderedipItemsList)
+                                        {
+                                            <tr>
+                                                <td>@item.CauseName</td>
+                                                <td>@item.PartNum</td>
+                                                <td>@item.Name</td>
+                                                <td>@item.Count</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                        @if (engeneerZipItemsList.Any())
+                        {
+                            <tr>
+                                <td style="vertical-align: top">ЗИП - указано Инженером</td>
+                                <td>
+                                    <table class="zip">
+                                        <tr>
+                                            <th>Причина</th>
+                                            <th>Парт номер</th>
+                                            <th>Наименование</th>
+                                            <th>Количество</th>
+                                        </tr>
+                                        @foreach (var item in engeneerZipItemsList)
+                                        {
+                                            <tr>
+                                                <td>@item.CauseName</td>
+                                                <td>@item.PartNum</td>
+                                                <td>@item.Name</td>
+                                                <td>@item.Count</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    @*<div> </div>
+                        <div>
+                            ProcessEnabled @Model.ProcessEnabled <br />
+                            DeviceEnabled @Model.DeviceEnabled <br />
+                            ZipClaim @Model.ZipClaim <br />
+                            Descr @Model.Descr <br />
+                            CounterUnavailable @Model.CounterUnavailable <br />
+                            NoCounter @Model.NoCounter <br />
+                            CounterTotal @Model.CounterTotal <br />
+                            CounterMono @Model.CounterMono <br />
+                            CounterColor @Model.CounterColor <br />
+                        </div>*@
+                </div>
             </div>
         </div>
-    </div>
     </p>
 </body>
 </html>

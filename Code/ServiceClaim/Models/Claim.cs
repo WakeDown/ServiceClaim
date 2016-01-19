@@ -78,6 +78,7 @@ namespace ServiceClaim.Models
         public string addrFind { get; set; }
         public string contFind { get; set; }
         public string devFind { get; set; }
+        public string Note { get; set; }
 
         public string StateChangeDateDiffStr
         {
@@ -266,7 +267,8 @@ namespace ServiceClaim.Models
             DeviceCollective = Db.DbHelper.GetValueBool(row, "device_collective");
             CurClientManagerSid = Db.DbHelper.GetValueString(row, "cur_client_manager_sid");
             ObjectName = Db.DbHelper.GetValueString(row, "object_name");
-            
+            Note = Db.DbHelper.GetValueString(row, "note");
+
 
             Contractor = new Contractor() { Id = Db.DbHelper.GetValueIntOrDefault(row, "id_contractor"), Name = Db.DbHelper.GetValueString(row, "contractor_name"), FullName = Db.DbHelper.GetValueString(row, "contractor_full_name") };
             if (ContractUnknown && IdContract <= 0)
@@ -787,6 +789,7 @@ namespace ServiceClaim.Models
             bool goNext = false;
             bool saveClaim = false;//Метод вызывается из удаленных программ и поэтому не всегда нухно схранять статус
             //ReFillSelf(true);
+            bool changeCurrentSpecAndOther = !user.Is(AdGroup.ServiceControler, AdGroup.SuperAdmin);
 
             if (currState.SysName.ToUpper().Equals("NEW"))
             {
@@ -817,7 +820,10 @@ namespace ServiceClaim.Models
                     case "УТЗ":
                     case "Заказ":
                         nextState = new ClaimState("TECHSET");
-                        CurTechSid = SpecialistSid;
+                        if (changeCurrentSpecAndOther)
+                        {
+                            CurTechSid = SpecialistSid;
+                        }
                         break;
                     case "РТО":
                     case "МТС":
@@ -846,7 +852,7 @@ namespace ServiceClaim.Models
                 {
                     nextState = new ClaimState("TECHWORK");
                     //CurTechSid = user.Sid;
-                    SpecialistSid = user.Sid;
+                    if (changeCurrentSpecAndOther) SpecialistSid = user.Sid;
                 }
                 else
                 {
@@ -876,7 +882,8 @@ namespace ServiceClaim.Models
                     var cl = new Claim(Id);
                     ////if (!ServiceSheet4Save.NoTechWork)
                     ////{
-                    ServiceSheet4Save.EngeneerSid = cl.CurEngeneerSid;//user.Sid;
+                    ServiceSheet4Save.EngeneerSid = changeCurrentSpecAndOther ? user.Sid : String.IsNullOrEmpty(cl.CurEngeneerSid) ? user.Sid : cl.CurEngeneerSid; //cl.CurEngeneerSid;//user.Sid;
+                    //ServiceSheet4Save.AdminSid = cl.CurAdminSid;
                     ServiceSheet4Save.IdServiceIssue = -999;
                     ServiceSheet4Save.Save("TECHWORK", user.Sid);
                     if (ServiceSheet4Save.ProcessEnabled.HasValue && ServiceSheet4Save.ProcessEnabled.Value && ServiceSheet4Save.DeviceEnabled.HasValue && ServiceSheet4Save.DeviceEnabled.Value)
@@ -964,7 +971,7 @@ namespace ServiceClaim.Models
                 {
                     nextState = new ClaimState("SRVADMWORK");
                     //CurAdminSid = user.Sid;
-                    SpecialistSid = user.Sid;
+                    if (changeCurrentSpecAndOther) SpecialistSid = user.Sid;
                 }
                 else
                 {
@@ -1019,7 +1026,7 @@ namespace ServiceClaim.Models
                     saveStateInfo = false;
                     //nextState = new ClaimState("SERVENGOUTWAIT");
                     //CurEngeneerSid = user.Sid;
-                    SpecialistSid = user.Sid;
+                    if (changeCurrentSpecAndOther) SpecialistSid = user.Sid;
                 }
                 else
                 {
@@ -1140,7 +1147,7 @@ namespace ServiceClaim.Models
 
 
                 //if (String.IsNullOrEmpty(ServiceSheet4Save.CurUserAdSid)) ServiceSheet4Save.CurUserAdSid = CurUserAdSid;
-                if (String.IsNullOrEmpty(ServiceSheet4Save.EngeneerSid)) ServiceSheet4Save.EngeneerSid = user.Sid;
+                if (String.IsNullOrEmpty(ServiceSheet4Save.EngeneerSid)) ServiceSheet4Save.EngeneerSid = changeCurrentSpecAndOther ? user.Sid : String.IsNullOrEmpty(cl.CurEngeneerSid) ? user.Sid : cl.CurEngeneerSid;
                 ServiceSheet4Save.AdminSid = cl.CurAdminSid;
                 ServiceSheet4Save.IdServiceIssue = cl.CurServiceIssueId ?? -1;
                 ServiceSheet4Save.Save("SRVENGWORK", user.Sid);
@@ -1177,7 +1184,7 @@ namespace ServiceClaim.Models
                     else
                     {
                         nextState = new ClaimState("SERVADMSET");
-                        SpecialistSid = cl.CurAdminSid;
+                        if (changeCurrentSpecAndOther) SpecialistSid = cl.CurAdminSid;
                         sendNote = true;
                         noteTo = new[] { ServiceRole.CurAdmin };
                         noteText =
@@ -1191,7 +1198,7 @@ namespace ServiceClaim.Models
                 if (cl.ContractUnknown && nextState.SysName.Equals("DONE"))
                 {
                     nextState = new ClaimState("CONTRACTSET");
-                    SpecialistSid = cl.CurClientManagerSid;//Contractor.GetCurrentClientManagerSid(cl.IdContractor);
+                    if (changeCurrentSpecAndOther) SpecialistSid = cl.CurClientManagerSid;//Contractor.GetCurrentClientManagerSid(cl.IdContractor);
                     sendNote = true;
                     noteTo = new[] { ServiceRole.CurSpecialist };
                     noteText = $@"Необходимо указать номер договора по заявке №%ID% %LINK%";
@@ -1231,7 +1238,7 @@ namespace ServiceClaim.Models
                 var curCl = new Claim(Id);
                 if (curCl.DeviceCollective)
                 {
-                    SpecialistSid = curCl.CurClientManagerSid;//Contractor.GetCurrentClientManagerSid(curCl.IdContractor);
+                    if (changeCurrentSpecAndOther) SpecialistSid = curCl.CurClientManagerSid;//Contractor.GetCurrentClientManagerSid(curCl.IdContractor);
                     nextState = new ClaimState("MANAGERNOTE");
                     sendNote = true;
                     noteTo = new[] { ServiceRole.CurSpecialist };
@@ -1268,7 +1275,7 @@ namespace ServiceClaim.Models
                                 lastServiceSheet.Id, user.Sid);
                         }
 
-                        SpecialistSid = user.Sid;
+                        if (changeCurrentSpecAndOther) SpecialistSid = user.Sid;
                         nextState = new ClaimState("ZIPCHECK");
 
                         if (nextState.SysName.Equals("ZIPCHECK"))
@@ -1281,7 +1288,7 @@ namespace ServiceClaim.Models
 
                         if (curCl.DeviceCollective)
                         {
-                            SpecialistSid = curCl.CurClientManagerSid;//Contractor.GetCurrentClientManagerSid(curCl.IdContractor);
+                            if (changeCurrentSpecAndOther) SpecialistSid = curCl.CurClientManagerSid;//Contractor.GetCurrentClientManagerSid(curCl.IdContractor);
                             nextState = new ClaimState("MANAGERNOTE");
                             sendNote = true;
                             noteTo = new[] { ServiceRole.CurSpecialist };
@@ -1307,7 +1314,7 @@ namespace ServiceClaim.Models
                             nextState = new ClaimState("SERVADMSET");
                         }
 
-                        SpecialistSid = curCl.CurAdminSid;
+                        if (changeCurrentSpecAndOther) SpecialistSid = curCl.CurAdminSid;
                         sendNote = true;
                         noteTo = new[] { ServiceRole.CurAdmin };
                         noteText = $@"Не весь ЗИП установлен №%ID% %LINK%";
@@ -1328,7 +1335,7 @@ namespace ServiceClaim.Models
                 if (curCl.ContractUnknown)
                 {
                     nextState = new ClaimState("CONTRACTSET");
-                    SpecialistSid = curCl.CurClientManagerSid;//Contractor.GetCurrentClientManagerSid(curCl.IdContractor);
+                    if (changeCurrentSpecAndOther) SpecialistSid = curCl.CurClientManagerSid;//Contractor.GetCurrentClientManagerSid(curCl.IdContractor);
                     sendNote = true;
                     noteTo = new[] { ServiceRole.CurSpecialist };
                     noteText = $@"Необходимо указать номер договора по заявке №%ID% %LINK%";
@@ -1344,8 +1351,8 @@ namespace ServiceClaim.Models
                 {
                     goNext = true;
                     saveClaim = true;
-                    CurTechSid = user.Sid;
-                    SpecialistSid = user.Sid;
+                    if (changeCurrentSpecAndOther) CurTechSid = user.Sid;
+                    if (changeCurrentSpecAndOther) SpecialistSid = user.Sid;
                     nextState = new ClaimState("ZIPCHECKINWORK");
                 }
                 else
@@ -1423,7 +1430,7 @@ namespace ServiceClaim.Models
                     descr = $"Вручную установлено что ЗИП на складе";
                     nextState = new ClaimState("SERVADMSET");
                     var curCl = new Claim(Id, false);
-                    SpecialistSid = curCl.CurAdminSid;
+                    if (changeCurrentSpecAndOther) SpecialistSid = curCl.CurAdminSid;
                     sendNote = true;
                     noteTo = new[] { ServiceRole.CurAdmin };
                     noteText = $@"Вам назначена заявка №%ID% %LINK%";
@@ -1458,7 +1465,7 @@ namespace ServiceClaim.Models
                 saveClaim = true;
                 nextState = new ClaimState("SERVADMSET");
                 var curCl = new Claim(Id, false);
-                SpecialistSid = curCl.CurAdminSid;
+                if (changeCurrentSpecAndOther) SpecialistSid = curCl.CurAdminSid;
                 sendNote = true;
                 noteTo = new[] { ServiceRole.CurAdmin };
                 noteText = $@"Вам назначена заявка №%ID% %LINK%";
@@ -1470,7 +1477,7 @@ namespace ServiceClaim.Models
                 saveClaim = true;
                 nextState = new ClaimState("SERVADMSET");
                 var curCl = new Claim(Id, false);
-                SpecialistSid = curCl.CurAdminSid;
+                if (changeCurrentSpecAndOther)SpecialistSid = curCl.CurAdminSid;
                 sendNote = true;
                 noteTo = new[] { ServiceRole.CurAdmin };
                 noteText = $@"Вам назначена заявка №%ID% %LINK%";
@@ -1491,6 +1498,8 @@ namespace ServiceClaim.Models
             {
                 nextState = currState;
             }
+
+            if (!changeCurrentSpecAndOther) descr += $"\r\nИзменения произведены контролером";
 
             if (saveClaim) Save(user.Sid);
             if (goNext) SaveStateStep(nextState.Id, user.Sid, descr, saveStateInfo);
@@ -1957,6 +1966,14 @@ namespace ServiceClaim.Models
             return GetLastServiceSheet(Id);
         }
 
+        public static void SaveNote(string creatorSid, int idClaim, string note)
+        {
+            SqlParameter pIdClaim = new SqlParameter() { ParameterName = "id_claim", SqlValue = idClaim, SqlDbType = SqlDbType.Int };
+            SqlParameter pNote = new SqlParameter() { ParameterName = "note", SqlValue = note, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pCreatorSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.NVarChar };
+            var dt = Db.Service.ExecuteQueryStoredProcedure("claim_save_note", pIdClaim, pNote, pCreatorSid);
+        }
+
         public static ServiceSheet GetLastServiceSheet(int idClaim)
         {
             ServiceSheet.GetList(idClaim);
@@ -2252,16 +2269,16 @@ namespace ServiceClaim.Models
             return new List<ServiceSheetZipItem>();
         }
 
-        public void Cancel(string creatorSid)
+        public void Cancel(string creatorSid, string descr)
         {
             var cancelState = new ClaimState("CANCEL");
-            SaveStateStep(cancelState.Id, creatorSid, String.Empty, true);
+            SaveStateStep(cancelState.Id, creatorSid, descr, true);
         }
 
-        public void End(string creatorSid)
+        public void End(string creatorSid, string descr = null)
         {
             var cancelState = new ClaimState("END");
-            SaveStateStep(cancelState.Id, creatorSid, String.Empty, true);
+            SaveStateStep(cancelState.Id, creatorSid, descr, true);
         }
 
         public void SetState(string creatorSid, string stateSysName, string descr = null)
