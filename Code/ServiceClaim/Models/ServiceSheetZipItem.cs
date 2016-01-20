@@ -157,6 +157,16 @@ namespace ServiceClaim.Models
             var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_not_installed_zip_item_save_list", pId, pServiceSheetId, pCreatorAdSid);
         }
 
+        //public static void InstalledSaveList(int[] idOrderedZipItem, int serviceSheetId, string creatorSid)
+        //{
+
+        //    SqlParameter pId = new SqlParameter() { ParameterName = "id_ordered_zip_item_list", SqlValue = String.Join(",", idOrderedZipItem), SqlDbType = SqlDbType.NVarChar };
+        //    SqlParameter pServiceSheetId = new SqlParameter() { ParameterName = "id_service_sheet", SqlValue = serviceSheetId, SqlDbType = SqlDbType.Int };
+        //    SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
+
+        //    var dt = Db.Service.ExecuteQueryStoredProcedure("service_sheet_installed_zip_item_save_list", pId, pServiceSheetId, pCreatorAdSid);
+        //}
+
         public static IEnumerable<ServiceSheetZipItem> GetIssuedList(int serviceSheetId)
         {
             SqlParameter pServiceSheetId = new SqlParameter() { ParameterName = "id_service_sheet", SqlValue = serviceSheetId, SqlDbType = SqlDbType.Int };
