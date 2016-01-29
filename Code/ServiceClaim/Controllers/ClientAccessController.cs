@@ -14,7 +14,7 @@ namespace ServiceClaim.Controllers
     {
         public ActionResult List()
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
             //var list = UserList.GetUserSelectionList(AdGroup.ZipClaimClient);
             var list = ClientAccess.GetList().OrderBy(x=>x.Name);
             return View(list);
@@ -23,7 +23,7 @@ namespace ServiceClaim.Controllers
         [HttpGet]
         public ActionResult New()
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
             //var model = new ClientAccess();
             return View();
         }
@@ -31,7 +31,7 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public ActionResult New(ClientAccess model)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess)) return RedirectToAction("AccessDenied", "Error");
             try
             {
                 ResponseMessage responseMessage;
@@ -55,7 +55,7 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public ActionResult Edit(ClientAccess model)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess)) return RedirectToAction("AccessDenied", "Error");
             try
             {
                 ResponseMessage responseMessage;
@@ -74,7 +74,7 @@ namespace ServiceClaim.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
             var model = new ClientAccess(id);
             return View(model);
         }
@@ -88,7 +88,7 @@ namespace ServiceClaim.Controllers
 
         public ActionResult ClientSheetPdf(int id)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
             HtmlToPdf converter = new HtmlToPdf();
 
             string url = Url.Action("ClientSheet", new { id = id });
@@ -109,7 +109,7 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public void Delete(int id)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClientAccess)) return;// RedirectToAction("AccessDenied", "Error");
             try
             {
                 ResponseMessage responseMessage;

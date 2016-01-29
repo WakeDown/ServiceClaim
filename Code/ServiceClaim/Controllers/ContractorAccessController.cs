@@ -15,7 +15,7 @@ namespace ServiceClaim.Controllers
         [HttpGet]
         public ActionResult List()
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
             //var list = UserList.GetUserSelectionList(AdGroup.ZipClaimClient);
             var list = ContractorAccess.GetList().OrderBy(x => x.City).ThenBy(x => x.OrgName).ThenBy(x => x.Name);
             return View(list);
@@ -24,7 +24,7 @@ namespace ServiceClaim.Controllers
         [HttpGet]
         public ActionResult New()
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
             //var model = new ClientAccess();
             return View();
         }
@@ -32,7 +32,7 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public ActionResult New(ContractorAccess model)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess)) return RedirectToAction("AccessDenied", "Error");
             try
             {
                 ResponseMessage responseMessage;
@@ -57,7 +57,7 @@ namespace ServiceClaim.Controllers
 
         public ActionResult AccessSheetPdf(int id)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
             HtmlToPdf converter = new HtmlToPdf();
 
             string url = Url.Action("AccessSheet", new { id = id });
@@ -78,7 +78,7 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public void Delete(int id)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimContractorAccess)) return;//RedirectToAction("AccessDenied", "Error");
             try
             {
                 ResponseMessage responseMessage;

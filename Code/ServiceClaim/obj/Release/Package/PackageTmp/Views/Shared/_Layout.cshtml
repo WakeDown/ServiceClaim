@@ -1,5 +1,6 @@
 ﻿@using System.Configuration
 @using System.Data.SqlClient
+@using ServiceClaim.Objects
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +38,10 @@
             <ul class="nav navbar-nav">
                 <li><a href="@Url.Action("New", "Claim")" class="nav-btn-primary"><i class="fa fa-plus-circle"></i> Новая</a></li>
                 <li><a href="@Url.Action("List", "Claim")"><i class="fa fa-list"></i> Заявки</a></li>
+                @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceClaimClientAccess, AdGroup.ServiceClaimContractorAccess, AdGroup.ServiceClaimClassifier))
+                {
                 <li><a href="@Url.Action("Planing", "ServiceIssuePlan")"><i class="fa fa-plane"></i> Планирование поездки</a></li>
+                
                 <li>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog fa-fw"></i>Настройки <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -46,6 +50,7 @@
                         <li><a href="@Url.Action("List", "ContractorAccess")">Доступы подрядчиков</a></li>
                     </ul>
                 </li>
+                }
                 @if ((DateTime.Now.Month == 1 && DateTime.Now.Day <= 15) || (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20))
                 {
                     <li>
@@ -73,7 +78,6 @@
                     var conn = new SqlConnection(cs.ConnectionString);
                      @(conn.DataSource.Contains("usql-1") ? "text-danger text-lg bold" : String.Empty)
                      bool isProduction = conn.DataSource.Contains("usql-1");
-                 
 
                 <div class="@(isProduction ? "text-danger text-lg bold" : String.Empty)"><i class="@(isProduction ? "fa fa-warning text-danger" : String.Empty)"></i>@conn.DataSource - @conn.Database</div>
             }

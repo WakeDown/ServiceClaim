@@ -17,7 +17,7 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public ActionResult Attributes(ClassifierAttributes attrs)
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClassifier, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClassifier, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
             try
             {
                 ResponseMessage responseMessage;
@@ -35,14 +35,14 @@ namespace ServiceClaim.Controllers
 
         public ActionResult List()
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClassifier, AdGroup.ServiceControler)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClassifier, AdGroup.ServiceControler)) return RedirectToAction("AccessDenied", "Error");
 
             return View();
         }
 
         public ActionResult ExportExcel()
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClassifier)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClassifier)) return RedirectToAction("AccessDenied", "Error");
             MemoryStream stream=new MemoryStream(new byte[0]);
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
@@ -50,7 +50,7 @@ namespace ServiceClaim.Controllers
         [HttpPost]
         public ActionResult ImportExcel()
         {
-            if (!CurUser.HasAccess(AdGroup.ServiceClaimClassifier)) RedirectToAction("AccessDenied", "Error");
+            if (!CurUser.HasAccess(AdGroup.ServiceClaimClassifier)) return RedirectToAction("AccessDenied", "Error");
             //if (!user.UserCanEdit()) return RedirectToAction("AccessDenied", "Error");
             int id = 0;
             if (Request.Files.Count > 0)
