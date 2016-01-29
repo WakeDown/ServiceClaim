@@ -88,9 +88,9 @@ namespace ServiceClaim.Objects
                     if (wi.User != null)
                     {
                         var domain = new PrincipalContext(ContextType.Domain);
-                        string sid = fakeSid??wi.User.Value;
+                        string sid = fakeSid ?? wi.User.Value;
                         user.Sid = sid;
-                        var login = fakeLosgin??wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
+                        var login = fakeLosgin ?? wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
                         user.Login = login;
                         var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
                         if (userPrincipal != null)

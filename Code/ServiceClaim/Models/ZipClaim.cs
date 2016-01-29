@@ -135,7 +135,6 @@ namespace ServiceClaim.Models
                 //lastServiceSheet.CurUserAdSid = creatorSid;
                 lastServiceSheet.SetOrderedZipItemListRealyOrdered(creatorSid);
             }
-
         }
 
         public void SetSendStateUnitProg(string creatorSid)

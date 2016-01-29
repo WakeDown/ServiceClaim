@@ -81,7 +81,7 @@ namespace ServiceClaim.Models
         public void SaveUnitProg(string creatorSid, bool fromTop = false)
         {
             SqlParameter pAction = new SqlParameter() { ParameterName = "action", Value = "saveClaimUnit", SqlDbType = SqlDbType.NVarChar };
-            SqlParameter pId = new SqlParameter() { ParameterName = "id_claim_unit", Value = Id, DbType = DbType.Int32 };
+            //SqlParameter pId = new SqlParameter() { ParameterName = "id_claim_unit", Value = Id, DbType = DbType.Int32 };
             SqlParameter pIdClaim = new SqlParameter() { ParameterName = "id_claim", Value = ClaimId, DbType = DbType.Int32 };
             SqlParameter pCatalogNum = new SqlParameter() { ParameterName = "catalog_num", Value = PartNum, DbType = DbType.AnsiString };
             SqlParameter pName = new SqlParameter() { ParameterName = "name", Value = Name, DbType = DbType.AnsiString };
@@ -96,7 +96,7 @@ namespace ServiceClaim.Models
             SqlParameter pIdSupplyMan = new SqlParameter() { ParameterName = "id_supply_man", Value = IdSupplyMan, DbType = DbType.Int32 };
             SqlParameter pNoNomenclatureNum = new SqlParameter() { ParameterName = "no_nomenclature_num", Value = NoNomenclatureNum, DbType = DbType.Boolean };
 
-            DataTable dt = Db.UnitProg.ExecuteQueryStoredProcedure("ui_zip_claims", pAction, pId, pIdClaim, pCatalogNum, pName, pCount, pNomenclatureNum, pPriceIn, pPriceOut, pIdCreator, pDeliveryTime, pFromTop, pNomenclatureClaimNum, pIdSupplyMan, pNoNomenclatureNum);
+            DataTable dt = Db.UnitProg.ExecuteQueryStoredProcedure("ui_zip_claims", pAction, pIdClaim, pCatalogNum, pName, pCount, pNomenclatureNum, pPriceIn, pPriceOut, pIdCreator, pDeliveryTime, pFromTop, pNomenclatureClaimNum, pIdSupplyMan, pNoNomenclatureNum);
 
 
             if (dt.Rows.Count > 0)

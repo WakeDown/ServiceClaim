@@ -378,6 +378,7 @@
         showSpinnerAppend(curObj);
         curObj.prop('disabled', true);
         var ziid = $(this).attr('ziid');
+        $('#btnSendServiceSheet').prop('disabled', true);
         $.ajax({
             url: '@Url.Action("ServiceSheetZipItemSetInstalled")',
             method: 'POST',
@@ -391,6 +392,7 @@
                 $btnInst.addClass('btn-success');
                 hideSpinner(curObj);
                 curObj.prop('disabled', false);
+                $('#btnSendServiceSheet').prop('disabled', false);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 BootstrapDialog.show({
@@ -400,6 +402,7 @@
                 });
                 hideSpinner(curObj);
                 curObj.prop('disabled', false);
+                $('#btnSendServiceSheet').prop('disabled', false);
             }
         });
     }

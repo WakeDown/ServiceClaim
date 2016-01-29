@@ -1375,17 +1375,15 @@ namespace ServiceClaim.Models
                     (curCl.Device.HasGuarantee.HasValue && curCl.Device.HasGuarantee.Value))
                 {
                     nextState = new ClaimState("ZIPCONFIRM");
-
+                    sendNote = true;
+                    noteTo = new[] { ServiceRole.ZipConfirm };
+                    noteText = $@"Необходимо утвердить список ЗИП в заявке №%ID% %LINK%";
+                    noteSubject = $"[Заявка №%ID%] Утверждение список ЗИП";
                 }
                 else
                 {
                     ZipClaim.CreateClaimUnitWork(Id, user.Sid);
                     nextState = new ClaimState("ZIPORDERED");
-
-                    sendNote = true;
-                    noteTo = new[] { ServiceRole.ZipConfirm };
-                    noteText = $@"Необходимо утвердить список ЗИП в заявке №%ID% %LINK%";
-                    noteSubject = $"[Заявка №%ID%] Утверждение список ЗИП";
                 }
             }
             else if (currState.SysName.ToUpper().Equals("ZIPCONFIRM"))
@@ -1976,7 +1974,7 @@ namespace ServiceClaim.Models
 
         public static ServiceSheet GetLastServiceSheet(int idClaim)
         {
-            ServiceSheet.GetList(idClaim);
+            //ServiceSheet.GetList(idClaim);
 
             SqlParameter pIdClaim = new SqlParameter() { ParameterName = "id_claim", SqlValue = idClaim, SqlDbType = SqlDbType.Int };
             var dt = Db.Service.ExecuteQueryStoredProcedure("get_last_service_sheet_id", pIdClaim);
