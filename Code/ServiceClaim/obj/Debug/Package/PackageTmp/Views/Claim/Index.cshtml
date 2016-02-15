@@ -6,7 +6,7 @@
 
 
 @{
-    ViewBag.Title = "Карточка заяки";
+    ViewBag.Title = "Карточка заявки";
     Layout = "~/Views/Shared/_Editor.cshtml";
     //var stateHistory = Model.GetStateHistory();
     //var servSheetList = Model.GetClaimServiceSheetList();
@@ -20,33 +20,92 @@
 
     @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimCancelClaim))
     {
-        <div class="pull-right">
-            
+        <div class="pull-right" style="padding-right: 5px;">
+
             @if (!Model.State.SysName.Equals("CANCEL"))
             {
-                using (Html.BeginForm("ClaimCancel", "Claim", FormMethod.Post, new {@id = "ClaimCancel"}))
+                <a class="btn btn-danger  btn-xs" data-toggle="modal" data-target="#claimCancelModal">Удалить заявку</a>
+                using (Html.BeginForm("ClaimCancel", "Claim", FormMethod.Post, new { @id = "ClaimCancel" }))
                 {
                     @Html.HiddenFor(m => m.Id)
-                    <button id="claimCancel" class="btn btn-danger btn-xs" type="submit">Остановить заявку</button>
+                    <div id="claimCancelModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Удаление заявки - комментарий</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        @Html.TextAreaFor(m => m.Descr, new { @class = "form-control required-mark", rows = "3", placeholder = "Введите комментарий", required = "required" })
+                                        @*<textarea id="ZipOrderCancelDescr" name="ZipOrderCancelDescr" class="form-control required-mark" rows="3" placeholder="Введите комментарий" required="required"></textarea>*@
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="claimCancel" class="btn btn-success" type="submit">Сохранить и удалить</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">отмена</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 }
             }
         </div>
     }
-@if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler))
-{
-    <div class="pull-right">
-        <a id="claimChange" class="btn btn-warning btn-xs">Изменить</a>
-    </div>
-}
+    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
+    {
+        if (!Model.State.SysName.Equals("END"))
+        {
+            if (ViewBag.CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
+            {
+                <div class="pull-right" style="padding-right: 5px;">
+                    <a class="btn btn-primary  btn-xs" data-toggle="modal" data-target="#claimEndModal">Завершить заявку</a>
+                    @using (Html.BeginForm("ClaimEnd", "Claim", FormMethod.Post, new { @id = "ClaimEnd" }))
+                    {
+                        @Html.HiddenFor(m => m.Id)
+                        <div id="claimEndModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Завершение заявки - комментарий</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            @Html.TextAreaFor(m => m.Descr, new { @class = "form-control required-mark", rows = "3", placeholder = "Введите комментарий", required = "required" })
+                                            @*<textarea id="ZipOrderCancelDescr" name="ZipOrderCancelDescr" class="form-control required-mark" rows="3" placeholder="Введите комментарий" required="required"></textarea>*@
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="claimEnd" class="btn btn-success" type="submit">Сохранить и завершить</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">отмена</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+
+            }
+
+            <div class="pull-right" style="padding-right: 5px;">
+                <a id="claimChange" class="btn btn-warning btn-xs">Изменить</a>
+            </div>
+        }
+    }
 }
 
 @section PanelBody
 {
+
+
     @*@using(Html.BeginForm("Index", "Claim", FormMethod.Post, new {@class="form-horizontal"}))*@
     <div class="row">
         <div class="col-lg-8">
             @if (TempData["error"] != null)
-            {
+    {
                 <div class="row">
                     <div class="col-lg-push-2 col-lg-10">
                         <blockquote class="alert-danger">
@@ -59,8 +118,8 @@
             <div class="row pad-b-md">
                 <div class="col-lg-6">
                     @*@if (!String.IsNullOrEmpty(Model.ClientSdNum))
-                    {*@
-                        <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">№ SD клиента</label> <span id="clientSdNum" class="col-lg-9 text-left-lg col-xs-12 col-sm-12  text-center-sm text-center-xs">@Model.ClientSdNum</span></div>
+                        {*@
+                    <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">№ SD клиента</label> <span id="clientSdNum" class="col-lg-9 text-left-lg col-xs-12 col-sm-12  text-center-sm text-center-xs">@Model.ClientSdNum</span></div>
                     @*}*@
                     <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Клиент</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Contractor.FullName</span></div>
                     <div class="row">
@@ -96,33 +155,44 @@
                     {
                         <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Тип работ</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.WorkType.SysName - @Model.WorkType.Name</span></div>
                     }
-                    
+
                     @if (Model.Specialist != null && !String.IsNullOrEmpty(Model.Specialist.DisplayName))
                     {
                         <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Текущий специалист</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
                     }
                     <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Descr</span></div>
+                    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin, AdGroup.ServiceClaimView))
+                    {
+                        <div class="row">
+                            <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs text-danger">
+                                @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin) && (Model.CurAdminSid == ViewBag.CurUser.Sid || ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)))
+                                {
+                                    <button id="editNote" class="btn btn-link btn-xs"><i class="fa fa-edit"></i></button>
+                                }
+                                Заметка
+                            </label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs" id="noteContainer">@Model.Note</span>
+                        </div>
+                    }
                 </div>
                 <div class="col-lg-3">
                     <div class="row" style="color: #ac2925">
                         <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">МСЦ</label>
                         <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Manager.DisplayName</span>
                     </div>
-                    <div class="row" style="color: #FF9800">
-                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СТП</label> 
+                    <div class="row" style="color: #2e6da4">
+                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СТП</label>
                         <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Tech.DisplayName</span>
                     </div>
-                    <div class="row" style="color: #2e6da4">
+                    <div class="row" style="color: #FF9800">
                         <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СА</label>
                         <span id="curAdmin" class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Admin.DisplayName</span>
-                        
                     </div>
                     <div class="row" style="color: #4cae4c">
-                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СИ</label> 
+                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">СИ</label>
                         <span id="curEngeneer" class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Engeneer.DisplayName</span>
                     </div>
                     <div class="row" style="color: #4E342E">
-                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">МРК</label> 
+                        <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">МРК</label>
                         <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.ClientManager.DisplayName</span>
                     </div>
                 </div>
@@ -131,47 +201,44 @@
                     <div id="serviceSheetContainer">
                         @*@Html.Partial("ClaimServiceSheetList", servSheetList)*@
                     </div>
-                    <div id="btnGetPaperServiceSheetContainer">
-
-                    </div>
+                    <div id="btnGetPaperServiceSheetContainer"></div>
                     @*@if (servSheetNotPayedWrapList.Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
-        {
-            @Html.Partial("ServiceSheetPaperGet", servSheetNotPayedWrapList)
-        }*@
+                        {
+                            @Html.Partial("ServiceSheetPaperGet", servSheetNotPayedWrapList)
+                        }*@
                     <h5 class="bold">Заявки на ЗИП</h5>
-                    <div id="zipClaimContainer">
-                    </div>
+                    <div id="zipClaimContainer"></div>
                 </div>
             </div>
 
             @if (Model.State.SysName.ToUpper().Equals("NEW") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager, AdGroup.AddNewClaim))
-            {
+    {
                 @Html.Partial("SetWorkType", Model)
             }
             @if ((Model.State.SysName.ToUpper().Equals("NEWADD") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager, AdGroup.AddNewClaim)) || (Model.State.SysName.ToUpper().Equals("SERVADMSETWAIT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager, AdGroup.AddNewClaim, AdGroup.ServiceTech)))
-            {
+    {
                 @Html.Partial("AdminSelect", Model)
             }
             @if ((Model.State.SysName.ToUpper().Equals("SRVADMWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) || (Model.State.SysName.ToUpper().Equals("SERVENGSETWAIT")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
-            {
+    {
                 @Html.Partial("EngeneerSelect", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("TECHSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
-            {
+    {
                 @Html.Partial("TechConfirm", Model)
             }
             @if ((Model.State.SysName.ToUpper().Equals("SERVADMSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)))
-            {
+    {
                 @Html.Partial("ConfirmWork", Model)
             }
             @if ((Model.State.SysName.ToUpper().Equals("SRVENGSET")) && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
-            {
+    {
                 @Html.Partial("ConfirmWork", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("TECHWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech))
-            {
-                if (Model.DeviceCollective)
-                {
+    {
+        if (Model.DeviceCollective)
+        {
                     @Html.Partial("ServiceSheetTechCollectiveForm", Model)
                 }
                 else
@@ -180,40 +247,39 @@
                 }
             }
             @if (Model.State.SysName.ToUpper().Equals("SRVENGGET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
-            {
+    {
                 @Html.Partial("StateEngOutWait", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("SRVENGWENT") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
-            {
+    {
                 @Html.Partial("SetServEngOnWork", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("SRVENGWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
-            {
+    {
                 @Html.Partial("ServiceSheetForm", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("ZIPISSUE") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
-            {
+    {
                 @Html.Partial("ZipIssue", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("CARTRIDGELIST") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
-            {
+    {
                 @Html.Partial("CartridgeList", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("CARTRIDGEREFILL") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
-            {
+    {
                 @Html.Partial("CartridgeRefill", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("CONTRACTSET") && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
-            {
+    {
                 @Html.Partial("ContractChoice", Model)
             }
-            @*Доступ только текущему СТП*@
-            @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech)))
+            @*Доступ только текущему СТП*@@if ((Model.State.SysName.ToUpper().Equals("ZIPCHECK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech)))
             {
                 @Html.Partial("ZipGetOnCheck", Model)
             }
             @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECKINWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech) && Model.CurTechSid == ViewBag.CurUser.Sid))
-            {
+    {
                 @Html.Partial("ZipCheck", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("ZIPCONFIRM") && ViewBag.CurUser.HasAccess(AdGroup.ServiceZipClaimConfirm))
@@ -224,14 +290,16 @@
                 {
                     @Html.Partial("ZipOrdered", Model)
                 }*@
-            @if (Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceControler))
-                {
-                    @Html.Partial("ZipOrderConfirm", Model)
-                }
-                @if (Model.State.SysName.ToUpper().Equals("DONE") && Model.DeviceCollective && !Model.GetClaimServiceSheetList().Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceManager))
-                {
-                    @Html.Partial("EndClaim", Model)
-                }
+            @if (Model.State != null && Model.State.IsZipClaim && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)
+           //Model.State.SysName.ToUpper().Equals("ZIPORDERED") && ViewBag.CurUser.HasAccess(AdGroup.ServiceControler)
+            )
+            {
+                @Html.Partial("ZipOrderConfirm", Model)
+            }
+            @if (Model.State.SysName.ToUpper().Equals("DONE") && Model.DeviceCollective && !Model.GetClaimServiceSheetList().Any() && ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
+            {
+                @Html.Partial("EndClaim", Model)
+            }
 
 
                 <div class="row">
@@ -271,16 +339,20 @@
                 </div>
             </div>
         </div>
+
 }
 
 @section scripts
 {
+
     <script type="text/javascript">
+        
         $(document).ready(function() {
 
             //$('#showFullClaimHistory').click(showFullClaimHistory);
             $('#clSave').click(claimSave);
             $('#clContinue').click(claimContinue);
+            $('#editNote').click(editNote);
             //$('#clEnd').click(claimEnd);
 
             $('[data-toggle="popover"]').popover();
@@ -288,8 +360,42 @@
             loadServiceSheetList();
             loadZipClaimList();
             $('#claimChange').click(changeViewDisplay);
+
         });
 
+        function editNote() {
+            var $this = $(this);
+            var $noteContainer = $('#noteContainer');
+
+            var element = '<textarea id="txtNote" class="form-control" rows="3">' + $noteContainer.val() + '</textarea><button id="cancelNote" class="btn btn-danger btn-xs pull-right">Отмена изменения заметки</button><button id="saveNote" class="btn btn-success btn-xs pull-right">Сохранить заметку</button>';
+            $noteContainer.html(element);
+
+            $('#cancelNote').click(function() {
+                $noteContainer.html('@(String.IsNullOrEmpty(Model.Note)? String.Empty : Html.Encode(Model.Note.Trim().Replace("\r"," ").Replace("\n"," ")))');
+            });
+
+            $('#saveNote').click(function() {
+                showSpinnerAppend($this);
+                var noteText = $('#txtNote').val();
+                $.ajax({
+                    url: "@Url.Action("SaveNote")",
+                    method: 'POST',
+                    data: { id: @Model.Id, note: noteText },
+                    success: function() {
+                        $noteContainer.html(noteText);
+                        hideSpinner($this);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        BootstrapDialog.show({
+                            type: 'type-danger',
+                            title: 'Ошибка!',
+                            message: xhr.responseText
+                        });
+                        hideSpinner($this);
+                    }
+                });
+            });
+        }
 
         function changeViewDisplay() {
             $('#claimChange').replaceWith('<a id="saveChanges" class="btn btn-success btn-xs">Сохранить изменения</a>');
@@ -304,80 +410,90 @@
         }
 
         function saveChanges() {
-                var idClaim = @Model.Id;
+            var idClaim = @Model.Id;
             var adminSid = $('#curAdmin option:selected').val();
             var engeneerSid = $('#curEngeneer option:selected').val();
             var clientSdNum = $('#clientSdNumNew').val();
-                $.ajax({
-                    url: '@Url.Action("SaveClaimChanges")',
-                    method:'POST',
-                    data: {idClaim:idClaim, adminSid:adminSid, engeneerSid:engeneerSid, clientSdNum:clientSdNum},
-                    success: function() {
-                        window.location.reload();
-                    }
-                });
+            $.ajax({
+                url: '@Url.Action("SaveClaimChanges")',
+                method:'POST',
+                data: {idClaim:idClaim, adminSid:adminSid, engeneerSid:engeneerSid, clientSdNum:clientSdNum},
+                success: function() {
+                    window.location.reload();
+                }
+            });
 
         }
 
         function showEngeneerSelect() {
             var $curEngeneer = $('#curEngeneer');
             var curEngeneerSid = '@Model.CurEngeneerSid';
-            if ($curEngeneer.text() !== '') {
-                var $select = $('<select id="selEngeneer"></select>');
-                $curEngeneer.html($select);
-                $.ajax({
+            //if ($curEngeneer.text() !== '') {
+            var $select = $('<select id="selEngeneer"></select>');
+            $curEngeneer.html($select);
+            showSpinner($select, true);
+            $.ajax({
                 url: '@Url.Action("GetEngeneerList")',
-                    method: 'POST',
-                    success: function(data) {
-                        if (data && data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                var item = data[i];
-                                var option = '<option value="' + item.Key + '">' + item.Value + '</option>';
+                method: 'POST',
+                success: function(data) {
+                    if (data && data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var option = '<option value="' + item.Key + '">' + item.Value + '</option>';
 
-                                $select.append(option);
-                            }
-                            $select.val(curEngeneerSid);
+                            $select.append(option);
                         }
+                        $select.val(curEngeneerSid);
                     }
-                });
+                    hideSpinner($select);
+                },
+                error:function() {
+                    hideSpinner($select);
+                }
+            });
 
-                
-            }
+
+            //}
         }
 
         function showAdminSelect() {
             var $curAdmin = $('#curAdmin');
             var curAdminSid = '@Model.CurAdminSid';
-            
-            if ($curAdmin.text() !== '') {
-                var $select = $('<select id="selAdmin"></select>');
-                $curAdmin.html($select);
-                $.ajax({
+
+            //if ($curAdmin.text() !== '') {
+            var $select = $('<select id="selAdmin"></select>');
+            $curAdmin.html($select);
+            showSpinner($select, true);
+            $.ajax({
                 url: '@Url.Action("GetAdminList")',
-                    method: 'POST',
-                    success: function(data) {
-                        if (data && data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                var item = data[i];
-                                var option = '<option value="' + item.Key + '">' + item.Value + '</option>';
+                method: 'POST',
+                success: function(data) {
+                    if (data && data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var option = '<option value="' + item.Key + '">' + item.Value + '</option>';
 
-                                $select.append(option);
-                            }
-                            $select.val(curAdminSid);
+                            $select.append(option);
                         }
+                        $select.val(curAdminSid);
                     }
-                });
+                    hideSpinner($select);
+                },
+                error:function() {
+                    hideSpinner($select);
+                }
+            });
 
-                
-               
-            }
+
+
+            //}
         }
 
 
         function loadZipClaimList() {
             showSpinnerAppend($('#zipClaimContainer'));
             $.ajax({
-            url: '@Url.Action("GetClaimZipClaimList")',
+                url: '@Url.Action("GetClaimZipClaimList")',
                 method: 'POST',
                 data: { idClaim: @Model.Id },
                 success: function(html) {
@@ -391,7 +507,7 @@
             var $cont = $('#serviceSheetContainer');
             showSpinnerAppend($cont);
             $.ajax({
-            url: '@Url.Action("GetClaimServiceSheetList")',
+                url: '@Url.Action("GetClaimServiceSheetList")',
                 method: 'POST',
                 data: { idClaim: @Model.Id },
                 success: function(html) {
@@ -408,7 +524,7 @@
         function loadBtnGetServiceSheetList() {
             //showSpinnerAppend($('#btnGetPaperServiceSheetContainer'));
             $.ajax({
-            url: '@Url.Action("GetServiceSheetPaperGet")',
+                url: '@Url.Action("GetServiceSheetPaperGet")',
                 method: 'POST',
                 data: { idClaim: @Model.Id },
                 success: function(html) {
@@ -420,7 +536,7 @@
         function loadHistory() {
             showSpinnerAppend($('#stateHistoryContainer'));
             $.ajax({
-            url: '@Url.Action("СlaimStateHistory")?idClaim=@Model.Id&full=False',
+                url: '@Url.Action("СlaimStateHistory")?idClaim=@Model.Id&full=False',
                 method: 'GET',
                 success: function(html) {
                     $('#stateHistoryContainer').html(html);

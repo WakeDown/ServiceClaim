@@ -796,3 +796,15 @@ th.row-mark, td.row-mark {
     /*border-top: 0;*/ 
 }
 
+.btn-danger-header {
+    color: white !important;
+}
+
+.btn-danger-header:hover {
+    color: #d9534f !important;
+    
+}
+
+.text-lg {
+    font-size: 2em;
+}

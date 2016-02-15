@@ -65,7 +65,7 @@
     <div class="row">
         <label class="col-lg-4 text-right">Функциональность оборудования восстановлена</label>
         <div class="col-lg-2">
-            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, true, new { required = "required" }) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, false) нет
+            @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, true, new {required = "required"}) да&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.ServiceSheet4Save.ProcessEnabled, false) нет
             <span class="help-block with-errors"></span>
         </div>
     </div>
@@ -136,7 +136,27 @@
     <div class="row" id="commentContainer">
         <label class="col-lg-4 text-right">Комментарий Общий</label>
         <div class="col-lg-6">
-            @Html.TextAreaFor(m => m.ServiceSheet4Save.DescrGeneral, new { id = "comment", @class = "form-control", autocomplete = "off", placeholder="Комментарий" })
+            @Html.TextAreaFor(m => m.ServiceSheet4Save.DescrGeneral, new {id = "comment", @class = "form-control", autocomplete = "off", placeholder = "Комментарий"})
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-4 text-right">Дата выполнения</label>
+        <div class="col-lg-3">
+            @Html.TextBoxFor(m => m.ServiceSheet4Save.FactDateStart, new {id = "FactDateStart", @class = "form-control datepicker required-mark", autocomplete = "off", placeholder = "Дата выполнения", required = "required" })
+            <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-lg-4 text-right">Время</label>
+        <div class="col-lg-2">
+            <input name="FactTimeStart" id="FactTimeStart" class="form-control required-mark" autocomplete="off" placeholder="начало" required="required" />
+            @*@Html.TextAreaFor(m => m.ServiceSheet4Save.FactDateStart, new {id = "FactTimeStart", @class = "form-control", autocomplete = "off", placeholder = "начало"})*@
+            <span class="help-block with-errors"></span>
+        </div>
+        <div class="col-lg-2">
+            <input name="FactTimeEnd" id="FactTimeEnd" class="form-control required-mark" autocomplete="off" placeholder="окончание" required="required" />
+            @*@Html.TextAreaFor(m => m.ServiceSheet4Save.FactDateStart, new {id = "FactTimeEnd", @class = "form-control", autocomplete = "off", placeholder = "окончание"})*@
             <span class="help-block with-errors"></span>
         </div>
     </div>
@@ -313,7 +333,13 @@
 
         //    alert(formIsValid);
         //});
-
+        $('#FactTimeStart').mask('00:00');
+        $('#FactTimeEnd').mask('00:00');
+        $('.datepicker').datepicker({
+            language: "ru",
+            todayHighlight: true,
+            autoclose: true
+        });
         $('#ServiceSheetForm').bootstrapValidator({
             feedbackIcons: {
                 valid: 'fa fa-check',

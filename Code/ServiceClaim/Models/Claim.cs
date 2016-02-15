@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.Services.Description;
+using DocumentFormat.OpenXml.Drawing;
 using Newtonsoft.Json;
 using ServiceClaim.Helpers;
 using ServiceClaim.Objects;
@@ -445,7 +446,7 @@ namespace ServiceClaim.Models
             //if (isNew && ExistsActive()) throw new Exception("Для данного аппарата существует незавершенная заявка. Сохранение заявки не было завершено!");
 
             if (ContractUnknown || Contract == null) { Contract = new Contract(); }
-            else if (Contract.Id > 0)
+            if (Contract.Id > 0)
             {
                 IdContract = Contract.Id;
             }
@@ -634,19 +635,20 @@ namespace ServiceClaim.Models
             Db.Service.ExecuteQueryStoredProcedure("claim_change_contract_id", pIdClaim, pIdContract);
         }
 
-        public static bool RemoteStateChange(int idClaim, string stateSysName, string creatorSid, string descr = null, int? idZipClaim = null)
+        public async static Task<bool> RemoteStateChange(int idClaim, string stateSysName, bool goNext, string creatorSid, string descr = null, int? idZipClaim = null)
         {
             var claim = new Claim(idClaim);
-            bool goNext = true;
+            //bool goNext = true;
             if (claim.Id > 0)
             {
                 var state = new ClaimState(stateSysName);
                 bool saveClaimCurrentState = true;
 
                 //Если текущий статус совпадает с переданным или передают что заявка удалена или статус опаздывает (мы уже назначили кого-то а нам приходит статус по заказу ЗИП)
-                if (claim.State.SysName.Equals(stateSysName) || !claim.State.SysName.StartsWith("ZIPCL"))
+                if (claim.State.SysName.Equals(stateSysName) || stateSysName.Equals("ZIPCL-CLOSED") || stateSysName.Equals("ZIPCL-DONE") || !claim.State.IsZipClaim)
                 {
                     saveClaimCurrentState = false;
+                    goNext = false;
                 }
 
                 //Если текущий статус заявки не является завершающим из заявок на ЗИП (при обмене может случиться так что какой либо статус Эталона может прийти после завершающего)
@@ -659,7 +661,6 @@ namespace ServiceClaim.Models
                 //////    saveClaimCurrentState = !stateSysName.Equals("ZIPCL-CLOSED");
                 //////}
 
-
                 claim.SaveStateStep(state.Id, creatorSid, descr, idZipClaim: idZipClaim,
                         saveClaimCurrentState: saveClaimCurrentState);
                 //if (stateSysName.ToUpper().Equals("ZIPCL-FAIL"))
@@ -668,10 +669,16 @@ namespace ServiceClaim.Models
                 //    claim.SaveStateStep(nextState.Id);
                 //}
 
+                if (claim.State.SysName.Equals("ZIPORDERED"))
+                    goNext = false;
+
+                var user = new AdUser(creatorSid, true);
+                //bool zipDelivery = goNext;
+                await claim.Go(user, zipDelivery: goNext);
             }
 
-            if (claim.State.SysName.Equals("ZIPORDERED"))
-                goNext = false;
+            
+
             return goNext;
         }
 
@@ -773,7 +780,7 @@ namespace ServiceClaim.Models
         /// Перевод заявки на следующую стадию
         /// </summary>
         /// <param name="confirm">Подтвердить или отклонить назначение заявки</param>
-        public async Task Go(AdUser user, bool confirm = true)
+        public async Task Go(AdUser user, bool confirm = true, bool zipDelivery = false)
         {
             if (Id <= 0) throw new ArgumentException("Невозможно предать заявку. Не указан ID заявки.");
 
@@ -1365,7 +1372,7 @@ namespace ServiceClaim.Models
             {
                 if (!user.HasAccess(AdGroup.ServiceTech)) return;
                 var curCl = new Claim(Id);
-                if (curCl.SpecialistSid != user.Sid && curCl.CurTechSid != user.Sid)
+                if (curCl.SpecialistSid != user.Sid && curCl.CurTechSid != user.Sid && !user.HasAccess(AdGroup.ServiceControler))
                     throw new ArgumentException("Проверка ЗИП уже в работе.");
                 goNext = true;
                 saveClaim = true;
@@ -1456,8 +1463,9 @@ namespace ServiceClaim.Models
                 descr = Descr;
                 nextState = new ClaimState("ZIPBUYCANCEL");
             }
-            else if (currState.SysName.ToUpper().Equals("ZIPCL-ETPREP-GET") ||
-                     currState.SysName.ToUpper().Equals("ZIPCL-ETSHIP-GET"))
+            //else if (currState.SysName.ToUpper().Equals("ZIPCL-ETPREP-GET") ||
+            //         currState.SysName.ToUpper().Equals("ZIPCL-ETSHIP-GET"))
+            else if (zipDelivery)
             {
                 goNext = true;
                 saveClaim = true;
@@ -1469,18 +1477,18 @@ namespace ServiceClaim.Models
                 noteText = $@"Вам назначена заявка №%ID% %LINK%";
                 noteSubject = $"[Заявка №%ID%] Вам назначена заявка";
             }
-            else if (currState.SysName.ToUpper().Equals("ZIPCL-DELIV"))
-            {
-                goNext = true;
-                saveClaim = true;
-                nextState = new ClaimState("SERVADMSET");
-                var curCl = new Claim(Id, false);
-                if (changeCurrentSpecAndOther)SpecialistSid = curCl.CurAdminSid;
-                sendNote = true;
-                noteTo = new[] { ServiceRole.CurAdmin };
-                noteText = $@"Вам назначена заявка №%ID% %LINK%";
-                noteSubject = $"[Заявка №%ID%] Вам назначена заявка";
-            }
+            //else if (currState.SysName.ToUpper().Equals("ZIPCL-DELIV"))
+            //{
+            //    goNext = true;
+            //    saveClaim = true;
+            //    nextState = new ClaimState("SERVADMSET");
+            //    var curCl = new Claim(Id, false);
+            //    if (changeCurrentSpecAndOther)SpecialistSid = curCl.CurAdminSid;
+            //    sendNote = true;
+            //    noteTo = new[] { ServiceRole.CurAdmin };
+            //    noteText = $@"Вам назначена заявка №%ID% %LINK%";
+            //    noteSubject = $"[Заявка №%ID%] Вам назначена заявка";
+            //}
             //else if (currState.SysName.ToUpper().Equals("CONTRACTSET"))
             //{
             //    goNext = true;
@@ -2285,10 +2293,10 @@ namespace ServiceClaim.Models
             SaveStateStep(cancelState.Id, creatorSid, descr, true);
         }
 
-        public async Task SetStateAndGoNext(AdUser creator, string stateSysName, string descr = null)
+        public async Task SetStateAndGoNext(AdUser creator, string stateSysName, string descr = null, bool zipDelivery = false)
         {
             SetState(creator.Sid, stateSysName, descr);
-            await Go(creator);
+            await Go(creator, zipDelivery: zipDelivery);
         }
     }
 }

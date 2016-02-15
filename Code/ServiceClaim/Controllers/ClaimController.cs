@@ -15,7 +15,7 @@ using ServiceClaim.Objects;
 
 namespace ServiceClaim.Controllers
 {
-
+    [System.Web.Mvc.Authorize]
     public class ClaimController : BaseController
     {
         //[HttpGet]
@@ -25,27 +25,27 @@ namespace ServiceClaim.Controllers
         //    Claim model = new Claim(id.Value);
         //    return View(model);
         //}
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult Add2Session(string name, string value)
         {
             Session[name] = value;
             return Json(new {});
         }
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetFromSession(string name)
         {
             var value = Session[name];
             return Json(new { val= value });
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult RemoveFromSession(string name)
         {
             Session.Remove(name);
             return Json(new {});
         }
 
-        [HttpGet]
+        [System.Web.Mvc.HttpGet]
         public ActionResult Index(int? id)
         {
             if (
@@ -67,7 +67,7 @@ namespace ServiceClaim.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult SaveClaimChanges(int idClaim, string adminSid, string engeneerSid, string clientSdNum)
         {
             if (!CurUser.HasAccess(AdGroup.ServiceControler)) return Json(new { });
@@ -77,14 +77,14 @@ namespace ServiceClaim.Controllers
             return Json(new {});
         }
         [OutputCache(Duration = 3600)]
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetAdminList()
         {
             var list = AdHelper.GetUserListByAdGroup(AdGroup.ServiceAdmin).ToList();
             return Json(list);
         }
         [OutputCache(Duration = 3600)]
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetEngeneerList()
         {
             var list = AdHelper.GetUserListByAdGroup(AdGroup.ServiceEngeneer).ToList();
@@ -205,7 +205,7 @@ namespace ServiceClaim.Controllers
             return View();
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetClaimList(int? idDevice = null, string client = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null, int? idState = null, string dateCreate = null, string curSpec = null)
         {
             //if (!CurUser.HasAccess(AdGroup.ServiceTech, AdGroup.ServiceAdmin, AdGroup.ServiceControler,
@@ -258,7 +258,7 @@ namespace ServiceClaim.Controllers
             return Json(result);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public PartialViewResult GetListItem(int? claimId)
         {
             if (!claimId.HasValue) return null;
@@ -278,13 +278,13 @@ namespace ServiceClaim.Controllers
         //    return View(result);
         //}
 
-        [HttpGet]
+        [System.Web.Mvc.HttpGet]
         public ActionResult New()
         {
             return View(new Claim());
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateInput(false)]
         public ActionResult New(Claim model)
         {
@@ -371,28 +371,28 @@ namespace ServiceClaim.Controllers
         //    //return RedirectToAction("New", model);
         //}
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetCtors(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null)
         {
             var list = Contractor.GetServiceList(idContractor, contractorName, idContract, contractNumber, idDevice, deviceName);
             return Json(list);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetConts(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null, string addrStrId = null)
         {
             var list = Contract.GetList(idContractor, contractorName, idContract, contractNumber, idDevice, deviceName, addrStrId);
             return Json(list);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetAddrs(int? idContractor = null, int? idContract = null, int? idDevice = null, string addrName = null)
         {
             var list = Address.GetList(idContractor, idContract, idDevice, addrName);
             return Json(list);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetDevices(int? idContractor = null, string contractorName = null, int? idContract = null, string contractNumber = null, int? idDevice = null, string deviceName = null, string serialNum = null, string addrStrId = null)
         {
             var result = Device.GetSearchList(idContractor, contractorName, idContract, contractNumber, idDevice, deviceName, serialNum);
@@ -400,7 +400,7 @@ namespace ServiceClaim.Controllers
         }
 
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> SetWorkType(Claim model)
         {
             try
@@ -427,7 +427,7 @@ namespace ServiceClaim.Controllers
             }
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> EngeneerSelect(Claim model)
         {
             try
@@ -450,7 +450,7 @@ namespace ServiceClaim.Controllers
             }
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> SpecialistSelect(Claim model)
         {
             try
@@ -475,7 +475,7 @@ namespace ServiceClaim.Controllers
             }
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> TechConfirmWork(Claim model)
         {
             try
@@ -508,7 +508,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ConfirmWork(Claim model)
         {
             try
@@ -541,7 +541,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ServiceSheetTechForm(Claim model)
         {
             try
@@ -572,7 +572,7 @@ namespace ServiceClaim.Controllers
             }
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ServiceSheetTechCollectiveForm(Claim model)
         {
             try
@@ -603,7 +603,7 @@ namespace ServiceClaim.Controllers
             }
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> StateServadmSetWait(Claim model)
         {
             try
@@ -623,7 +623,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> StateEngOutWait(Claim model)
         {
             try
@@ -643,7 +643,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<JsonResult> StateEngOutWaitAsync(int claimId)
         {
             ResponseMessage responseMessage;
@@ -653,7 +653,7 @@ namespace ServiceClaim.Controllers
             return Json(new { });
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
 
         public async Task<ActionResult> ServiceSheetForm(Claim model)
         {
@@ -662,6 +662,31 @@ namespace ServiceClaim.Controllers
                 ResponseMessage responseMessage;
                 //bool complete = model.Go(out responseMessage);
                 //if (!complete) throw new Exception(responseMessage.ErrorMessage);
+
+                string factTimeStart = Request.Form["FactTimeStart"];
+                string factTimeEnd = Request.Form["FactTimeEnd"];
+                try
+                {
+                    DateTime startDateTime =
+                        Convert.ToDateTime($"{model.ServiceSheet4Save.FactDateStart:dd.MM.yyyy} {factTimeStart}");
+                    DateTime endDateTime =
+                        Convert.ToDateTime($"{model.ServiceSheet4Save.FactDateStart:dd.MM.yyyy} {factTimeEnd}");
+                
+
+                model.ServiceSheet4Save.FactDateStart = startDateTime;
+                model.ServiceSheet4Save.FactDateEnd = endDateTime;
+                }
+                catch
+                {
+                    throw new Exception("Указано некорретное время выполнения работ!");
+                }
+
+                if (model.ServiceSheet4Save.FactDateStart.HasValue && model.ServiceSheet4Save.FactDateEnd.HasValue &&
+                    model.ServiceSheet4Save.FactDateEnd.Value < model.ServiceSheet4Save.FactDateStart.Value)
+                {
+                    throw new Exception("Время окончания не может быть меньше времени начала!");
+                }
+
                 await model.Go(GetCurUser());
             }
             catch (Exception ex)
@@ -682,7 +707,7 @@ namespace ServiceClaim.Controllers
             //return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ServiceSheetFormCollective(Claim model)
         {
             try
@@ -710,7 +735,7 @@ namespace ServiceClaim.Controllers
             //return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> EndClaim(Claim model)
         {
             try
@@ -730,7 +755,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> StateDone(Claim model)
         {
             try
@@ -750,7 +775,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> SetServEngOnWork(Claim model)
         {
             try
@@ -770,7 +795,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<JsonResult> SetServEngOnWorkAsync(int claimId)
         {
             //try
@@ -788,7 +813,7 @@ namespace ServiceClaim.Controllers
             return Json(new { });
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ZipGetOnCheck(Claim model)
         {
             try
@@ -809,7 +834,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ZipOrder(Claim model)
         {
             try
@@ -844,7 +869,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ZipConfirm(Claim model)
         {
             try
@@ -877,7 +902,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ContractChoice(Claim model)
         {
             try
@@ -897,7 +922,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ZipOrdered(Claim model)
         {
             try
@@ -918,7 +943,7 @@ namespace ServiceClaim.Controllers
         }
 
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ZipOrderConfirm(Claim model)
         {
             try
@@ -933,12 +958,12 @@ namespace ServiceClaim.Controllers
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["ZipEngeneerGet"]))
                 {
-                    await model.SetStateAndGoNext(CurUser, "ZIPCL-ETSHIP-GET", "Отметка в ручном режиме");
+                    await model.SetStateAndGoNext(CurUser, "ZIPCL-ETSHIP-GET", "Отметка в ручном режиме", true);
                     return RedirectToAction("Index", new { id = model.Id });
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["ZipClientDelivery"]))
                 {
-                    await model.SetStateAndGoNext(CurUser, "ZIPCL-DELIV", "Отметка в ручном режиме");
+                    await model.SetStateAndGoNext(CurUser, "ZIPCL-DELIV", "Отметка в ручном режиме", true);
                     return RedirectToAction("Index", new { id = model.Id });
                 }
                 else if (!String.IsNullOrEmpty(Request.Form["ZipOrderCancel"]))
@@ -964,7 +989,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetWorkTypeSpecialistSelectionList(int idWorkType)
         {
             var list = Claim.GetWorkTypeSpecialistSelectionList(idWorkType);
@@ -990,7 +1015,7 @@ namespace ServiceClaim.Controllers
         //    var stateHistory = Claim.GetStateHistory();
         //}
 
-        [HttpGet]
+        [System.Web.Mvc.HttpGet]
         public ActionResult СlaimStateHistory(int? idClaim, bool? full = false)
         {
             if (!idClaim.HasValue) return HttpNotFound();
@@ -1005,7 +1030,7 @@ namespace ServiceClaim.Controllers
             ViewBag.ShowBtnGetAll = !topRows.HasValue || stateHistory.Count() < topRows.Value;
             return PartialView("StateHistory", stateHistory);
         }
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult AddServiceSheetIssuedZipItem(ServiceSheetZipItem model)
         {
             try
@@ -1023,7 +1048,7 @@ namespace ServiceClaim.Controllers
             return Json(new { });
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult AddServiceSheetClientGivenInstalledZipItem(ServiceSheetZipItem model)
         {
             try
@@ -1041,7 +1066,7 @@ namespace ServiceClaim.Controllers
             return Json(new { });
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult ServiceSheetIssuedZipItemDelete(int id)
         {
             try
@@ -1057,7 +1082,7 @@ namespace ServiceClaim.Controllers
             return null;
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult AddServiceSheetOrderedZipItem(ServiceSheetZipItem model)
         {
             try
@@ -1075,7 +1100,7 @@ namespace ServiceClaim.Controllers
             return Json(new { });
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult ServiceSheetOrderedZipItemDelete(int id)
         {
             try
@@ -1091,7 +1116,7 @@ namespace ServiceClaim.Controllers
             return null;
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ZipIssue(Claim model)
         {
             try
@@ -1114,7 +1139,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> CartridgeList(Claim model)
         {
             try
@@ -1137,7 +1162,7 @@ namespace ServiceClaim.Controllers
             //return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> CartridgeRefill(Claim model)
         {
             try
@@ -1161,7 +1186,7 @@ namespace ServiceClaim.Controllers
             //return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult ServiceSheetZipItemSetInstalled(int id, int idServiceSheet)
         {
             try
@@ -1177,7 +1202,7 @@ namespace ServiceClaim.Controllers
             return null;
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult ServiceSheetZipItemSetInstalledCancel(int id, int idServiceSheet)
         {
             try
@@ -1193,7 +1218,7 @@ namespace ServiceClaim.Controllers
             return null;
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult ServiceSheetZipItemClientGivenInstalledDelete(int id)
         {
             try
@@ -1209,7 +1234,7 @@ namespace ServiceClaim.Controllers
             return null;
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult ServiceSheetSaveNotInstalledComment(int id, string comment)
         {
             try
@@ -1224,7 +1249,7 @@ namespace ServiceClaim.Controllers
             }
             return null;
         }
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<JsonResult> SaveServiceSheetIsPayed(int serviceSheetId)
         {
             //try
@@ -1239,7 +1264,7 @@ namespace ServiceClaim.Controllers
             //}
             return null;
         }
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<JsonResult> SaveServiceSheetIsNotPayed(int serviceSheetId, string comment)
         {
             //try
@@ -1255,28 +1280,28 @@ namespace ServiceClaim.Controllers
             return null;
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public PartialViewResult ClaimServiceSheetList(int idClaim)
         {
             var list = new Claim() {Id = idClaim}.GetClaimServiceSheetList();
             return PartialView("ClaimServiceSheetList", list);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetClientFilterList()
         {
            return Json(Contractor.GetServiceClaimFilterList());
         }
 
         [OutputCache(Duration = 3600,Location=OutputCacheLocation.Server)]
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetStateFilterList()
         {
             return Json(ClaimState.GetFilterList());
         }
 
         //[OutputCache(Duration = 120, VaryByCustom = "User")]
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetStateGroupFilterList(int? idDevice = null, string client = null, int? claimId = null, string clientSdNum = null, string deviceName = null, string serialNum = null, int? topRows = null, int? pageNum = null, int[] groupStateList = null, string address = null, int? idState = null, string dateCreate = null, string curSpec = null)
         {
             string servAdminSid = null;
@@ -1301,21 +1326,21 @@ namespace ServiceClaim.Controllers
             return Json(list);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public PartialViewResult GetClaimServiceSheetList(int? idClaim)
         {
             if (!idClaim.HasValue) return null;
             var list = Claim.GetClaimServiceSheetList(idClaim.Value);
             return PartialView("ClaimServiceSheetList", list);
         }
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public PartialViewResult GetClaimZipClaimList(int? idClaim)
         {
             if (!idClaim.HasValue) return null;
             var list = Claim.GetClaimZipClaimList(idClaim.Value);
             return PartialView("ClaimZipList", list);
         }
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public PartialViewResult GetServiceSheetPaperGet(int? idClaim)
         {
             if (!ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin)) return null;
@@ -1325,21 +1350,21 @@ namespace ServiceClaim.Controllers
             return PartialView("ServiceSheetPaperGet", list);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult CheckDeviceIsExists(string serialNum, int idClaim)
         {
             bool exists = Device.CheckSerialNumIsExists(serialNum, idClaim);
             return Json(new {exists = exists});
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult GetModelSelectionList(string model)
         {
             var list = Device.GetModelSelectionList(model);
              return Json(list);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult ClaimCancel(Claim model)
         {
             if (CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimCancelClaim))
@@ -1354,7 +1379,7 @@ namespace ServiceClaim.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult ClaimEnd(Claim model)
         {
             if (CurUser.HasAccess(AdGroup.ServiceControler, AdGroup.ServiceClaimEndClaim))
@@ -1368,25 +1393,44 @@ namespace ServiceClaim.Controllers
 
             return RedirectToAction("List");
         }
-        
+
+        ////[System.Web.Http.AllowAnonymous]
+        ////[System.Web.Http.HttpGet]
+        ////public IHttpActionResult RemoteStateChange(int? idClaim, string stateSysName, string creatorSid, string descr = null, int? idZipClaim = null)
+        ////{
+        ////    if (!idClaim.HasValue || String.IsNullOrEmpty(stateSysName)) return NotFound();
+
+        ////    var goNext = Claim.RemoteStateChange(idClaim.Value, stateSysName, creatorSid, descr, idZipClaim);
+
+        ////    if (goNext)
+        ////    {
+        ////        var claim = new Claim(idClaim.Value);
+        ////        claim.CurUserAdSid = creatorSid;
+        ////        //claim.Descr = descr;
+        ////        claim.Go(GetCurUser());
+        ////    }
+        ////    return Ok();
+        ////}
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult> RemoteStateChange(int? idClaim, string stateSysName, string creatorSid, string descr = null, int? idZipClaim = null)
+        //Использовать только для интеграции с Заявками на ЗИП так как есть костыль с goNext
+        public async Task<ActionResult> RemoteStateChange(int? idClaim, string stateSysName, bool goNext, string creatorSid, string descr = null, int? idZipClaim = null)
         {
             if (!idClaim.HasValue || String.IsNullOrEmpty(stateSysName)) return HttpNotFound();
 
-            bool goNext = Claim.RemoteStateChange(idClaim.Value, stateSysName, creatorSid, descr, idZipClaim);
+            //bool goNext = 
+                await Claim.RemoteStateChange(idClaim.Value, stateSysName, goNext, creatorSid, descr, idZipClaim);
 
-            if (goNext)
-            {
-                var claim = new Claim(idClaim.Value);
-                await claim.Go(GetCurUser());
-            }
+            //if (goNext)
+            //{
+            //    var claim = new Claim(idClaim.Value);
+                
+            //}
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public JsonResult SaveNote(int id, string note)
         {
             if (!CurUser.HasAccess(AdGroup.ServiceAdmin)) return null;

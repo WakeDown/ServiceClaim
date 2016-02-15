@@ -5,10 +5,11 @@
     var zipItemList = serviceSheet.GetIssuedZipItemList();
     var orderedZipItemList = Model.GetOrderedZipItemList(serviceSheet.Id);//Заказанные
     var clientGivenInstalledZipItemList = serviceSheet.GetClientGivenInstalledZipItemList();
+    var causeSelList = new SelectList(ZipItemCause.GetList(), "Id", "Name");
 }
 
 <div class="row">
-    <div class="col-lg-push-2 col-lg-9" style="min-width: 700px !important">
+    <div class="col-lg-12" style="min-width: 700px !important">
         
     @if ((orderedZipItemList != null && orderedZipItemList.Any()) || serviceSheet.ZipClientGivenInstall)
             {
@@ -17,6 +18,7 @@
             <table class="table table-bordered bg-white">
                 <tr class="bg-primary">
                     <th class="min-width"></th>
+                    <th>причина</th>
                     <th style="width: 100px">парт номер</th>
                     <th style="width: 250px">наименование</th>
                     <th style="width: 100px">количество</th>
@@ -30,8 +32,9 @@
                         {
                             <tr id="issued-zip-item-@item.Id" @(!item.Installed ? "notinstalled=notinstalled" : String.Empty)>
                                 <td class="text-center valign-middle">
-                                    <button ziid="@item.Id" class="btn @(item.Installed ? "btn-success" : "btn-primary")" name="btn-issued-zip-item-installed" @(item.Installed ? "disabled=disabled" : String.Empty)>Установлено</button>
+                                    <button ziid="@item.Id" class="btn  btn-block @(item.Installed ? "btn-success" : "btn-primary")" name="btn-issued-zip-item-installed" @(item.Installed ? "disabled=disabled" : String.Empty)>Установлено</button>
                                 </td>
+                                <td>@item.CauseName</td>
                                 <td class="text-center valign-middle">@item.PartNum</td>
                                 <td class="text-center valign-middle">@item.Name</td>
                                 <td class="text-center valign-middle">@item.Count</td>
@@ -39,7 +42,7 @@
                                         @(item.ClientGiven ? "да" : "нет")
                                     </td>*@
                                 <td class="text-center valign-middle">
-                                    <button ziid="@item.Id" class="btn btn-danger" name="btn-issued-zip-item-installed-cancel" @(!item.Installed ? "disabled=disabled" : String.Empty)>отмена</button>
+                                    <button ziid="@item.Id" class="btn btn-danger btn-block" name="btn-issued-zip-item-installed-cancel" @(!item.Installed ? "disabled=disabled" : String.Empty)>отмена</button>
                                 </td>
                             </tr>
                         }
@@ -54,10 +57,11 @@
                             {
                                 <tr id="zip-clgiv-inst-item-@item.Id">
                                     <th>предоставлено клиентом</th>
+                                    <td class="text-center valign-middle">@item.CauseName</td>
                                     <td class="text-center valign-middle">@item.PartNum</td>
                                     <td class="text-center valign-middle">@item.Name</td>
                                     <td class="text-center valign-middle">@item.Count</td>
-                                    <td class="text-center valign-middle"><button ziid="@item.Id" titel="удалить" name="zip-clgiv-inst-item-del" class="btn btn-danger">Удалить</button></td>
+                                    <td class="text-center valign-middle"><button ziid="@item.Id" titel="удалить" name="zip-clgiv-inst-item-del" class="btn btn-danger btn-block">Удалить</button></td>
                                 </tr>
                             }
                         }
@@ -67,12 +71,13 @@
                     </tbody>
                         <tr class="bg-info">
                             <th>предоставлено клиентом</th>
+                            <td style="width: 250px">@Html.DropDownList("causeClient", causeSelList, "--выберите--", new {@class= "form-control input-sm required-mark", required = "required" })</td>
                             <td><input id="zipClientGivenInstallNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required" /></td>
                             <td><input id="zipClientGivenInstallName" type="text" placeholder="наименование" class="form-control required-mark" required="required" /></td>
                             <td><input id="zipClientGivenInstallCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1" /></td>
                             @*<td>да</td>*@
                             <td class="text-center">
-                                <button class="btn btn-primary" id="zipClientGivenInstalled" ssid="@serviceSheet.Id">Установлено</button>
+                                <button class="btn btn-primary btn-block" id="zipClientGivenInstalled" ssid="@serviceSheet.Id">Установлено</button>
                             </td>
                         </tr>
 
@@ -84,12 +89,13 @@
         
         @if (serviceSheet.ZipClaim.HasValue && serviceSheet.ZipClaim.Value)
         {
-            <blockquote class="bg-succes">
+            <blockquote class="bg-success">
                 <h4>Заказ ЗИП</h4>
                 <table class="table table-bordered bg-white">
                     
                     <tr id="zipIssueHeader" class="bg-primary" style="@(zipItemList != null && zipItemList.Any() ? String.Empty : "display: none")">
                         @*<tr class="bg-primary">*@
+                        <th>причина</th>
                         <th>парт номер</th>
                         <th>наименование</th>
                         <th>количество</th>
@@ -102,6 +108,7 @@
                             foreach (var item in zipItemList)
                             {
                                 <tr id="zip-item-@item.Id">
+                                    <td class="text-center valign-middle">@item.CauseName</td>
                                     <td class="text-center valign-middle">@item.PartNum</td>
                                     <td class="text-center valign-middle">@item.Name</td>
                                     <td class="text-center valign-middle">@item.Count</td>
@@ -109,17 +116,18 @@
                                             @(item.ClientGiven ? "да" : "нет")
                                         </td>*@
                                     <td class="text-center valign-middle">
-                                        <button ziid="@item.Id" titel="удалить" name="zip-item-del" class="btn btn-danger">Удалить</button>
+                                        <button ziid="@item.Id" title="удалить" name="zip-item-del" class="btn btn-danger btn-block">Удалить</button>
                                     </td>
                                 </tr>
                             }
                         }
                     </tbody>
                     <tr>
-                        <td style="width: 150px"><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required" /></td>
-                        <td style="width: 250px"><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required" /></td>
+                        <td style="width: 250px">@Html.DropDownList("cause", causeSelList, "--выберите причину--", new { @class = "form-control input-sm required-mark", required = "required" })</td>
+                        <td style="width: 150px"><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required"/></td>
+                        <td style="width: 250px"><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required"/></td>
                         <td style="width: 70px">
-                            <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1" />
+                            <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1"/>
                         </td>
                         @*<td class="text-nowrap valign-middle">
                 <div>предоставил клиент</div>
@@ -128,7 +136,7 @@
                 <input type="radio" name="clientGiven" value="True" required="required"/>&nbsp;да
             </td>*@
                         <td style="width: 100px" class="text-center">
-                            <button type="submit" class="btn btn-success" id="addZipItem" ssid="@serviceSheet.Id">
+                            <button type="submit" class="btn btn-success btn-block" id="addZipItem" ssid="@serviceSheet.Id">
                                 @*<i class="fa fa-save"></i>*@
                                 Сохранить
                             </button>
@@ -260,10 +268,12 @@
     });
     function addClientGivenInstalledZipItem() {
         var ssid = $(this).attr('ssid');
+        var causeId = $('#causeClient').val();
+        var causeName = $('#causeClient option:checked').text();
         var zipClientGivenInstallNum = $('#zipClientGivenInstallNum').val();
         var zipClientGivenInstallName = $('#zipClientGivenInstallName').val();
         var zipClientGivenInstallCount = $('#zipClientGivenInstallCount').val();
-            
+
         if (zipClientGivenInstallNum == '' || zipClientGivenInstallName == '' || zipClientGivenInstallCount == '') {
             BootstrapDialog.show({
                 type: 'type-warning',
@@ -279,14 +289,15 @@
             url: '@Url.Action("AddServiceSheetClientGivenInstalledZipItem")',
             method: 'POST',
             contentType: 'application/json;charset=utf-8 ',
-            data: JSON.stringify({ PartNum: zipClientGivenInstallNum, Name: zipClientGivenInstallName, Count: zipClientGivenInstallCount, ServiceSheetId: ssid, ClientGiven:true }),
+            data: JSON.stringify({ PartNum: zipClientGivenInstallNum, Name: zipClientGivenInstallName, Count: zipClientGivenInstallCount, ServiceSheetId: ssid, ClientGiven:true, IdCause:causeId }),
             success: function (data) {
                 if (!data.error) {
                     //var clientGivenStr = clientGiven === 'True' ? 'да' : 'нет';
                     //var item = '<tr id="zip-item-' + data.id + '" class="updated"><td>' + zipIssueNewPartNum + '</td><td>' + zipIssueNewName + '</td><td>' + zipIssueNewCount + '</td><td>' + clientGivenStr +  '</td><td class="text-center"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a></td></tr>';
-                    var item = '<tr id="zip-clgiv-inst-item-' + data.id + '" class="updated"><th>предоставлено клиентом</th><td class="text-center valign-middle">' + zipClientGivenInstallNum + '</td><td class="text-center valign-middle">' + zipClientGivenInstallName + '</td><td class="text-center valign-middle">' + zipClientGivenInstallCount + '</td><td class="text-center valign-middle"><button ziid="' + data.id + '" titel="удалить" name="zip-clgiv-inst-item-del" class="btn btn-danger">Удалить</button></td></tr>';
+                    var item = '<tr id="zip-clgiv-inst-item-' + data.id + '" class="updated"><th>предоставлено клиентом</th><th class="text-center valign-middle">' +causeName+ '</th><td class="text-center valign-middle">' + zipClientGivenInstallNum + '</td><td class="text-center valign-middle">' + zipClientGivenInstallName + '</td><td class="text-center valign-middle">' + zipClientGivenInstallCount + '</td><td class="text-center valign-middle"><button ziid="' + data.id + '" titel="удалить" name="zip-clgiv-inst-item-del" class="btn btn-danger btn-block">Удалить</button></td></tr>';
                     $('#zipClientGivenInstall').append(item);
                     $('[name="zip-clgiv-inst-item-del"]').click(zipClientGivenInstallItemDelete);
+                    $('#causeClient').val('');
                     $('#zipClientGivenInstallNum').val('');
                     $('#zipClientGivenInstallName').val('');
                     $('#zipClientGivenInstallCount').val('1');
@@ -367,6 +378,7 @@
         showSpinnerAppend(curObj);
         curObj.prop('disabled', true);
         var ziid = $(this).attr('ziid');
+        $('#btnSendServiceSheet').prop('disabled', true);
         $.ajax({
             url: '@Url.Action("ServiceSheetZipItemSetInstalled")',
             method: 'POST',
@@ -380,6 +392,7 @@
                 $btnInst.addClass('btn-success');
                 hideSpinner(curObj);
                 curObj.prop('disabled', false);
+                $('#btnSendServiceSheet').prop('disabled', false);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 BootstrapDialog.show({
@@ -389,6 +402,7 @@
                 });
                 hideSpinner(curObj);
                 curObj.prop('disabled', false);
+                $('#btnSendServiceSheet').prop('disabled', false);
             }
         });
     }
@@ -416,12 +430,14 @@
     function addZipItem() {
 
         var ssid = $(this).attr('ssid');
+        var zipCauseId = $('#cause').val();
+        var zipCauseName = $('#cause option:checked').text();
         var zipIssueNewPartNum = $('#zipIssueNewPartNum').val();
         var zipIssueNewName = $('#zipIssueNewName').val();
         var zipIssueNewCount = $('#zipIssueNewCount').val();
         //var clientGiven = $('[name="clientGiven"]:checked').val();
 
-        if (zipIssueNewPartNum == '' || zipIssueNewName == '' || zipIssueNewCount == '') {
+        if (zipIssueNewPartNum == '' || zipIssueNewName == '' || zipIssueNewCount == '' || zipCauseId <= 0) {
             BootstrapDialog.show({
                 type: 'type-warning',
                 title: 'Внимание!',
@@ -436,15 +452,16 @@
             url: '@Url.Action("AddServiceSheetIssuedZipItem")',
             method: 'POST',
             contentType: 'application/json;charset=utf-8 ',
-            data: JSON.stringify({ PartNum: zipIssueNewPartNum, Name: zipIssueNewName, Count: zipIssueNewCount, ServiceSheetId: ssid }),
+            data: JSON.stringify({ PartNum: zipIssueNewPartNum, Name: zipIssueNewName, Count: zipIssueNewCount, ServiceSheetId: ssid, IdCause:zipCauseId }),
             success: function (data) {
                 if (!data.error) {
                     $('#zipIssueHeader').show();
                     //var clientGivenStr = clientGiven === 'True' ? 'да' : 'нет';
                     //var item = '<tr id="zip-item-' + data.id + '" class="updated"><td>' + zipIssueNewPartNum + '</td><td>' + zipIssueNewName + '</td><td>' + zipIssueNewCount + '</td><td>' + clientGivenStr +  '</td><td class="text-center"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a></td></tr>';
-                    var item = '<tr id="zip-item-' + data.id + '" class="updated"><td class="text-center valign-middle">' + zipIssueNewPartNum + '</td><td class="text-center valign-middle">' + zipIssueNewName + '</td><td class="text-center valign-middle">' + zipIssueNewCount + '</td><td class="text-center valign-middle">' +
-                        '<button ziid="' + data.id + '" titel="удалить" name="zip-item-del" class="btn btn-danger">Удалить</button>' +
+                    var item = '<tr id="zip-item-' + data.id + '" class="updated"><td class="text-center valign-middle">' + zipCauseName + '</td><td class="text-center valign-middle">' + zipIssueNewPartNum + '</td><td class="text-center valign-middle">' + zipIssueNewName + '</td><td class="text-center valign-middle">' + zipIssueNewCount + '</td><td class="text-center valign-middle">' +
+                        '<button ziid="' + data.id + '" titel="удалить" name="zip-item-del" class="btn btn-danger btn-block">Удалить</button>' +
                         '</td></tr>';
+                    $('#cause').val('');
                     $('#zipIssueItemsContainer').append(item);
                     $('[name="zip-item-del"]').click(zipItemDelete);
                     $('#zipIssueNewPartNum').val('');

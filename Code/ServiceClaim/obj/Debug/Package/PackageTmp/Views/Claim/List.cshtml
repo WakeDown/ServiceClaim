@@ -23,7 +23,7 @@
         <div class="col-lg-8 col-sm-12 col-xs-12">
             <div id="stateGroupFilter"></div>
             <div class="text-center">
-                <span id="filterIsEnabled" style="display: none; padding: 5px 0 5px 5px" class="text-center alert alert-danger">Внимание! Используется фильтр. <button id="filterDisable" class="bt btn-link btn-xs">снять фильтр</button></span>
+                <span id="filterIsEnabled" style="display: none; padding: 5px 0 5px 5px" class="text-center alert alert-danger">Внимание! Используется фильтр. <button id="filterDisable" class="bt btn-link btn-xs">очистить фильтр</button></span>
             </div>
         </div>
         <div class="col-sm-6 col-xs-6 hidden-md hidden-lg">
@@ -148,8 +148,9 @@
             var sesFilter = getFromSession('filter');
             if (sesFilter) {
                 sesFilter = JSON.parse(sesFilter);
-                dlnk.hashupdate({ 'num': getEmptyIfNull(sesFilter.num), 'cli': getEmptyIfNull(sesFilter.client), 'csdn': getEmptyIfNull(sesFilter.clSdNum), 'dev': getEmptyIfNull(sesFilter.devName), 'snum': getEmptyIfNull(sesFilter.serial), 'top': getEmptyIfNull(sesFilter.topRows), 'page': getEmptyIfNull(sesFilter.selPage), 'addr': getEmptyIfNull(sesFilter.address), 'grst': getEmptyIfNull(sesFilter.grpState), 'stt': getEmptyIfNull(sesFilter.idState), 'dc': getEmptyIfNull(sesFilter.dateCreate), 'spec': getEmptyIfNull(sesFilter.curSpec) });
+                dlnk.hashupdate({ 'num': getEmptyIfNull(sesFilter.num), 'cli': getEmptyIfNull(sesFilter.client), 'csdn': getEmptyIfNull(sesFilter.clSdNum), 'dev': getEmptyIfNull(sesFilter.devName), 'serial': getEmptyIfNull(sesFilter.serial), 'top': getEmptyIfNull(sesFilter.topRows), 'page': getEmptyIfNull(sesFilter.selPage), 'addr': getEmptyIfNull(sesFilter.address), 'grst': getEmptyIfNull(sesFilter.grpState), 'stt': getEmptyIfNull(sesFilter.idState), 'dc': getEmptyIfNull(sesFilter.dateCreate), 'spec': getEmptyIfNull(sesFilter.curSpec) });
             } else {
+                updated = 1;
                 removeRowsAndShowSpinnerOnTable();
                 loadClaimList(true);
             }
@@ -227,22 +228,33 @@
         if (data.List.length > 0) {
             for (var i = 0; i < data.List.length; i++) {
                 var item = data.List[i];
-                var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="row-mark" style="background-color: #' + (item.State != null ? item.State.BorderColor : '') + '"></th><th class="valign-middle text-center"></div>' + item.Id + '</th><th class="valign-middle hidden-sm hidden-xs text-center">' + (item.ClientSdNum != null ? item.ClientSdNum : '') + '</th><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="hidden-sm hidden-xs">' + (item != null ? (item.CityName != null ? item.CityName : '') + (item.Address != null ? '<br />' + item.Address : '') : '') + (item.ContactName != null ? '<br /><b>Контакт:</b> ' + item.ContactName : '') + (item.ContactPhone != null ? '<br /><b>Телефон:</b> ' + item.ContactPhone : '') + '</td><td class="valign-middle">'
+                var $trItem = '<tr id="claim-' + item.Id + '" claimid="' + item.Id + '"><th class="row-mark" style="background-color: #' + (item.State != null ? item.State.BorderColor : '') + '"></th><th class="valign-middle text-center"></div>' + item.Id + '</th><th class="valign-middle hidden-sm hidden-xs text-center">' + (item.ClientSdNum != null ? item.ClientSdNum : '') + '</th><td class="valign-middle">' + (item.Contractor != null ? item.Contractor.FullName : '') + '</td><td class="hidden-sm hidden-xs">' + (item != null ? (item.CityName != null ? item.CityName : '') + (item.Address != null ? '<br />' + item.Address : '') : '') + (item.ContactName != null ? '<br /><b>Контакт:</b> ' + item.ContactName : '') + (item.ContactPhone != null ? '<br /><b>Телефон:</b> ' + item.ContactPhone : '') + '</td>' +
+                    '<td class="valign-middle">'
                     + (item.DeviceCollective != null && item.DeviceCollective == true ? '<span class="text-danger">массовая заявка</span>' : (item.DeviceUnknown != null && item.DeviceUnknown == true ? '<span class="text-primary">аппарат неизвестен</span>' : (item.Device != null && item.Device.FullName != null ? item.Device.FullName : '')))
-                    + (item.Descr != null ? '<br /><strong>Тип работ:</strong> ' + (item.WorkType != null ? item.WorkType.SysName : 'не указан') + '<br /><strong>Описание:</strong> ' + item.Descr : '') + '</td><td class="valign-middle">' + (item.Device != null && item.Device.SerialNum != null ? item.Device.SerialNum : '') + '</td><td class="hidden-sm hidden-xs">' +
-                    '<div class="text-nowrap">' +
-                        '<span class="small" style="color: #ac2925">' +
-                        '<span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span>' +
-                    '</div>' +
-                    '<div class="text-nowrap"><span class="small" style="color: #FF9800"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div>' +
-                    '<div class="text-nowrap"><span class="small" style="color: #2e6da4"><span class="bold monospace text-nowrap">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div>' +
-                    '<div class="text-nowrap"><span class="small" style="color: #4cae4c"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div>' +
-                    '<div class="text-nowrap"><span class="small" style="color: #4E342E"><span class="bold monospace">МРК:</span>&nbsp;' + (item.ClientManager != null && item.ClientManager.DisplayName != null ? item.ClientManager.DisplayName : '') + '</span></div>' +
+                    + (item.Descr != null ? '<br /><strong>Тип работ:</strong> ' + (item.WorkType != null ? item.WorkType.SysName : 'не указан') + '<br /><strong>Описание:</strong> ' + item.Descr : '') +
+                    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin, AdGroup.ServiceClaimView))
+                    {
+                        <text>
+                    (item.Note != null && item.Note != '' ? '<br /><strong class="text-danger">Заметка:</strong> ' + item.Note : '') +
+                        </text>
+                    }
                     '</td>' +
-                    '<td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #37474F" class="valign-middle hidden-sm hidden-xs">' + (item.State != null ? item.State.Name : '') + '<div class="small text-nowrap" style="color: #37474F">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle hidden-sm hidden-xs text-nowrap">' + item.DateCreateStr + '</td></tr>';
+                    '<td class="valign-middle">' + (item.Device != null && item.Device.SerialNum != null ? item.Device.SerialNum : '') + '</td>' +
+                    '<td class="hidden-sm hidden-xs">' +
+                            '<div class="text-nowrap">' +
+                                '<span class="small" style="color: #ac2925">' +
+                                '<span class="bold monospace">МСЦ:</span>&nbsp;' + (item.Manager != null && item.Manager.DisplayName != null ? item.Manager.DisplayName : '') + '</span>' +
+                            '</div>' +
+                            
+                            '<div class="text-nowrap"><span class="small" style="color: #2e6da4"><span class="bold monospace text-nowrap">СТП:</span>&nbsp;' + (item.Tech != null && item.Tech.DisplayName != null ? item.Tech.DisplayName : '') + '</span></div>' +
+                            '<div class="text-nowrap"><span class="small" style="color: #FF9800"><span class="bold monospace">&nbsp;СА:</span>&nbsp;' + (item.Admin != null && item.Admin.DisplayName != null ? item.Admin.DisplayName : '') + '</span></div>' +
+                            '<div class="text-nowrap"><span class="small" style="color: #4cae4c"><span class="bold monospace">&nbsp;СИ:</span>&nbsp;' + (item.Engeneer != null && item.Engeneer.DisplayName != null ? item.Engeneer.DisplayName : '') + '</span></div>' +
+                            '<div class="text-nowrap"><span class="small" style="color: #4E342E"><span class="bold monospace">МРК:</span>&nbsp;' + (item.ClientManager != null && item.ClientManager.DisplayName != null ? item.ClientManager.DisplayName : '') + '</span></div>' +
+                            '</td>' +
+                            '<td style="background-color: #' + (item.State != null ? item.State.BackgroundColor : '') + '; color: #37474F" class="valign-middle hidden-sm hidden-xs">' + (item.State != null ? item.State.Name : '') + '<div class="small text-nowrap" style="color: #37474F">' + item.DateStateChangeStr + '-' + (item.Changer != null ? item.Changer.DisplayName : '') + '</div></td><td class="valign-middle hidden-sm hidden-xs text-nowrap">' + item.DateCreateStr + '</td></tr>';
 
                 $cont.append($trItem);
-            }
+                    }
             initListButtons();
         } else {
             $cont.append('<tr><td>пусто</td></tr>');
@@ -379,7 +391,7 @@
         var client = getHashQueryStringValue('cli');//$('#clientFilter').val();
         var clSdNum = getHashQueryStringValue('csdn');//$('#clientSdNumFilter').val();
         var devName = getHashQueryStringValue('dev');//$('#deviceFilter').val();
-        var serial = getHashQueryStringValue('snum');//$('#serialNumFilter').val();
+        var serial = getHashQueryStringValue('serial');//$('#serialNumFilter').val();
         var topRows = getHashQueryStringValue('top');//$('[name="pageSize"].selected').attr('value');
         var selPage = getHashQueryStringValue('page');//1;
         if (!topRows || topRows <= 30) topRows = 30;
@@ -555,7 +567,7 @@
             success: function(data) {
                 var $cont = $('#stateGroupFilter');
                 $cont.find('ul').remove();
-                var $ul = $('<ul class="list-inline"></div>');
+                var $ul = $('<ul class="list-inline"></ul>');
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
@@ -576,7 +588,7 @@
                         if ($grpStateElem.length > 0) {
                             for (var i = 0; i < $grpStateElem.length; i++) {
                                 var val = $($grpStateElem[i]).attr('value');
-                                if (grpState > 0) grpState = grpState + ',';
+                                if (grpState.length > 0) grpState = grpState + ',';
                                 grpState = grpState + val;
                             }
                         }
@@ -642,7 +654,7 @@
         });
         $('#serialNumFilter').keypress(function (e) {
             if (e.keyCode == 13) {
-                dlnk.hashupdate({ 'snum': $(this).val(), 'page': 1 });
+                dlnk.hashupdate({ 'serial': $(this).val(), 'page': 1 });
             }
         });
         $('#addressFilter').keypress(function (e) {

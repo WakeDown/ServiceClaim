@@ -157,9 +157,17 @@
                         <td>Время работы</td>
                         <td>@Model.TimeOnWorkMinutes мин</td>
                     </tr>
+                    <tr>
+                        <td>Комментарий Общий</td>
+                        <td>@Html.Nl2Br(Model.DescrGeneral)</td>
+                    </tr>
+                    <tr>
+                        <td>Фактическое время выполнения</td>
+                        <td>@(Model.FactDateStart.HasValue ? Model.FactDateStart.Value.ToString("dd.MM.yyyy HH:mm") + " " + (Model.FactDateEnd.HasValue ? Model.FactDateEnd.Value.ToString("HH:mm") : null) : "не указано")</td>
+                    </tr>
                         <tr>
-                            <td>Комментарий Общий</td>
-                            <td>@Html.Nl2Br(Model.DescrGeneral)</td>
+                            <td>Фактическое время работы</td>
+                            <td>@(Model.FactDateStart.HasValue && Model.FactDateEnd.HasValue ? (Model.FactDateEnd.Value - Model.FactDateStart.Value).TotalMinutes + " мин" : "не указано")</td>
                         </tr>
                         @if (installedZipItemsList.Any())
                         {

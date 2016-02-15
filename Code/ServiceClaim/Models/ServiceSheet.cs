@@ -61,6 +61,8 @@ namespace ServiceClaim.Models
         public int? UnitProgZipClaimId { get; set; }
         public string CreatorSid { get; set; }
         public string DescrGeneral { get; set; }
+        public DateTime? FactDateStart { get; set; }
+        public DateTime? FactDateEnd { get; set; }
 
         public ServiceSheet()
         {
@@ -118,6 +120,8 @@ namespace ServiceClaim.Models
             ForceSaveRealSerialNum = Db.DbHelper.GetValueBoolOrNull(row, "force_save_real_serial_num");
             RealDeviceModel = Db.DbHelper.GetValueIntOrNull(row, "real_device_model_id");
             DescrGeneral = Db.DbHelper.GetValueString(row, "descr_general");
+            FactDateStart = Db.DbHelper.GetValueDateTimeOrNull(row, "fact_date_start");
+            FactDateEnd = Db.DbHelper.GetValueDateTimeOrNull(row, "fact_date_end");
 
             if (fillNames)
             {
@@ -177,8 +181,10 @@ namespace ServiceClaim.Models
             SqlParameter pForceSaveRealSerialNum = new SqlParameter() { ParameterName = "force_save_real_serial_num", SqlValue = ForceSaveRealSerialNum, SqlDbType = SqlDbType.Bit };
             SqlParameter pRealDeviceModelId = new SqlParameter() { ParameterName = "real_device_model_id", SqlValue = RealDeviceModel, SqlDbType = SqlDbType.Int };
             SqlParameter pDescrGeneral = new SqlParameter() { ParameterName = "descr_general", SqlValue = DescrGeneral, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pFactDateStart = new SqlParameter() { ParameterName = "fact_date_start", SqlValue = FactDateStart, SqlDbType = SqlDbType.DateTime };
+            SqlParameter pFactDateEnd = new SqlParameter() { ParameterName = "fact_date_end", SqlValue = FactDateEnd, SqlDbType = SqlDbType.DateTime };
 
-            var dt = Db.Service.ExecuteQueryStoredProcedure("save_service_sheet", pId, pProcessEnabled, pDeviceEnabled, pZipClaim, pZipClaimNumber, pCounterMono, pCounterColor, pCounterTotal, pNoCounter, pCounterUnavailable, pDescr, pCreatorAdSid, pCounterDescr, pEngeneerSid, pAdminSid, pIdServiceIssue, pIdClaim, pTimeOnWorkMinutes, pWorkTypeId, pZipClientGivenInstall, pRealSerialNum, pForceSaveRealSerialNum, pRealDeviceModelId, pDescrGeneral);
+            var dt = Db.Service.ExecuteQueryStoredProcedure("save_service_sheet", pId, pProcessEnabled, pDeviceEnabled, pZipClaim, pZipClaimNumber, pCounterMono, pCounterColor, pCounterTotal, pNoCounter, pCounterUnavailable, pDescr, pCreatorAdSid, pCounterDescr, pEngeneerSid, pAdminSid, pIdServiceIssue, pIdClaim, pTimeOnWorkMinutes, pWorkTypeId, pZipClientGivenInstall, pRealSerialNum, pForceSaveRealSerialNum, pRealDeviceModelId, pDescrGeneral, pFactDateStart, pFactDateEnd);
             int id = 0;
             if (dt.Rows.Count > 0)
             {

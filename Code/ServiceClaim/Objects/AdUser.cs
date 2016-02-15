@@ -17,43 +17,25 @@ namespace ServiceClaim.Objects
         public string Email { get; set; }
         public string DisplayName => MainHelper.ShortName(FullName);
         public List<AdGroup> AdGroups { get; set; }
+        public bool IsAnonymous { get; set; }
 
-        //private static string GetShortName(string name)
-        //{
+        public AdUser()
+        {
+            IsAnonymous = false;
+        }
 
-        //    if (String.IsNullOrEmpty(name)) return "Имя отсутствует";
-        //    var shortName = new StringBuilder();
-        //    string res = String.Empty;
-        //    var partNames = name.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-        //    if (partNames.Count() > 2)
-        //    {
-        //        shortName.Append(partNames[0]);
-        //        shortName.Append(" ");
-        //        shortName.Append(partNames[1].Substring(0, 1));
-        //        shortName.Append(".");
-        //        shortName.Append(partNames[2].Substring(0, 1));
-        //        shortName.Append(".");
-
-        //        res = shortName.ToString();
-        //    }
-        //    else if (partNames.Count() == 2)
-        //    {
-        //        shortName.Append(partNames[0]);
-        //        shortName.Append(" ");
-        //        shortName.Append(partNames[1].Substring(0, 1));
-        //        shortName.Append(".");
-
-        //        res = shortName.ToString();
-        //    }
-        //    else
-        //    {
-        //        res = name;
-        //    }
-        //    return res;
-        //}
+        public AdUser(string sid, bool isAnonymous)
+        {
+            var user = AdHelper.GetUserBySid(sid);
+            Sid = user.AdSid;
+            FullName = user.FullName;
+            Email = user.Email;
+            IsAnonymous = isAnonymous;
+        }
 
         public bool Is(params AdGroup[] groups)
         {
+            if (IsAnonymous) return false;
             return groups.Select(grp => AdGroups.Contains(grp)).Any(res => res);
             //bool result = false;
 
@@ -69,6 +51,7 @@ namespace ServiceClaim.Objects
 
         public bool HasAccess(params AdGroup[] groups)
         {
+            if (IsAnonymous) return false;
             if (AdGroups == null || !AdGroups.Any()) return false;
             if (AdGroups.Contains(AdGroup.SuperAdmin) || AdGroups.Contains(AdGroup.ServiceControler)) return true;
             return groups.Select(grp => AdGroups.Contains(grp)).Any(res => res);

@@ -7,6 +7,7 @@
 @{
     var serviceSheet = Model.GetLastServiceSheet();
     var zipItemList = serviceSheet.GetOrderedZipItemList();
+    var causeSelList = new SelectList(ZipItemCause.GetList(), "Id", "Name");
 }
 <div class="row">
     <div class="col-lg-push-2 col-lg-7">
@@ -14,16 +15,18 @@
             <h4>Редактирование ЗИП</h4>
             <table class="table table-bordered">
                 <tr>
-                    <td><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required" /></td>
-                    <td><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required" /></td>
+                    <td>@Html.DropDownList("cause", causeSelList, "--выберите причину--", new { @class = "form-control input-sm required-mark", required = "required" })</td>
+                    <td><input id="zipIssueNewPartNum" type="text" placeholder="парт номер" class="form-control required-mark" required="required"/></td>
+                    <td><input id="zipIssueNewName" type="text" placeholder="наименование" class="form-control required-mark" required="required"/></td>
                     <td>
-                        <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1" />
+                        <input id="zipIssueNewCount" type="text" placeholder="количество" class="form-control required-mark" required="required" value="1"/>
                     </td>
                     <td>
                         <button type="submit" class="btn btn-success" id="addZipItem" ssid="@serviceSheet.Id"><i class="fa fa-save"></i></button>
                     </td>
                 </tr>
                 <tr id="zipIssueHeader" class="bg-primary" style="@(zipItemList != null && zipItemList.Any() ? String.Empty : "display: none")">
+                    <th>причина</th>
                     <th>парт номер</th>
                     <th>наименование</th>
                     <th>количество</th>
@@ -35,11 +38,12 @@
                         foreach (var item in zipItemList)
                         {
                             <tr id="zip-item-@item.Id">
+                                <td>@item.CauseName</td>
                                 <td>@item.PartNum</td>
                                 <td>@item.Name</td>
                                 <td>@item.Count</td>
                                 <td class="text-center">
-                                    <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a>
+                                    <a ziid="@item.Id" titel="удалить" href="#!" name="zip-item-del" class="btn btn-danger"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         }
@@ -121,6 +125,8 @@
 
     function addZipItem() {
         var ssid = $(this).attr('ssid');
+        var causeId = $('#cause').val();
+        var causeName = $('#cause option:checked').text();
         var zipIssueNewPartNum = $('#zipIssueNewPartNum').val();
         var zipIssueNewName = $('#zipIssueNewName').val();
         var zipIssueNewCount = $('#zipIssueNewCount').val();
@@ -139,11 +145,11 @@
             url: '@Url.Action("AddServiceSheetOrderedZipItem")',
             method: 'POST',
             contentType: 'application/json;charset=utf-8 ',
-            data: JSON.stringify({ PartNum: zipIssueNewPartNum, Name: zipIssueNewName, Count: zipIssueNewCount, ServiceSheetId: ssid }),
+            data: JSON.stringify({ PartNum: zipIssueNewPartNum, Name: zipIssueNewName, Count: zipIssueNewCount, ServiceSheetId: ssid, IdCause: causeId }),
             success: function(data) {
                 if (!data.error) {
                     $('#zipIssueHeader').show();
-                    var item = '<tr id="zip-item-' + data.id + '"><td>' + zipIssueNewPartNum + '</td><td>' + zipIssueNewName + '</td><td>' + zipIssueNewCount + '</td><td class="text-center"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-item-del"><i class="fa fa-trash"></i></a></td></tr>';
+                    var item = '<tr id="zip-item-' + data.id + '"><td>' + causeName + '</td><td>' + zipIssueNewPartNum + '</td><td>' + zipIssueNewName + '</td><td>' + zipIssueNewCount + '</td><td class="text-center"><a ziid="' + data.id + '" titel="удалить" href="#!" name="zip-item-del" class="btn btn-danger"><i class="fa fa-trash"></i></a></td></tr>';
                     $('#zipItemsContainer').prepend(item);
                     $('[name="zip-item-del"]').click(zipItemDelete);
                     $('#zipIssueNewPartNum').val('');

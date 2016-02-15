@@ -232,7 +232,7 @@
                     '<td class="valign-middle">'
                     + (item.DeviceCollective != null && item.DeviceCollective == true ? '<span class="text-danger">массовая заявка</span>' : (item.DeviceUnknown != null && item.DeviceUnknown == true ? '<span class="text-primary">аппарат неизвестен</span>' : (item.Device != null && item.Device.FullName != null ? item.Device.FullName : '')))
                     + (item.Descr != null ? '<br /><strong>Тип работ:</strong> ' + (item.WorkType != null ? item.WorkType.SysName : 'не указан') + '<br /><strong>Описание:</strong> ' + item.Descr : '') +
-                    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
+                    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin, AdGroup.ServiceClaimView))
                     {
                         <text>
                     (item.Note != null && item.Note != '' ? '<br /><strong class="text-danger">Заметка:</strong> ' + item.Note : '') +

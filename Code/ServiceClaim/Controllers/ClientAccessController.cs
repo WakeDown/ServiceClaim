@@ -10,6 +10,7 @@ using ServiceClaim.Objects;
 
 namespace ServiceClaim.Controllers
 {
+    [Authorize]
     public class ClientAccessController : BaseController
     {
         public ActionResult List()

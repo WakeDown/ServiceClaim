@@ -12,6 +12,7 @@ using ServiceClaim.Objects;
 
 namespace ServiceClaim.Controllers
 {
+    [Authorize]
     public class ClassifierController : BaseController
     {
         [HttpPost]

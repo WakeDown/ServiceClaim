@@ -61,6 +61,9 @@
                 }
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="btn btn-danger btn-danger-header" target="_blank" href="@ConfigurationManager.AppSettings["TaskTrackerNewWishUri"]">Заявка разработчику</a>
+                </li>
                 <li class="navbar-text">Вы вошли как <strong id="userName">@ViewBag.CurUser.DisplayName</strong></li>
             </ul>
         </div>

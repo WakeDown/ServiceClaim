@@ -23,6 +23,7 @@
                     </td>
                 </tr>*@
                 <tr id="zipIssueHeader" class="bg-primary" style="@(zipItemList != null && zipItemList.Any() ? String.Empty : "display: none")">
+                    <th>причина</th>
                     <th>парт номер</th>
                     <th>наименование</th>
                     <th>количество</th>
@@ -34,6 +35,7 @@
                         foreach (var item in zipItemList)
                         {
                             <tr id="zip-item-@item.Id">
+                                <td>@item.CauseName</td>
                                 <td>@item.PartNum</td>
                                 <td>@item.Name</td>
                                 <td>@item.Count</td>

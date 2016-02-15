@@ -9,6 +9,7 @@ using ServiceClaim.Objects;
 
 namespace ServiceClaim.Controllers
 {
+    [Authorize]
     [Compress]
     public class ServiceIssuePlanController : BaseController
     {

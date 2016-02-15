@@ -101,7 +101,7 @@ namespace ServiceClaim.Models
         {
             SqlParameter pContractId = new SqlParameter() { ParameterName = "contract_id", SqlValue = contractId, SqlDbType = SqlDbType.Int };
             SqlParameter pClientId = new SqlParameter() { ParameterName = "client_id", SqlValue = clientId, SqlDbType = SqlDbType.Int };
-            var dt = Db.Service.ExecuteQueryStoredProcedure("client_get_client_manager", pClientId);
+            var dt = Db.Service.ExecuteQueryStoredProcedure("client_get_client_manager", pClientId, pContractId);
             string sid = String.Empty;
             if (dt.Rows.Count > 0)
             {

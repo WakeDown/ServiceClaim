@@ -7,6 +7,7 @@ using ServiceClaim.Objects;
 
 namespace ServiceClaim.Controllers
 {
+    [Authorize]
     public class ErrorController : BaseController
     {
         public ViewResult Index()
@@ -18,6 +19,7 @@ namespace ServiceClaim.Controllers
             Response.StatusCode = 404;
             return View();
         }
+        [AllowAnonymous]
         public ViewResult AccessDenied()
         {
             Response.StatusCode = 403;

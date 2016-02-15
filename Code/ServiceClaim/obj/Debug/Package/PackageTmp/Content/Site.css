@@ -5,6 +5,9 @@
     font-size: 8pt;
 }
 
+.container {
+    width: 100% !important;
+  }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
@@ -792,3 +795,4 @@ th.row-mark, td.row-mark {
     border: 2px solid #e38d13;
     /*border-top: 0;*/ 
 }
+

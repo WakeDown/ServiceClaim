@@ -161,7 +161,7 @@
                         <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Текущий специалист</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Specialist.DisplayName</span></div>
                     }
                     <div class="row"><label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">Комментарий</label> <span class="col-lg-9 text-left-lg col-xs-12 col-sm-12 text-center-sm text-center-xs">@Model.Descr</span></div>
-                    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin))
+                    @if (ViewBag.CurUser.HasAccess(AdGroup.ServiceAdmin, AdGroup.ServiceClaimView))
                     {
                         <div class="row">
                             <label class="col-lg-3 text-right-lg col-xs-12 col-sm-12 text-center-sm text-center-xs text-danger">
@@ -278,7 +278,7 @@
             {
                 @Html.Partial("ZipGetOnCheck", Model)
             }
-            @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECKINWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech) && Model.CurTechSid == ViewBag.CurUser.Sid))
+            @if ((Model.State.SysName.ToUpper().Equals("ZIPCHECKINWORK") && ViewBag.CurUser.HasAccess(AdGroup.ServiceTech) && (Model.CurTechSid == ViewBag.CurUser.Sid || ViewBag.CurUser.HasAccess(AdGroup.ServiceControler))))
     {
                 @Html.Partial("ZipCheck", Model)
             }
