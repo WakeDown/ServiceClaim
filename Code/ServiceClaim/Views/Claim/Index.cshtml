@@ -258,8 +258,8 @@
     {
                 @Html.Partial("ServiceSheetForm", Model)
             }
-            @if (Model.State.SysName.ToUpper().Equals("ZIPISSUE") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
-    {
+            @if (Model.State.SysName.ToUpper().Equals("ZIPISSUE") && (ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer) || ViewBag.CurUser.HasAccess(AdGroup.ServiceTech)))
+            {
                 @Html.Partial("ZipIssue", Model)
             }
             @if (Model.State.SysName.ToUpper().Equals("CARTRIDGELIST") && ViewBag.CurUser.HasAccess(AdGroup.ServiceEngeneer))
