@@ -77,8 +77,8 @@ namespace ServiceClaim.Objects
 
                 string fakeSid = null;
                 string fakeLosgin = null;
-                //fakeSid = "S-1-5-21-1970802976-3466419101-4042325969-3837";
-                //fakeLosgin = "olga.skidan";
+                //fakeSid = "S-1-5-21-1970802976-3466419101-4042325969-3992";
+                //fakeLosgin = "ekaterina.talanova";
 
                 using (WindowsImpersonationContextFacade impersonationContext
                     = new WindowsImpersonationContextFacade(
@@ -109,7 +109,9 @@ namespace ServiceClaim.Objects
                             //        user.AdGroups.Add(role.Group);
                             //    }
                             //}
+
                             AdHelper.SetUserAdGroups(wi, ref user);
+                            //user.AdGroups = new List<AdGroup>() { AdGroup.ServiceCenterManager, AdGroup.ServiceAdmin};
                         }
                     }
                 }

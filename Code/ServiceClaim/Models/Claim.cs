@@ -1367,7 +1367,6 @@ namespace ServiceClaim.Models
                     throw new ArgumentException("Проверка ЗИП уже в работе.");
                 }
             }
-
             else if (currState.SysName.ToUpper().Equals("ZIPCHECKINWORK"))
             {
                 if (!user.HasAccess(AdGroup.ServiceTech)) return;

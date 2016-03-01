@@ -176,8 +176,7 @@ namespace ServiceClaim.Helpers
             //{
             var wi = (WindowsIdentity)identity;
             var context = new PrincipalContext(ContextType.Domain);
-
-
+            
             if (identity != null && wi.User != null && user != null)
             {
 

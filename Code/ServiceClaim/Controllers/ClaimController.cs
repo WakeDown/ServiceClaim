@@ -237,7 +237,9 @@ namespace ServiceClaim.Controllers
             }
             if (CurUser.Is(AdGroup.ServiceCenterManager))
             {
-                servManagerSid = CurUser.Sid;
+                //servManagerSid = CurUser.Sid;
+                servManagerSid = null;
+                adminSid = null;
                 userGroupSid = AdUserGroup.GetSidByAdGroup(AdGroup.ServiceCenterManager);
             }
             if (CurUser.Is(AdGroup.ServiceManager))
